@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INSERT TITLE</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <canvas id="churnComplexityChart" width="800" height="400"></canvas>
+
+  <script>
+    // Example data points from your Ruby gem
+    const dataPoints = [
+      // INSERT DATA
+    ];
+
+    // Extract data for Chart.js
+    const labels = dataPoints.map(point => point.file_path);
+    const churnData = dataPoints.map(point => point.churn);
+    const complexityData = dataPoints.map(point => point.complexity);
+
+    // Prepare data in Chart.js format
+    const data = {
+      labels: labels,
+      datasets: [{
+        label: 'INSERT TITLE',
+        data: dataPoints.map(point => ({ x: point.churn, y: point.complexity })),
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+        pointRadius: 5,
+        pointHoverRadius: 10
+      }]
+    };
+
+    // Configure and render the chart
+    const config = {
+      type: 'scatter',
+      data: data,
+      options: {
+        scales: {
+          x: {
+            type: 'linear',
+            position: 'bottom',
+            title: {
+              display: true,
+              text: 'Churn'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Complexity'
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const index = context.dataIndex;
+                return `${labels[index]}: Churn(${context.raw.x}), Complexity(${context.raw.y})`;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const myChart = new Chart(
+      document.getElementById('churnComplexityChart'),
+      config
+    );
+  </script>
+</body>
+</html>

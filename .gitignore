@@ -1,0 +1,15 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/*
+!/tmp/test-support/
+!/tmp/pmd-support/
+/tmp/pmd-support/pmd-cache
+!/tmp/template/
+
+.DS_Store
+*.gem

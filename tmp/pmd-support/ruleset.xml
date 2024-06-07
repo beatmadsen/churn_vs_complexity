@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<ruleset name="Rules for churn vs complexity"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        Find cyclomatic complexity in java files
+    </description>
+
+    <rule ref="category/java/design.xml/CyclomaticComplexity">
+        <properties>
+            <property name="classReportLevel" value="1"/>
+            <!-- We only want one report pr class -->
+            <property name="methodReportLevel" value="1000000"/>
+            <property name="cycloOptions" value=""/>
+        </properties>
+    </rule>
+
+</ruleset>

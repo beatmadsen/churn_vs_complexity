@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'churn_vs_complexity'
+
+begin
+  ChurnVsComplexity::CLI.run!
+rescue StandardError => e
+  warn e.message
+end
