@@ -11,7 +11,9 @@ module ChurnVsComplexity
     end
 
     def calculate(folder:, files:, since:)
-      schedule_churn_calculation(folder, files, since)
+      latest_commit_date = @churn.date_of_latest_commit(folder:)
+      @git_period = GitDate.git_period(since, latest_commit_date)
+      schedule_churn_calculation(folder, files, @git_period.effective_start_date)
       calculate_complexity(folder, files)
       await_results
       combine_results
@@ -51,10 +53,14 @@ module ChurnVsComplexity
     end
 
     def combine_results
-      @churn_results.to_h do |file, churn|
-        complexity = @complexity_results[file] || -1
-        [file, [churn, complexity]]
+      intersection = @churn_results.keys & @complexity_results.keys
+
+      result = {}
+      result[:values_by_file] = intersection.each_with_object({}) do |file, acc|
+        acc[file] = [@churn_results[file], @complexity_results[file]]
       end
+      result[:git_period] = @git_period
+      result
     end
   end
 end

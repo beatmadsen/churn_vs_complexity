@@ -11,7 +11,8 @@ module ChurnVsComplexity
         serializer:,
         calculator: CalculatorStub,
         file_selector: FileSelector::Stub,
-      ).check(folder: 'folder', since: Date.new(2012, 2, 2))
+        since: Date.new(2012, 2, 2),
+      ).check(folder: 'folder')
 
       assert_equal({ 'file1' => [1, 1], 'file2' => [1, 1] }, serializer.serialize_called_with)
     end
@@ -21,7 +22,8 @@ module ChurnVsComplexity
         serializer: Serializer::None,
         calculator: CalculatorStub,
         file_selector: FileSelector::Stub,
-      ).check(folder: 'folder', since: Date.new(2012, 2, 2))
+        since: Date.new(2012, 2, 2),
+      ).check(folder: 'folder')
 
       assert_equal({ 'file1' => [1, 1], 'file2' => [1, 1] }, result)
     end

@@ -31,6 +31,10 @@ module ChurnVsComplexity
           options[:serializer] = :graph
         end
 
+        opts.on('--summary', 'Output summary statistics (mean and median) for churn and complexity') do
+          options[:serializer] = :summary
+        end
+
         opts.on('--excluded PATTERN',
                 'Exclude file paths including this string. Can be used multiple times.',) do |value|
           options[:excluded] << value
@@ -38,6 +42,18 @@ module ChurnVsComplexity
 
         opts.on('--since YYYY-MM-DD', 'Calculate churn after this date') do |value|
           since = value
+        end
+
+        opts.on('-m', '--month', 'Calculate churn for the month leading up to the most recent commit') do
+          since = :month
+        end
+
+        opts.on('-q', '--quarter', 'Calculate churn for the quarter leading up to the most recent commit') do
+          since = :quarter
+        end
+
+        opts.on('-y', '--year', 'Calculate churn for the year leading up to the most recent commit') do
+          since = :year
         end
 
         opts.on('-h', '--help', 'Display help') do
@@ -56,24 +72,11 @@ module ChurnVsComplexity
 
       raise Error, 'No options selected. Use --help for usage information.' if options.empty?
 
-      begin
-        if since.nil?
-          since = Time.at(0).to_date
-          options[:graph_title] = 'Churn vs Complexity'
-        else
-          date_string = since
-          since = Date.strptime(since, '%Y-%m-%d')
-          options[:graph_title] = "Churn vs Complexity since #{date_string}"
-        end
-      rescue StandardError
-        raise Error, "Invalid date #{since}, please use correct format, YYYY-MM-DD"
-      end
-
       config = Config.new(**options)
 
       config.validate!
 
-      puts config.to_engine.check(folder:, since:)
+      puts config.to_engine.check(folder:)
     end
   end
 end

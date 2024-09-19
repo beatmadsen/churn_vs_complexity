@@ -31,13 +31,17 @@ In order to use the `--java` flag, you must first install PMD manually, and the 
 Execute the `churn_vs_complexity` with the applicable arguments. Output in the requested format will be directed to stdout.
 
 ```
-churn_vs_complexity [options] folder
+Usage: churn_vs_complexity [options] folder
         --java                       Check complexity of java classes
         --ruby                       Check complexity of ruby files
         --csv                        Format output as CSV
         --graph                      Format output as HTML page with Churn vs Complexity graph
+        --summary                    Output summary statistics (mean and median) for churn and complexity
         --excluded PATTERN           Exclude file paths including this string. Can be used multiple times.
         --since YYYY-MM-DD           Calculate churn after this date
+    -m, --month                      Calculate churn for the month leading up to the most recent commit
+    -q, --quarter                    Calculate churn for the quarter leading up to the most recent commit
+    -y, --year                       Calculate churn for the year leading up to the most recent commit
     -h, --help                       Display help
 ```
 
@@ -47,6 +51,7 @@ churn_vs_complexity [options] folder
 
 `churn_vs_complexity --java --graph --exclude generated-sources --exclude generated-test-sources --since 2023-01-01 my_java_project > ~/Desktop/java-demo.html`
 
+`churn_vs_complexity --ruby --summary -m my_ruby_project >> ~/Desktop/monthly-report.txt`
 
 
 ## Development

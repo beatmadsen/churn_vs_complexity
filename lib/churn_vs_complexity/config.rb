@@ -6,21 +6,23 @@ module ChurnVsComplexity
       language:,
       serializer:,
       excluded: [],
-      graph_title: nil,
-      complexity_validator: ComplexityValidator
+      since: nil,
+      complexity_validator: ComplexityValidator,
+      since_validator: SinceValidator
     )
       @language = language
       @serializer = serializer
       @excluded = excluded
+      @since = since
       @complexity_validator = complexity_validator
-      @graph_title = graph_title
+      @since_validator = since_validator
     end
 
     def validate!
       raise Error, "Unsupported language: #{@language}" unless %i[java ruby].include?(@language)
-      raise Error, "Unsupported serializer: #{@serializer}" unless %i[none csv graph].include?(@serializer)
-      raise Error, 'Please provide a title for the graph' if @serializer == :graph && @graph_title.nil?
+      raise Error, "Unsupported serializer: #{@serializer}" unless %i[none csv graph summary].include?(@serializer)
 
+      @since_validator.validate!(@since)
       @complexity_validator.validate!(@language)
     end
 
@@ -32,6 +34,7 @@ module ChurnVsComplexity
           churn:,
           file_selector: FileSelector::Java.excluding(@excluded),
           serializer:,
+          since: @since,
         )
       when :ruby
         Engine.concurrent(
@@ -39,6 +42,7 @@ module ChurnVsComplexity
           churn:,
           file_selector: FileSelector::Ruby.excluding(@excluded),
           serializer:,
+          since: @since,
         )
       end
     end
@@ -54,7 +58,9 @@ module ChurnVsComplexity
       when :csv
         Serializer::CSV
       when :graph
-        Serializer::Graph.new(title: @graph_title)
+        Serializer::Graph.new
+      when :summary
+        Serializer::Summary
       end
     end
 
@@ -63,6 +69,25 @@ module ChurnVsComplexity
         case language
         when :java
           Complexity::PMDCalculator.check_dependencies!
+        end
+      end
+    end
+
+    module SinceValidator
+      def self.validate!(since)
+        # since can be nil, a date string or a keyword (:month, :quarter, :year)
+        return if since.nil?
+
+        if since.is_a?(Symbol)
+          raise Error, "Invalid since value #{since}" unless %i[month quarter year].include?(since)
+        elsif since.is_a?(String)
+          begin
+            Date.strptime(since, '%Y-%m-%d')
+          rescue StandardError
+            raise Error, "Invalid date #{since}, please use correct format, YYYY-MM-DD"
+          end
+        else
+          raise Error, "Invalid since value #{since}"
         end
       end
     end

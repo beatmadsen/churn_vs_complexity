@@ -10,10 +10,13 @@ class IntegrationTest < TLDR
   end
 
   def test_stubbed_engine_completes
-    result = ChurnVsComplexity::Engine.concurrent(
+    out = ChurnVsComplexity::Engine.concurrent(
+      since: '2024-01-01',
       complexity: TestComplexityCalculator,
       churn: TestChurnCalculator,
-    ).check(folder: FOLDER, since: Date.new(2000, 1, 1))
+    ).check(folder: FOLDER)
+
+    result = out[:values_by_file]
 
     assert_instance_of Hash, result
     assert(result.keys.all? { |k| k.is_a?(String) })
@@ -37,10 +40,10 @@ class IntegrationTest < TLDR
       language: :java,
       serializer: :graph,
       excluded: %w[exclude-me me-too-also],
-      graph_title: 'Integration Test, part 2',
+      since: '2000-01-01',
     )
     config.validate!
-    result = config.to_engine.check(folder: 'tmp/test-support/java', since: Date.new(2000, 1, 1))
+    result = config.to_engine.check(folder: 'tmp/test-support/java')
     refute_nil result
     refute_empty result
   end
@@ -49,9 +52,10 @@ class IntegrationTest < TLDR
     config = ChurnVsComplexity::Config.new(
       language: :ruby,
       serializer: :csv,
+      since: '2000-01-01',
     )
     config.validate!
-    result = config.to_engine.check(folder: 'lib', since: Date.new(2000, 1, 1))
+    result = config.to_engine.check(folder: 'lib')
     refute_nil result
     refute_empty result
   end
@@ -84,4 +88,6 @@ module TestChurnCalculator
     `cat #{file}`
     File.basename(file).length
   end
+
+  def self.date_of_latest_commit(folder:) = Date.parse('2024-01-01')
 end

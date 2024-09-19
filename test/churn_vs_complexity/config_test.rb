@@ -23,14 +23,17 @@ module ChurnVsComplexity
     end
 
     def test_that_it_supports_graphing
-      subject = config(serializer: :graph, graph_title: 'This is the title')
+      subject = config(serializer: :graph, since: '2024-01-01')
       subject.validate!
       result = subject.to_engine
       assert_instance_of Engine, result
     end
 
-    def test_that_graphing_needs_title
-      assert_raises(Error) { config(serializer: :graph).validate! }
+    def test_that_it_supports_summary
+      subject = config(serializer: :summary)
+      subject.validate!
+      result = subject.to_engine
+      assert_instance_of Engine, result
     end
 
     def test_that_it_validates_complexity_plugin
@@ -43,8 +46,8 @@ module ChurnVsComplexity
     private
 
     def config(language: :java, serializer: :csv, excluded: [], complexity_validator: ValidatorStub,
-               graph_title: nil)
-      Config.new(language:, serializer:, excluded:, complexity_validator:, graph_title:)
+               since: nil)
+      Config.new(language:, serializer:, excluded:, complexity_validator:, since:)
     end
 
     module ValidatorStub

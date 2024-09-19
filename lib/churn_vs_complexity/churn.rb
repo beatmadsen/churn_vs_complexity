@@ -11,6 +11,10 @@ module ChurnVsComplexity
           with_follow.zero? ? repo(folder).log.path(file).size : with_follow
         end
 
+        def date_of_latest_commit(folder:)
+          repo(folder).log.first.date
+        end
+
         private
 
         def calculate_with_follow(folder, file, since)
