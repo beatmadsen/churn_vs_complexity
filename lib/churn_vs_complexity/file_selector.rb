@@ -4,7 +4,8 @@ module ChurnVsComplexity
   module FileSelector
     module Any
       def self.select_files(folder)
-        Dir.glob("#{folder}/**/*").select { |f| File.file?(f) }
+        included = Dir.glob("#{folder}/**/*").select { |f| File.file?(f) }
+        { explicitly_excluded: [], included: }
       end
     end
 
@@ -15,9 +16,16 @@ module ChurnVsComplexity
       end
 
       def select_files(folder)
-        Dir.glob("#{folder}/**/*").select do |f|
-          !has_excluded_pattern?(f) && has_correct_extension?(f) && File.file?(f)
+        were_excluded = []
+        were_included = []
+        Dir.glob("#{folder}/**/*").each do |f|
+          if has_excluded_pattern?(f)
+            were_excluded << f
+          elsif has_correct_extension?(f) && File.file?(f)
+            were_included << f
+          end
         end
+        { explicitly_excluded: were_excluded, included: were_included }
       end
 
       private

@@ -27,6 +27,10 @@ module ChurnVsComplexity
         mean_complexity = complexity_values.sum / complexity_values.size
         median_complexity = complexity_values.sort[complexity_values.size / 2]
 
+        product = values_by_file.map { |_, values| values[0].to_f * values[1].to_f }
+        mean_product = product.sum / product.size
+        median_product = product.sort[product.size / 2]
+
         <<~SUMMARY
           #{Serializer.title(result)}
 
@@ -37,6 +41,9 @@ module ChurnVsComplexity
 
           Complexity:
           Mean #{mean_complexity}, Median #{median_complexity}
+
+          Product of churn and complexity:
+          Mean #{mean_product}, Median #{median_product}
         SUMMARY
       end
     end

@@ -66,7 +66,7 @@ class TestComplexityCalculator
 
   def self.calculate(folder:)
     # simulate calling an external command that prints the complexity to stdout by doing echo 42 and getting the 42 back
-    ChurnVsComplexity::FileSelector::Any.select_files(folder).to_h do |file|
+    ChurnVsComplexity::FileSelector::Any.select_files(folder)[:included].to_h do |file|
       `cat #{file}`
       s = stable_hash(File.basename(file))
       puts "Stable hash was #{s} for #{file}"
