@@ -6,3 +6,5 @@
 
 - Introduce `--summary` flag to output summary statistics for churn and complexity
 - Introduce `--month`, `--quarter`, and `--year` short-hand flags to calculate churn for different time periods relative to the most recent commit
+- Improve selection of observations included in the output
+- Fixed calculation of churn that would never be zero
