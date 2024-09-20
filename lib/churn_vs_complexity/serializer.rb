@@ -30,6 +30,8 @@ module ChurnVsComplexity
         <<~SUMMARY
           #{Serializer.title(result)}
 
+          Number of observations: #{values_by_file.size}
+
           Churn:
           Mean #{mean_churn}, Median #{median_churn}
 

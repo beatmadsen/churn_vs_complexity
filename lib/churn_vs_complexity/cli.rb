@@ -9,7 +9,6 @@ module ChurnVsComplexity
     def self.run!
       # Create an options hash to store parsed options
       options = { excluded: [] }
-      since = nil
 
       # Initialize OptionParser
       OptionParser.new do |opts|
@@ -41,19 +40,24 @@ module ChurnVsComplexity
         end
 
         opts.on('--since YYYY-MM-DD', 'Calculate churn after this date') do |value|
-          since = value
+          options[:since] = value
         end
 
         opts.on('-m', '--month', 'Calculate churn for the month leading up to the most recent commit') do
-          since = :month
+          options[:since] = :month
         end
 
         opts.on('-q', '--quarter', 'Calculate churn for the quarter leading up to the most recent commit') do
-          since = :quarter
+          options[:since] = :quarter
         end
 
         opts.on('-y', '--year', 'Calculate churn for the year leading up to the most recent commit') do
-          since = :year
+          options[:since] = :year
+        end
+
+        opts.on('--dry-run', 'Echo the chosen options from the CLI') do
+          puts options
+          exit
         end
 
         opts.on('-h', '--help', 'Display help') do

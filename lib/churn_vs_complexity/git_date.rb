@@ -3,6 +3,7 @@
 module ChurnVsComplexity
   module GitDate
     def self.git_period(cli_arg_since, latest_commit_date)
+      latest_commit_date = latest_commit_date.to_date
       if cli_arg_since.nil?
         NoStartGitPeriod.new(latest_commit_date)
       elsif cli_arg_since.is_a?(Symbol)

@@ -53,11 +53,12 @@ module ChurnVsComplexity
     end
 
     def combine_results
-      intersection = @churn_results.keys & @complexity_results.keys
-
       result = {}
-      result[:values_by_file] = intersection.each_with_object({}) do |file, acc|
-        acc[file] = [@churn_results[file], @complexity_results[file]]
+      # TODO: filter out explicitly excluded files while not filtering out files that didn't churn
+      result[:values_by_file] = @complexity_results.keys.each_with_object({}) do |file, acc|
+        # File with complexity score might not have churned in queried period, 
+        # set zero churn on miss
+        acc[file] = [@churn_results[file] || 0, @complexity_results[file]]
       end
       result[:git_period] = @git_period
       result
