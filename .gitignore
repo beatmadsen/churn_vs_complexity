@@ -9,6 +9,9 @@
 !/tmp/test-support/
 !/tmp/pmd-support/
 /tmp/pmd-support/pmd-cache
+!/tmp/eslint-support/
+/tmp/eslint-support/node_modules
+/tmp/eslint-support/package-lock.json
 !/tmp/template/
 
 .DS_Store
