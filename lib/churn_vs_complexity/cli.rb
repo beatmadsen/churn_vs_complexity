@@ -22,6 +22,10 @@ module ChurnVsComplexity
           options[:language] = :ruby
         end
 
+        opts.on('--javascript', 'Check complexity of javascript files') do
+          options[:language] = :javascript
+        end
+
         opts.on('--csv', 'Format output as CSV') do
           options[:serializer] = :csv
         end

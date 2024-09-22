@@ -59,6 +59,17 @@ class IntegrationTest < TLDR
     refute_nil result
     refute_empty result
   end
+
+  def test_javascript_summary_completes
+    config = ChurnVsComplexity::Config.new(
+      language: :javascript,
+      serializer: :summary,
+      since: '2000-01-01',
+    )
+    config.validate!
+    result = config.to_engine.check(folder: 'tmp/test-support/javascript')
+    refute_nil result
+  end
 end
 
 class TestComplexityCalculator

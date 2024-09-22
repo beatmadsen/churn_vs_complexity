@@ -14,6 +14,15 @@ module ChurnVsComplexity
       assert_instance_of Engine, result
     end
 
+    def test_that_it_supports_javascript
+      config(language: :javascript).validate!
+    end
+
+    def test_that_it_creates_an_engine_for_javascript
+      result = config(language: :javascript).to_engine
+      assert_instance_of Engine, result
+    end
+
     def test_that_it_raises_an_error_for_unsupported_language
       assert_raises(Error) { config(language: :csharp).validate! }
     end

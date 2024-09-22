@@ -50,5 +50,11 @@ module ChurnVsComplexity
         Excluding.new(['.rb'], excluded)
       end
     end
+
+    module JavaScript
+      def self.excluding(excluded)
+        Excluding.new(['.js'], excluded)
+      end
+    end
   end
 end

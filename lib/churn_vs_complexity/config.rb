@@ -19,7 +19,7 @@ module ChurnVsComplexity
     end
 
     def validate!
-      raise Error, "Unsupported language: #{@language}" unless %i[java ruby].include?(@language)
+      raise Error, "Unsupported language: #{@language}" unless %i[java ruby javascript].include?(@language)
       raise Error, "Unsupported serializer: #{@serializer}" unless %i[none csv graph summary].include?(@serializer)
 
       @since_validator.validate!(@since)
@@ -41,6 +41,14 @@ module ChurnVsComplexity
           complexity: Complexity::FlogCalculator,
           churn:,
           file_selector: FileSelector::Ruby.excluding(@excluded),
+          serializer:,
+          since: @since,
+        )
+      when :javascript
+        Engine.concurrent(
+          complexity: Complexity::ESLintCalculator,
+          churn:,
+          file_selector: FileSelector::JavaScript.excluding(@excluded),
           serializer:,
           since: @since,
         )

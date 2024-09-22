@@ -1,17 +1,14 @@
 # frozen_string_literal: true
 
-require 'flog'
-
 module ChurnVsComplexity
   module Complexity
-    module FlogCalculator
+    module ESLintCalculator
       class << self
         def folder_based? = false
 
         def calculate(file:)
-          flog = Flog.new
-          flog.flog(file)
-          { file => flog.total_score }
+          # TODO: Integrate with eslint
+          { file => 42 }
         end
       end
     end
