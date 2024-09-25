@@ -22,7 +22,7 @@ module ChurnVsComplexity
           options[:language] = :ruby
         end
 
-        opts.on('--javascript', 'Check complexity of javascript files') do
+        opts.on('--js', '--ts', '--javascript', '--typescript', 'Check complexity of javascript and typescript files') do
           options[:language] = :javascript
         end
 

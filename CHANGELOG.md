@@ -12,3 +12,8 @@
 - Fix bug in CLI where new flags and `--since` would not be recognized
 - Improve selection of observations included in the output
 - Fixed calculation of churn that would never be zero
+
+## [1.3.0] - 2024-09-26
+
+- Add support for javascript and typescript complexity calculation using eslint
+- Fixed behavior when --since or short-hand flags were not provided

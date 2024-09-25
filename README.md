@@ -34,6 +34,8 @@ Execute the `churn_vs_complexity` with the applicable arguments. Output in the r
 Usage: churn_vs_complexity [options] folder
         --java                       Check complexity of java classes
         --ruby                       Check complexity of ruby files
+        --js, --ts, --javascript, --typescript
+                                     Check complexity of javascript and typescript files
         --csv                        Format output as CSV
         --graph                      Format output as HTML page with Churn vs Complexity graph
         --summary                    Output summary statistics (mean and median) for churn and complexity
@@ -42,6 +44,7 @@ Usage: churn_vs_complexity [options] folder
     -m, --month                      Calculate churn for the month leading up to the most recent commit
     -q, --quarter                    Calculate churn for the quarter leading up to the most recent commit
     -y, --year                       Calculate churn for the year leading up to the most recent commit
+        --dry-run                    Echo the chosen options from the CLI
     -h, --help                       Display help
 ```
 

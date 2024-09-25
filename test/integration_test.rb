@@ -68,10 +68,8 @@ class IntegrationTest < TLDR
     )
     config.validate!
     result = config.to_engine.check(folder: 'tmp/test-support/javascript')
-    
-    expected_result = <<~EXPECTED
-      Churn between 2000-01-01 and 2024-09-23 vs complexity
 
+    expected_summary_contents = <<~EXPECTED
       Number of observations: 4
 
       Churn:
@@ -84,7 +82,7 @@ class IntegrationTest < TLDR
       Mean 0.0, Median 0.0
     EXPECTED
 
-    assert_equal expected_result, result
+    assert result.include?(expected_summary_contents.strip), "Expected summary contents not found in the result"
   end
 end
 

@@ -10,9 +10,10 @@ module ChurnVsComplexity
     end
 
     class Excluding
-      def initialize(extensions, excluded)
+      def initialize(extensions, excluded, convert_to_absolute_path = false)
         @extensions = extensions
         @excluded = excluded
+        @convert_to_absolute_path = convert_to_absolute_path
       end
 
       def select_files(folder)
@@ -24,6 +25,10 @@ module ChurnVsComplexity
           elsif has_correct_extension?(f) && File.file?(f)
             were_included << f
           end
+        end
+        if @convert_to_absolute_path
+          were_excluded.map! { |f| File.absolute_path(f) }
+          were_included.map! { |f| File.absolute_path(f) }
         end
         { explicitly_excluded: were_excluded, included: were_included }
       end
@@ -53,7 +58,7 @@ module ChurnVsComplexity
 
     module JavaScript
       def self.excluding(excluded)
-        Excluding.new(['.js', '.jsx', '.ts', '.tsx'], excluded)
+        Excluding.new(['.js', '.jsx', '.ts', '.tsx'], excluded, true)
       end
     end
   end
