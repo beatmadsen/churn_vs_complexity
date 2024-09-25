@@ -5,17 +5,27 @@ module ChurnVsComplexity
     module ESLintCalculator
       class << self
         def folder_based? = false
+          
+        def calculate(files:)
+          dir_path = File.join(gem_root, 'tmp', 'eslint-support')
+          script_path = File.join(dir_path, 'complexity-calculator.js')
+          install_command = "npm install --prefix '#{dir_path}'"
+          `#{install_command}`
 
-        def calculate(file:)
-          # TODO: Integrate with eslint
-          { file => 42 }
+
+          command = "node #{script_path} '#{files.to_json}'"
+          complexity = `#{command}`
+
+          if complexity.empty?
+            raise Error, "Failed to calculate complexity"
+          end
+          all = JSON.parse(complexity)
+          all.to_h do |abc|
+            [abc['file'], abc['complexity']]
+          end
         end
 
         private
-
-        def resolve_script_path
-          File.join(gem_root, 'tmp', 'eslint-support', 'complexity-calculator.js')
-        end
 
         def gem_root
           File.expand_path('../../..', __dir__)

@@ -68,7 +68,23 @@ class IntegrationTest < TLDR
     )
     config.validate!
     result = config.to_engine.check(folder: 'tmp/test-support/javascript')
-    refute_nil result
+    
+    expected_result = <<~EXPECTED
+      Churn between 2000-01-01 and 2024-09-23 vs complexity
+
+      Number of observations: 4
+
+      Churn:
+      Mean 0.0, Median 0.0
+
+      Complexity:
+      Mean 5.0, Median 4.0
+
+      Product of churn and complexity:
+      Mean 0.0, Median 0.0
+    EXPECTED
+
+    assert_equal expected_result, result
   end
 end
 

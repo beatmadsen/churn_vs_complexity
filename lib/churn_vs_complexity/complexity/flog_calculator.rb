@@ -8,10 +8,13 @@ module ChurnVsComplexity
       class << self
         def folder_based? = false
 
-        def calculate(file:)
+        def calculate(files:)
           flog = Flog.new
-          flog.flog(file)
-          { file => flog.total_score }
+          # TODO: Run this concurrently
+          files.to_h do |file|
+            flog.flog(file)
+            [file, flog.total_score]
+          end
         end
       end
     end

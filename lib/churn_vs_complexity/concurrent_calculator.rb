@@ -30,9 +30,7 @@ module ChurnVsComplexity
           files[:explicitly_excluded].each { |file| result.delete(file) }
           result
         else
-          files[:included].each_with_object({}) do |file, acc|
-            acc.merge!(@complexity.calculate(file:))
-          end
+          @complexity.calculate(files: files[:included])
         end
     end
 

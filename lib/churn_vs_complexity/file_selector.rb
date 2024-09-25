@@ -53,7 +53,7 @@ module ChurnVsComplexity
 
     module JavaScript
       def self.excluding(excluded)
-        Excluding.new(['.js'], excluded)
+        Excluding.new(['.js', '.jsx', '.ts', '.tsx'], excluded)
       end
     end
   end
