@@ -22,7 +22,7 @@ module ChurnVsComplexity
         @end_date = end_date
       end
 
-      def effective_start_date = Time.at(0)
+      def effective_start_date = Time.at(0).to_date
 
       def requested_start_date = nil
     end

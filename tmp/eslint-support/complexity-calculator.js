@@ -10,13 +10,15 @@ async function analyzeComplexity(files) {
         {
             rules: {
                 'complexity': ['warn', 0],
-            },            
+            },
+                        
         }
     );
 
     const linter = new ESLint({
         overrideConfigFile: true,
         overrideConfig,
+        cwd: '/',
     });
 
     try {
@@ -26,7 +28,12 @@ async function analyzeComplexity(files) {
             const complexity = messages.reduce((sum, msg) => {
                 const complexityValue = parseInt(msg.message.match(/\d+/)[0], 10);
                 return sum + complexityValue;
-            }, 0);            
+            }, 0);
+            
+            if (complexity === 0) {
+                console.error("File has no complexity", result);
+            }
+
             return {
                 file: result.filePath,
                 complexity,

@@ -12,7 +12,7 @@ module ChurnVsComplexity
     def test_git_period_with_nil_since
       period = ChurnVsComplexity::GitDate.git_period(nil, @latest_commit_time)
       assert_equal @latest_commit_date, period.end_date
-      assert_equal Time.at(0), period.effective_start_date
+      assert_equal Time.at(0).to_date, period.effective_start_date
       assert_nil period.requested_start_date
     end
 
