@@ -13,6 +13,9 @@
 /tmp/eslint-support/node_modules
 /tmp/eslint-support/package-lock.json
 !/tmp/template/
+!/tmp/timetravel/
+/tmp/timetravel/*
+!/tmp/timetravel/.keep
 
 .DS_Store
 *.gem
