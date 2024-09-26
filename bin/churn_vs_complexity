@@ -7,5 +7,6 @@ require 'churn_vs_complexity'
 begin
   ChurnVsComplexity::CLI.run!
 rescue StandardError => e
+  $stderr.puts e.backtrace
   warn e.message
 end

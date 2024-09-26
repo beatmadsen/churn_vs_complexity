@@ -8,7 +8,8 @@ module ChurnVsComplexity
       excluded: [],
       since: nil,
       complexity_validator: ComplexityValidator,
-      since_validator: SinceValidator
+      since_validator: SinceValidator,
+      **ignored
     )
       @language = language
       @serializer = serializer
@@ -24,6 +25,10 @@ module ChurnVsComplexity
 
       @since_validator.validate!(@since)
       @complexity_validator.validate!(@language)
+    end
+
+    def timetravel
+      Timetravel.new(since: @since, engine: to_engine)
     end
 
     def to_engine

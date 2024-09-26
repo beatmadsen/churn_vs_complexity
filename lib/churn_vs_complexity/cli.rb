@@ -61,26 +61,6 @@ module ChurnVsComplexity
 
         opts.on('--timetravel', 'Calculate summary for previous commits at intervals throughout project history') do
           options[:mode] = :timetravel
-
-          # First argument that is not an option is the folder
-          folder = ARGV.first
-          repo = Git.open(folder)
-
-          # locate tmp folder relative to this file
-          tt_folder = File.expand_path('../../../tmp/timetravel/1', __FILE__)
-          $stderr.puts "Using #{tt_folder} as the timetravel folder"
-          FileUtils.mkdir_p tt_folder
-
-          # find old sha
-          sha = repo.log[1].sha[0,7]
-          $stderr.puts "Using #{sha} as the old sha"
-          command = "cd #{folder} && git worktree add -f #{tt_folder} #{sha}"
-          $stderr.puts "Running #{command}"
-          `#{command}`
-
-
-          exit          
-
         end
 
         opts.on('--dry-run', 'Echo the chosen options from the CLI') do
@@ -108,7 +88,11 @@ module ChurnVsComplexity
 
       config.validate!
 
-      puts config.to_engine.check(folder:)
+      if options[:mode] == :timetravel
+        puts config.timetravel.go(folder:)
+      else
+        puts config.to_engine.check(folder:)
+      end
     end
   end
 end

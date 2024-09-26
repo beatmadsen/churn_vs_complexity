@@ -13,6 +13,7 @@ require_relative 'churn_vs_complexity/cli'
 require_relative 'churn_vs_complexity/config'
 require_relative 'churn_vs_complexity/serializer'
 require_relative 'churn_vs_complexity/git_date'
+require_relative 'churn_vs_complexity/timetravel'
 
 module ChurnVsComplexity
   class Error < StandardError; end
