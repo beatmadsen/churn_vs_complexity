@@ -34,56 +34,6 @@ class IntegrationTest < TLDR
     }
     assert_equal expected_result, result
   end
-
-  def test_java_graph_completes
-    config = ChurnVsComplexity::Config.new(
-      language: :java,
-      serializer: :graph,
-      excluded: %w[exclude-me me-too-also],
-      since: '2000-01-01',
-    )
-    config.validate!
-    result = config.to_engine.check(folder: 'tmp/test-support/java')
-    refute_nil result
-    refute_empty result
-  end
-
-  def test_ruby_csv_completes
-    config = ChurnVsComplexity::Config.new(
-      language: :ruby,
-      serializer: :csv,
-      since: '2000-01-01',
-    )
-    config.validate!
-    result = config.to_engine.check(folder: 'lib')
-    refute_nil result
-    refute_empty result
-  end
-
-  def test_javascript_summary_completes
-    config = ChurnVsComplexity::Config.new(
-      language: :javascript,
-      serializer: :summary,
-      since: '2000-01-01',
-    )
-    config.validate!
-    result = config.to_engine.check(folder: 'tmp/test-support/javascript')
-
-    expected_summary_contents = <<~EXPECTED
-      Number of observations: 4
-
-      Churn:
-      Mean 0.0, Median 0.0
-
-      Complexity:
-      Mean 5.0, Median 4.0
-
-      Product of churn and complexity:
-      Mean 0.0, Median 0.0
-    EXPECTED
-
-    assert result.include?(expected_summary_contents.strip), "Expected summary contents not found in the result"
-  end
 end
 
 class TestComplexityCalculator

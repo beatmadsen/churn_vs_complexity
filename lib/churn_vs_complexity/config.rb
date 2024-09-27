@@ -9,7 +9,7 @@ module ChurnVsComplexity
       since: nil,
       complexity_validator: ComplexityValidator,
       since_validator: SinceValidator,
-      **ignored
+      **options
     )
       @language = language
       @serializer = serializer
@@ -17,6 +17,7 @@ module ChurnVsComplexity
       @since = since
       @complexity_validator = complexity_validator
       @since_validator = since_validator
+      @options = options
     end
 
     def validate!
@@ -28,7 +29,7 @@ module ChurnVsComplexity
     end
 
     def timetravel
-      Timetravel.new(since: @since, engine: to_engine)
+      Timetravel.new(since: @since, engine: to_engine, jump_days: @options[:jump_days])
     end
 
     def to_engine

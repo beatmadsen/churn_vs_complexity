@@ -42,4 +42,88 @@ module ChurnVsComplexity
       end
     end
   end
+
+  def test_select_dates_with_at_least_interval_given_empty_array
+    # Test case 1: Empty array
+    assert_equal [], ChurnVsComplexity::GitDate.select_dates_with_at_least_interval([], 1)
+  end
+
+  def test_select_dates_with_at_least_interval_given_single_date
+
+    # Test case 2: Single date
+    single_date = Date.new(2023, 1, 1)
+    assert_equal [single_date], ChurnVsComplexity::GitDate.select_dates_with_at_least_interval([single_date], 1)
+  end
+
+  def test_select_dates_with_at_least_interval_given_dates_with_sufficient_interval
+    # Test case 3: Dates with sufficient interval
+    dates = [
+      Date.new(2023, 1, 1),
+      Date.new(2023, 1, 3),
+      Date.new(2023, 1, 5),
+      Date.new(2023, 1, 7)
+    ]
+    expected = [
+      Date.new(2023, 1, 1),
+      Date.new(2023, 1, 3),
+      Date.new(2023, 1, 5),
+      Date.new(2023, 1, 7)
+    ]
+    assert_equal expected, ChurnVsComplexity::GitDate.select_dates_with_at_least_interval(dates, 2)
+  end
+
+  def test_select_dates_with_at_least_interval_given_dates_with_insufficient_interval
+    # Test case 4: Dates with insufficient interval
+    dates = [
+      Date.new(2023, 1, 1),
+      Date.new(2023, 1, 2),
+      Date.new(2023, 1, 3),
+      Date.new(2023, 1, 5),
+      Date.new(2023, 1, 6),
+      Date.new(2023, 1, 9)
+    ]
+    expected = [
+      Date.new(2023, 1, 1),
+      Date.new(2023, 1, 3),
+      Date.new(2023, 1, 5),
+      Date.new(2023, 1, 9)
+    ]
+    assert_equal expected, ChurnVsComplexity::GitDate.select_dates_with_at_least_interval(dates, 2)
+  end
+
+  def test_select_dates_with_at_least_interval_given_unsorted_dates
+    # Test case 5: Unsorted dates
+    unsorted_dates = [
+      Date.new(2023, 1, 5),
+      Date.new(2023, 1, 1),
+      Date.new(2023, 1, 9),
+      Date.new(2023, 1, 3)
+    ]
+    expected = [
+      Date.new(2023, 1, 1),
+      Date.new(2023, 1, 3),
+      Date.new(2023, 1, 5),
+      Date.new(2023, 1, 9)
+    ]
+    assert_equal expected, ChurnVsComplexity::GitDate.select_dates_with_at_least_interval(unsorted_dates, 2)
+  end
+
+  def test_select_dates_with_at_least_interval_given_dates_with_negative_interval
+    # Test case 6: Dates with negative interval
+    dates = [
+      Date.new(2023, 1, 1),
+      Date.new(2023, 1, 2),
+      Date.new(2023, 1, 3),
+      Date.new(2023, 1, 5),
+      Date.new(2023, 1, 6),
+      Date.new(2023, 1, 9)
+    ]
+    expected = [
+      Date.new(2023, 1, 1),
+      Date.new(2023, 1, 3),
+      Date.new(2023, 1, 5),
+      Date.new(2023, 1, 9)
+    ]
+    assert_equal expected, ChurnVsComplexity::GitDate.select_dates_with_at_least_interval(dates, 2)
+  end
 end

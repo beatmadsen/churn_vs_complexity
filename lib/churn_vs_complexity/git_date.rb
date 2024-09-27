@@ -2,6 +2,16 @@
 
 module ChurnVsComplexity
   module GitDate
+
+    def self.select_dates_with_at_least_interval(dates, interval)
+      ds = dates.sort
+      ds.each_with_object([]) do |date, acc|
+        if acc.empty? || date - acc.last >= interval
+          acc << date
+        end
+      end
+    end
+
     def self.git_period(cli_arg_since, latest_commit_date)
       latest_commit_date = latest_commit_date.to_date
       if cli_arg_since.nil?

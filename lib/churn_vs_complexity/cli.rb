@@ -59,8 +59,9 @@ module ChurnVsComplexity
           options[:since] = :year
         end
 
-        opts.on('--timetravel', 'Calculate summary for previous commits at intervals throughout project history') do
+        opts.on('--timetravel N', 'Calculate summary for all commits at intervals of N days throughout project history') do |value|
           options[:mode] = :timetravel
+          options[:jump_days] = value.to_i
         end
 
         opts.on('--dry-run', 'Echo the chosen options from the CLI') do
