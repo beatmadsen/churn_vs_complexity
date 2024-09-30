@@ -10,7 +10,7 @@ module ChurnVsComplexity
 
         def calculate(files:)
           flog = Flog.new
-          # TODO: Run this concurrently
+          #  TODO: Run this concurrently
           files.to_h do |file|
             flog.flog(file)
             [file, flog.total_score]

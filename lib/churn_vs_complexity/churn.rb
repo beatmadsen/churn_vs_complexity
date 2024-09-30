@@ -10,7 +10,7 @@ module ChurnVsComplexity
           git_dir = File.join(folder, '.git')
           earliest_date = [date_of_first_commit(folder:), since].max
           formatted_date = earliest_date.strftime('%Y-%m-%d')
-          cmd = %Q(git --git-dir #{git_dir} --work-tree #{folder} log --format="%H" --follow --since="#{formatted_date}" -- #{file} | wc -l)
+          cmd = %(git --git-dir #{git_dir} --work-tree #{folder} log --format="%H" --follow --since="#{formatted_date}" -- #{file} | wc -l)
           `#{cmd}`.to_i
         end
 

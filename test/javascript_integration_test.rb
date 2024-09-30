@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class JavascriptIntegrationTest < TLDR
-
   def test_javascript_summary_completes
     config = ChurnVsComplexity::Config.new(
       language: :javascript,
@@ -26,6 +25,6 @@ class JavascriptIntegrationTest < TLDR
       Mean 0.0, Median 0.0
     EXPECTED
 
-    assert result.include?(expected_summary_contents.strip), "Expected summary contents not found in the result"
+    assert result.include?(expected_summary_contents.strip), 'Expected summary contents not found in the result'
   end
 end

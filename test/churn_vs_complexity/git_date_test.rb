@@ -49,7 +49,6 @@ module ChurnVsComplexity
   end
 
   def test_select_dates_with_at_least_interval_given_single_date
-
     # Test case 2: Single date
     single_date = Date.new(2023, 1, 1)
     assert_equal [single_date], ChurnVsComplexity::GitDate.select_dates_with_at_least_interval([single_date], 1)
@@ -61,13 +60,13 @@ module ChurnVsComplexity
       Date.new(2023, 1, 1),
       Date.new(2023, 1, 3),
       Date.new(2023, 1, 5),
-      Date.new(2023, 1, 7)
+      Date.new(2023, 1, 7),
     ]
     expected = [
       Date.new(2023, 1, 1),
       Date.new(2023, 1, 3),
       Date.new(2023, 1, 5),
-      Date.new(2023, 1, 7)
+      Date.new(2023, 1, 7),
     ]
     assert_equal expected, ChurnVsComplexity::GitDate.select_dates_with_at_least_interval(dates, 2)
   end
@@ -80,13 +79,13 @@ module ChurnVsComplexity
       Date.new(2023, 1, 3),
       Date.new(2023, 1, 5),
       Date.new(2023, 1, 6),
-      Date.new(2023, 1, 9)
+      Date.new(2023, 1, 9),
     ]
     expected = [
       Date.new(2023, 1, 1),
       Date.new(2023, 1, 3),
       Date.new(2023, 1, 5),
-      Date.new(2023, 1, 9)
+      Date.new(2023, 1, 9),
     ]
     assert_equal expected, ChurnVsComplexity::GitDate.select_dates_with_at_least_interval(dates, 2)
   end
@@ -97,13 +96,13 @@ module ChurnVsComplexity
       Date.new(2023, 1, 5),
       Date.new(2023, 1, 1),
       Date.new(2023, 1, 9),
-      Date.new(2023, 1, 3)
+      Date.new(2023, 1, 3),
     ]
     expected = [
       Date.new(2023, 1, 1),
       Date.new(2023, 1, 3),
       Date.new(2023, 1, 5),
-      Date.new(2023, 1, 9)
+      Date.new(2023, 1, 9),
     ]
     assert_equal expected, ChurnVsComplexity::GitDate.select_dates_with_at_least_interval(unsorted_dates, 2)
   end
@@ -116,13 +115,13 @@ module ChurnVsComplexity
       Date.new(2023, 1, 3),
       Date.new(2023, 1, 5),
       Date.new(2023, 1, 6),
-      Date.new(2023, 1, 9)
+      Date.new(2023, 1, 9),
     ]
     expected = [
       Date.new(2023, 1, 1),
       Date.new(2023, 1, 3),
       Date.new(2023, 1, 5),
-      Date.new(2023, 1, 9)
+      Date.new(2023, 1, 9),
     ]
     assert_equal expected, ChurnVsComplexity::GitDate.select_dates_with_at_least_interval(dates, 2)
   end

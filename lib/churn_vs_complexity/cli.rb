@@ -22,7 +22,8 @@ module ChurnVsComplexity
           options[:language] = :ruby
         end
 
-        opts.on('--js', '--ts', '--javascript', '--typescript', 'Check complexity of javascript and typescript files') do
+        opts.on('--js', '--ts', '--javascript', '--typescript',
+                'Check complexity of javascript and typescript files',) do
           options[:language] = :javascript
         end
 
@@ -59,7 +60,8 @@ module ChurnVsComplexity
           options[:since] = :year
         end
 
-        opts.on('--timetravel N', 'Calculate summary for all commits at intervals of N days throughout project history') do |value|
+        opts.on('--timetravel N',
+                'Calculate summary for all commits at intervals of N days throughout project history',) do |value|
           options[:mode] = :timetravel
           options[:jump_days] = value.to_i
         end

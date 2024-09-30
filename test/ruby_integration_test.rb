@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class RubyIntegrationTest < TLDR
-
   def test_ruby_csv_completes
     config = ChurnVsComplexity::Config.new(
       language: :ruby,

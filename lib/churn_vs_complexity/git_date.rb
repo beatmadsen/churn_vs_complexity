@@ -2,13 +2,10 @@
 
 module ChurnVsComplexity
   module GitDate
-
     def self.select_dates_with_at_least_interval(dates, interval)
       ds = dates.sort
       ds.each_with_object([]) do |date, acc|
-        if acc.empty? || date - acc.last >= interval
-          acc << date
-        end
+        acc << date if acc.empty? || date - acc.last >= interval
       end
     end
 

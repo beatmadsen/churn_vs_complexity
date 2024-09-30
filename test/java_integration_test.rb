@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class JavaIntegrationTest < TLDR
-
   def test_java_graph_completes
     config = ChurnVsComplexity::Config.new(
       language: :java,

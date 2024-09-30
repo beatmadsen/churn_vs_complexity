@@ -30,7 +30,7 @@ module ChurnVsComplexity
 
     def timetravel
       engine = with_summary_hash.to_engine
-      Timetravel.new(since: @since, engine:, jump_days: @options[:jump_days])
+      Timetravel.new(since: @since, engine:, jump_days: @options[:jump_days], serializer: @serializer)
     end
 
     def to_engine
@@ -72,7 +72,7 @@ module ChurnVsComplexity
         since: @since,
         complexity_validator: @complexity_validator,
         since_validator: @since_validator,
-        **@options
+        **@options,
       )
     end
 

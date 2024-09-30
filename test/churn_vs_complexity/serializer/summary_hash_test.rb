@@ -16,7 +16,7 @@ module ChurnVsComplexity
           'file5' => [5, 3],
         }
         end_date = Date.new(2024, 1, 1)
-        git_period = GitPeriod.new(requested_start_date: nil, end_date: end_date)
+        git_period = GitPeriod.new(requested_start_date: nil, end_date:)
         result = SummaryHash.serialize({ values_by_file:, git_period: })
         assert_equal({
                        mean_churn: 3.0,
@@ -27,7 +27,7 @@ module ChurnVsComplexity
                        median_product: 12.0,
                        end_date:,
                      },
-                     result)
+                     result,)
       end
     end
   end
