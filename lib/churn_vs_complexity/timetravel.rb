@@ -12,21 +12,54 @@ module ChurnVsComplexity
       repo = Git.open(folder)
 
       commits = resolve_commits_with_interval(repo)
-      $stderr.puts "Found #{commits.size} commits:"
-      $stderr.puts commits.map(&:sha)
+      chunked = commits.each_slice(3).map do |chunk| 
+        { chunk:, pipe: IO.pipe }
+      end.to_a
 
+      pids = chunked.map do | c_and_p |
+        c_and_p => { chunk:, pipe: }
+        fork do
+          results = chunk.to_h do |commit|     
+            sha = commit.sha
+            # locate tmp folder relative to this file
+            tt_folder = File.expand_path("../../../tmp/timetravel/#{sha}", __FILE__)
+            
+            unless File.directory?(tt_folder)
+              FileUtils.mkdir_p(tt_folder)
+              command = "cd #{folder} && git worktree add -f #{tt_folder} #{sha}"
+              `#{command}`
+            end
+            result = @engine.check(folder: tt_folder)
+            [sha, "spiderman"]            
+          end
+          pipe[1].puts(JSON.dump(results))
+          pipe[1].close
+        end
+      end
 
-      # locate tmp folder relative to this file
-      tt_folder = File.expand_path('../../../tmp/timetravel/1', __FILE__)
-      $stderr.puts "Using #{tt_folder} as the timetravel folder"
-      FileUtils.mkdir_p tt_folder
+      combined = chunked.map do |c_and_p|
+        c_and_p => { chunk:, pipe: }
+        pipe[1].close
+        # read a single line from the pipe
+        part = begin
+          line = pipe[0].gets
+          JSON.parse(line)
+        rescue => e
+          $stderr.puts "Error parsing JSON: #{e}"
+          $stderr.puts "Line: #{line}"
+          {}
+        end
+        pipe[0].close
+        part
+      end.reduce({}, :merge)
 
-      # find old sha
-      sha = repo.log[1].sha[0,7]
-      $stderr.puts "Using #{sha} as the old sha"
-      command = "cd #{folder} && git worktree add -f #{tt_folder} #{sha}"
-      $stderr.puts "Running #{command}"
-      `#{command}`
+      pids.each do |pid|
+        Process.waitpid(pid)
+      end
+
+      puts combined
+
+      "Done with timetravel"
     end
 
     private
@@ -34,7 +67,6 @@ module ChurnVsComplexity
     def resolve_commits_with_interval(repo)
       git_period = GitDate.git_period(@since, Time.now.to_date)
       candidates = repo.log.since(git_period.effective_start_date).until(git_period.end_date).to_a
-      $stderr.puts "Found #{candidates.size} candidates"
       
       commits_by_date = candidates.group_by { |c| c.date.to_date }
 
