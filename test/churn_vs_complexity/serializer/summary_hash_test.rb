@@ -23,8 +23,10 @@ module ChurnVsComplexity
                        median_churn: 3.0,
                        mean_complexity: 7.8,
                        median_complexity: 3.0,
-                       mean_product: 23.2,
-                       median_product: 12.0,
+                       mean_alpha_score: 3.235835943461319,
+                       median_alpha_score: 3.428673469329448,
+                       mean_beta_score: 4.067536188270983,
+                       median_beta_score: 3.4642026514047934,
                        end_date:,
                      },
                      result,)

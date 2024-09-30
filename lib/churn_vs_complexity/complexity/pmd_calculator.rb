@@ -9,7 +9,10 @@ module ChurnVsComplexity
         def folder_based? = true
 
         def calculate(folder:)
-          output = `pmd check -d #{folder} -R #{resolve_ruleset_path} -f json -t #{CONCURRENCY}  --cache #{resolve_cache_path}`
+          cache_path = resolve_cache_path
+          output = `pmd check -d #{folder} -R #{resolve_ruleset_path} -f json -t #{CONCURRENCY}  --cache #{cache_path}`
+          File.delete(cache_path)
+
           Parser.new.parse(output)
         end
 
@@ -29,7 +32,7 @@ module ChurnVsComplexity
         end
 
         def resolve_cache_path
-          File.join(gem_root, 'tmp', 'pmd-support', 'pmd-cache')
+          File.join(gem_root, 'tmp', 'pmd-support', "pmd-cache-#{Process.pid}")
         end
 
         def gem_root

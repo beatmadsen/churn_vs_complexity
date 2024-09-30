@@ -18,8 +18,11 @@ module ChurnVsComplexity
           Complexity:
           Mean #{summary[:mean_complexity]}, Median #{summary[:median_complexity]}
 
-          Product of churn and complexity:
-          Mean #{summary[:mean_product]}, Median #{summary[:median_product]}
+          Alpha score:
+          Mean #{summary[:mean_alpha_score]}, Median #{summary[:median_alpha_score]}
+
+          Beta score:
+          Mean #{summary[:mean_beta_score]}, Median #{summary[:median_beta_score]}
         SUMMARY
       end
     end

@@ -49,15 +49,15 @@ module ChurnVsComplexity
         end
 
         opts.on('-m', '--month', 'Calculate churn for the month leading up to the most recent commit') do
-          options[:since] = :month
+          options[:relative_period] = :month
         end
 
         opts.on('-q', '--quarter', 'Calculate churn for the quarter leading up to the most recent commit') do
-          options[:since] = :quarter
+          options[:relative_period] = :quarter
         end
 
         opts.on('-y', '--year', 'Calculate churn for the year leading up to the most recent commit') do
-          options[:since] = :year
+          options[:relative_period] = :year
         end
 
         opts.on('--timetravel N',

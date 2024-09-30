@@ -6,7 +6,11 @@ require 'churn_vs_complexity'
 
 begin
   ChurnVsComplexity::CLI.run!
+rescue ChurnVsComplexity::ValidationError => e
+  warn e.message
+  exit 1
 rescue StandardError => e
   warn e.backtrace
   warn e.message
+  exit 2
 end

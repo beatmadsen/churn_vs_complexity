@@ -17,4 +17,5 @@ require_relative 'churn_vs_complexity/timetravel'
 
 module ChurnVsComplexity
   class Error < StandardError; end
+  class ValidationError < Error; end
 end

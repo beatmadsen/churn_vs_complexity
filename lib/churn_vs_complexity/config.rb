@@ -7,6 +7,7 @@ module ChurnVsComplexity
       serializer:,
       excluded: [],
       since: nil,
+      relative_period: nil,
       complexity_validator: ComplexityValidator,
       since_validator: SinceValidator,
       **options
@@ -15,22 +16,31 @@ module ChurnVsComplexity
       @serializer = serializer
       @excluded = excluded
       @since = since
+      @relative_period = relative_period
       @complexity_validator = complexity_validator
       @since_validator = since_validator
       @options = options
     end
 
     def validate!
-      raise Error, "Unsupported language: #{@language}" unless %i[java ruby javascript].include?(@language)
-      raise Error, "Unsupported serializer: #{@serializer}" unless %i[none csv graph summary].include?(@serializer)
+      raise ValidationError, "Unsupported language: #{@language}" unless %i[java ruby javascript].include?(@language)
 
-      @since_validator.validate!(@since)
+      SerializerValidator.validate!(serializer: @serializer, mode: @options[:mode])
+
+      @since_validator.validate!(since: @since, relative_period: @relative_period, mode: @options[:mode])
+      RelativePeriodValidator.validate!(relative_period: @relative_period, mode: @options[:mode])
       @complexity_validator.validate!(@language)
     end
 
     def timetravel
-      engine = with_summary_hash.to_engine
-      Timetravel.new(since: @since, engine:, jump_days: @options[:jump_days], serializer: @serializer)
+      engine = timetravel_engine_config.to_engine
+      Timetravel.new(
+        since: @since,
+        relative_period: @relative_period,
+        engine:,
+        jump_days: @options[:jump_days],
+        serializer: @serializer,
+      )
     end
 
     def to_engine
@@ -41,7 +51,7 @@ module ChurnVsComplexity
           churn:,
           file_selector: FileSelector::Java.excluding(@excluded),
           serializer:,
-          since: @since,
+          since: @since || @relative_period,
         )
       when :ruby
         Engine.concurrent(
@@ -49,7 +59,7 @@ module ChurnVsComplexity
           churn:,
           file_selector: FileSelector::Ruby.excluding(@excluded),
           serializer:,
-          since: @since,
+          since: @since || @relative_period,
         )
       when :javascript
         Engine.concurrent(
@@ -57,19 +67,20 @@ module ChurnVsComplexity
           churn:,
           file_selector: FileSelector::JavaScript.excluding(@excluded),
           serializer:,
-          since: @since,
+          since: @since || @relative_period,
         )
       end
     end
 
     private
 
-    def with_summary_hash
+    def timetravel_engine_config
       Config.new(
         language: @language,
         serializer: :summary_hash,
         excluded: @excluded,
-        since: @since,
+        since: nil, # since has a different meaning in timetravel mode
+        relative_period: @relative_period,
         complexity_validator: @complexity_validator,
         since_validator: @since_validator,
         **@options,
@@ -102,21 +113,45 @@ module ChurnVsComplexity
       end
     end
 
+    # TODO: unit test
+    module SerializerValidator
+      def self.validate!(serializer:, mode:)
+        raise ValidationError, "Unsupported serializer: #{serializer}" \
+          unless %i[none csv graph summary].include?(serializer)
+        raise ValidationError, 'Does not support --summary in --timetravel mode' \
+         if serializer == :summary && mode == :timetravel
+      end
+    end
+
+    # TODO: unit test
+    module RelativePeriodValidator
+      def self.validate!(relative_period:, mode:)
+        if mode == :timetravel && relative_period.nil?
+          raise ValidationError,
+                'Relative period is required in timetravel mode'
+        end
+        return if relative_period.nil? || %i[month quarter year].include?(relative_period)
+
+        raise ValidationError, "Invalid relative period #{relative_period}"
+      end
+    end
+
     module SinceValidator
-      def self.validate!(since)
+      def self.validate!(since:, relative_period:, mode:)
         # since can be nil, a date string or a keyword (:month, :quarter, :year)
         return if since.nil?
 
-        if since.is_a?(Symbol)
-          raise Error, "Invalid since value #{since}" unless %i[month quarter year].include?(since)
-        elsif since.is_a?(String)
-          begin
-            Date.strptime(since, '%Y-%m-%d')
-          rescue StandardError
-            raise Error, "Invalid date #{since}, please use correct format, YYYY-MM-DD"
-          end
-        else
-          raise Error, "Invalid since value #{since}"
+        unless mode == :timetravel || since.nil? || relative_period.nil?
+          raise ValidationError,
+                '--since and relative period (--month, --quarter, --year) can only be used together in --timetravel mode'
+        end
+
+        raise ValidationError, "Invalid since value #{since}" unless since.is_a?(String)
+
+        begin
+          Date.strptime(since, '%Y-%m-%d')
+        rescue Date::Error
+          raise ValidationError, "Invalid date #{since}, please use correct format, YYYY-MM-DD"
         end
       end
     end

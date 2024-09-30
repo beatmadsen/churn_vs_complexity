@@ -21,10 +21,14 @@ class JavascriptIntegrationTest < TLDR
       Complexity:
       Mean 5.0, Median 4.0
 
-      Product of churn and complexity:
-      Mean 0.0, Median 0.0
+      Alpha score:
+      Mean 0.00019999204658760359, Median 0.00019999500024998754
+
+      Beta score:
+      Mean 0.02079184966081483, Median 0.02000024999843752
     EXPECTED
 
-    assert result.include?(expected_summary_contents.strip), 'Expected summary contents not found in the result'
+    assert result.include?(expected_summary_contents.strip),
+           "Expected summary contents not found in the result: #{result}"
   end
 end
