@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Churn vs Complexity Over Time</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+</head>
+<body>
+  <canvas id="complexityChart" width="800" height="400"></canvas>
+  <canvas id="churnChart" width="800" height="400"></canvas>
+  <canvas id="productChart" width="800" height="400"></canvas>
+
+  <script>
+    // // Example data points from your Ruby gem
+    // const dataPoints = [
+    //   // INSERT DATA
+    // ];
+
+        // Example data points
+    const dataPoints = [
+      {
+        end_date: '2023-01-01',
+        mean_churn: 5.2,
+        median_churn: 4.8,
+        mean_complexity: 15.3,
+        median_complexity: 14.7,
+        mean_product: 79.56,
+        median_product: 70.56
+      },
+      {
+        end_date: '2023-02-01',
+        mean_churn: 5.5,
+        median_churn: 5.1,
+        mean_complexity: 15.8,
+        median_complexity: 15.2,
+        mean_product: 86.9,
+        median_product: 77.52
+      },
+      {
+        end_date: '2023-03-01',
+        mean_churn: 5.3,
+        median_churn: 4.9,
+        mean_complexity: 16.1,
+        median_complexity: 15.5,
+        mean_product: 85.33,
+        median_product: 75.95
+      },
+      {
+        end_date: '2023-04-01',
+        mean_churn: 5.7,
+        median_churn: 5.3,
+        mean_complexity: 16.5,
+        median_complexity: 15.9,
+        mean_product: 94.05,
+        median_product: 84.27
+      },
+      {
+        end_date: '2023-05-01',
+        mean_churn: 5.4,
+        median_churn: 5.0,
+        mean_complexity: 16.2,
+        median_complexity: 15.6,
+        mean_product: 87.48,
+        median_product: 78.0
+      },
+      {
+        end_date: '2023-06-01',
+        mean_churn: 5.6,
+        median_churn: 5.2,
+        mean_complexity: 16.7,
+        median_complexity: 16.1,
+        mean_product: 93.52,
+        median_product: 83.72
+      }
+    ];
+
+    // Extract dates for x-axis
+    const labels = dataPoints.map(point => point.end_date);
+
+    // Function to create a dataset
+    function createDataset(label, data, color) {
+      return {
+        label: label,
+        data: data,
+        borderColor: color,
+        backgroundColor: color,
+        fill: false,
+        tension: 0.1
+      };
+    }
+
+    // Function to create a chart
+    function createChart(ctx, title, datasets) {
+      return new Chart(ctx, {
+        type: 'line',
+        data: { labels: labels, datasets: datasets },
+        options: {
+          responsive: true,
+          plugins: {
+            title: { display: true, text: title }
+          },
+          scales: {
+            x: { type: 'time', time: { parser: 'yyyy-MM-dd', tooltipFormat: 'll' } },
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    // Create Complexity Chart
+    const complexityCtx = document.getElementById('complexityChart').getContext('2d');
+    createChart(complexityCtx, 'Complexity Over Time', [
+      createDataset('Mean Complexity', dataPoints.map(p => ({ x: p.end_date, y: p.mean_complexity })), 'rgb(75, 192, 192)'),
+      createDataset('Median Complexity', dataPoints.map(p => ({ x: p.end_date, y: p.median_complexity })), 'rgb(255, 99, 132)')
+    ]);
+
+    // Create Churn Chart
+    const churnCtx = document.getElementById('churnChart').getContext('2d');
+    createChart(churnCtx, 'Churn Over Time', [
+      createDataset('Mean Churn', dataPoints.map(p => ({ x: p.end_date, y: p.mean_churn })), 'rgb(54, 162, 235)'),
+      createDataset('Median Churn', dataPoints.map(p => ({ x: p.end_date, y: p.median_churn })), 'rgb(255, 206, 86)')
+    ]);
+
+    // Create Product Chart
+    const productCtx = document.getElementById('productChart').getContext('2d');
+    createChart(productCtx, 'Product Over Time', [
+      createDataset('Mean Product', dataPoints.map(p => ({ x: p.end_date, y: p.mean_product })), 'rgb(153, 102, 255)'),
+      createDataset('Median Product', dataPoints.map(p => ({ x: p.end_date, y: p.median_product })), 'rgb(255, 159, 64)')
+    ]);
+  </script>
+</body>
+</html>

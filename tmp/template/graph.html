@@ -16,10 +16,7 @@
     ];
 
     // Extract data for Chart.js
-    const labels = dataPoints.map(point => point.file_path);
-    const churnData = dataPoints.map(point => point.churn);
-    const complexityData = dataPoints.map(point => point.complexity);
-
+    const labels = dataPoints.map(point => point.file_path);    
     // Prepare data in Chart.js format
     const data = {
       labels: labels,
