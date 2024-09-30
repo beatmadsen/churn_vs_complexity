@@ -29,7 +29,8 @@ module ChurnVsComplexity
     end
 
     def timetravel
-      Timetravel.new(since: @since, engine: to_engine, jump_days: @options[:jump_days])
+      engine = with_summary_hash.to_engine
+      Timetravel.new(since: @since, engine:, jump_days: @options[:jump_days])
     end
 
     def to_engine
@@ -63,6 +64,18 @@ module ChurnVsComplexity
 
     private
 
+    def with_summary_hash
+      Config.new(
+        language: @language,
+        serializer: :summary_hash,
+        excluded: @excluded,
+        since: @since,
+        complexity_validator: @complexity_validator,
+        since_validator: @since_validator,
+        **@options
+      )
+    end
+
     def churn = Churn::GitCalculator
 
     def serializer
@@ -75,6 +88,8 @@ module ChurnVsComplexity
         Serializer::Graph.new
       when :summary
         Serializer::Summary
+      when :summary_hash
+        Serializer::SummaryHash
       end
     end
 

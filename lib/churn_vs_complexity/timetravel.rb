@@ -30,7 +30,7 @@ module ChurnVsComplexity
               `#{command}`
             end
             result = @engine.check(folder: tt_folder)
-            [sha, "spiderman"]            
+            [sha, result]            
           end
           pipe[1].puts(JSON.dump(results))
           pipe[1].close
@@ -46,7 +46,6 @@ module ChurnVsComplexity
           JSON.parse(line)
         rescue => e
           $stderr.puts "Error parsing JSON: #{e}"
-          $stderr.puts "Line: #{line}"
           {}
         end
         pipe[0].close

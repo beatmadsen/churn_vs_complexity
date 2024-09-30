@@ -16,7 +16,7 @@ module ChurnVsComplexity
       def self.serialize(result) = result
     end
 
-    module Summary
+    module SummaryHash
       def self.serialize(result)
         values_by_file = result[:values_by_file]
         churn_values = values_by_file.map { |_, values| values[0].to_f }
@@ -30,6 +30,25 @@ module ChurnVsComplexity
         product = values_by_file.map { |_, values| values[0].to_f * values[1].to_f }
         mean_product = product.sum / product.size
         median_product = product.sort[product.size / 2]
+        
+        end_date = result[:git_period].end_date
+
+        {
+          mean_churn:,
+          median_churn:,
+          mean_complexity:,
+          median_complexity:,
+          mean_product:,
+          median_product:,
+          end_date:,
+        }
+      end
+    end
+
+    module Summary
+      def self.serialize(result)
+        values_by_file = result[:values_by_file]
+        summary = SummaryHash.serialize(result)
 
         <<~SUMMARY
           #{Serializer.title(result)}
@@ -37,13 +56,13 @@ module ChurnVsComplexity
           Number of observations: #{values_by_file.size}
 
           Churn:
-          Mean #{mean_churn}, Median #{median_churn}
+          Mean #{summary[:mean_churn]}, Median #{summary[:median_churn]}
 
           Complexity:
-          Mean #{mean_complexity}, Median #{median_complexity}
+          Mean #{summary[:mean_complexity]}, Median #{summary[:median_complexity]}
 
           Product of churn and complexity:
-          Mean #{mean_product}, Median #{median_product}
+          Mean #{summary[:mean_product]}, Median #{summary[:median_product]}
         SUMMARY
       end
     end
