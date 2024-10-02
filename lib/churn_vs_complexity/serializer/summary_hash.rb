@@ -13,12 +13,17 @@ module ChurnVsComplexity
         mean_complexity = complexity_values.sum / complexity_values.size
         median_complexity = complexity_values.sort[complexity_values.size / 2]
 
+        epsilon = 0.0001
+        # TODO: right now the normalistion factor is only for 1 commit. It should be for the whole period.
+        churn_normailisation_factor = churn_values.max - churn_values.min + epsilon
+        complexity_normailisation_factor = complexity_values.max - complexity_values.min + epsilon
+        
         alpha_score = values_by_file.map do |_, values|
-          # harmonic mean of churn and complexity
-          epsilon = 0.0001
-          churn = values[0].to_f + epsilon
-          complexity = values[1].to_f + epsilon
-          (2 * churn * complexity) / (churn + complexity)
+          
+          churn = (values[0].to_f + epsilon) / churn_normailisation_factor
+          complexity = (values[1].to_f + epsilon) / complexity_normailisation_factor
+
+          (2 * churn * complexity) / (churn + complexity)          
         end
 
         mean_alpha_score = alpha_score.sum / alpha_score.size
@@ -26,7 +31,6 @@ module ChurnVsComplexity
 
         beta_score = values_by_file.map do |_, values|
           # geometric mean of churn and complexity
-          epsilon = 0.0001
           churn = values[0].to_f + epsilon
           complexity = values[1].to_f + epsilon
           Math.sqrt(churn * complexity)

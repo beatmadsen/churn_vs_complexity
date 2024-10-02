@@ -1,0 +1,14 @@
+TODO:
+- Normalisation factor for churn and complexity should be calculated over the whole period, not per sha
+  - Use an intermediate engine serializer for the individual commits that return raw data
+  - Aggregate numbers pr commit somewhere in Timetravel with access to the whole series for normalisation
+
+- Few worktrees and incremental checking out of next sha for processing. Much faster. 
+- Database, where we can prepopulate the state of every file and every commit
+  - Populate incrementally from each commit in log. 
+  - Only need to care about deltas between commits, and copy everything else from previous commit.
+  - processed_commit table with sha and version of processing logic
+- Unit tests for simpler new classes
+- Integration test for Timetravel
+- Refactor Timetravel into smaller parts
+- Candlebars on mean dots in graph
