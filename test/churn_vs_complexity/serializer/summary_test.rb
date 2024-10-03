@@ -17,7 +17,7 @@ module ChurnVsComplexity
         }
         git_period = GitPeriod.new(requested_start_date: nil, end_date: Date.new(2024, 1, 1))
         result = Summary.serialize({ values_by_file:, git_period: })
-        assert_equal "Churn until 2024-01-01 vs complexity\n\nNumber of observations: 5\n\nChurn:\nMean 3.0, Median 3.0\n\nComplexity:\nMean 6.2, Median 4.0\n\nAlpha score:\nMean 2.944570431584718, Median 3.5557160487105706\n\nBeta score:\nMean 3.617936675878832, Median 4.0001\n",
+        assert_equal "Churn until 2024-01-01 vs complexity\n\nNumber of observations: 5\n\nChurn:\nMean 3.0, Median 3.0\n\nComplexity:\nMean 6.2, Median 4.0\n\nGamma score:\nMean 2.944570431584718, Median 3.5557160487105706\n",
                      result
       end
     end

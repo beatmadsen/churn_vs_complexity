@@ -3,55 +3,52 @@
 module ChurnVsComplexity
   module Serializer
     module SummaryHash
-      def self.serialize(result)
-        values_by_file = result[:values_by_file]
-        churn_values = values_by_file.map { |_, values| values[0].to_f }
-        complexity_values = values_by_file.map { |_, values| values[1].to_f }
+      class << self
+        def serialize(result)
+          values_by_file = result[:values_by_file]
+          churn_values = values_by_file.map { |_, values| values[0].to_f }
+          complexity_values = values_by_file.map { |_, values| values[1].to_f }
 
-        mean_churn = churn_values.sum / churn_values.size
-        median_churn = churn_values.sort[churn_values.size / 2]
-        mean_complexity = complexity_values.sum / complexity_values.size
-        median_complexity = complexity_values.sort[complexity_values.size / 2]
+          mean_churn = churn_values.sum / churn_values.size
+          median_churn = churn_values.sort[churn_values.size / 2]
+          mean_complexity = complexity_values.sum / complexity_values.size
+          median_complexity = complexity_values.sort[complexity_values.size / 2]
 
-        epsilon = 0.0001
-        # TODO: right now the normalistion factor is only for 1 commit. It should be for the whole period.
-        churn_normailisation_factor = churn_values.max - churn_values.min + epsilon
-        complexity_normailisation_factor = complexity_values.max - complexity_values.min + epsilon
-        
-        alpha_score = values_by_file.map do |_, values|
-          
-          churn = (values[0].to_f + epsilon) / churn_normailisation_factor
-          complexity = (values[1].to_f + epsilon) / complexity_normailisation_factor
+          epsilon = 0.0001
 
-          (2 * churn * complexity) / (churn + complexity)          
+          churn_values.min
+          churn_values.max
+          complexity_values.min
+          complexity_values.max
+
+          gamma_score = values_by_file.map do |_, values|
+            # unnormalised harmonic mean of churn and complexity,
+            # since the summary needs to be comparable over time
+            churn = values[0].to_f + epsilon
+            complexity = values[1].to_f + epsilon
+
+            (2 * churn * complexity) / (churn + complexity)
+          end
+
+          mean_gamma_score = gamma_score.sum / gamma_score.size
+          median_gamma_score = gamma_score.sort[gamma_score.size / 2]
+
+          end_date = result[:git_period].end_date
+
+          {
+            mean_churn:,
+            median_churn:,
+            mean_complexity:,
+            median_complexity:,
+            mean_gamma_score:,
+            median_gamma_score:,
+            end_date:,
+          }
         end
 
-        mean_alpha_score = alpha_score.sum / alpha_score.size
-        median_alpha_score = alpha_score.sort[alpha_score.size / 2]
+        private
 
-        beta_score = values_by_file.map do |_, values|
-          # geometric mean of churn and complexity
-          churn = values[0].to_f + epsilon
-          complexity = values[1].to_f + epsilon
-          Math.sqrt(churn * complexity)
-        end
-
-        mean_beta_score = beta_score.sum / beta_score.size
-        median_beta_score = beta_score.sort[beta_score.size / 2]
-
-        end_date = result[:git_period].end_date
-
-        {
-          mean_churn:,
-          median_churn:,
-          mean_complexity:,
-          median_complexity:,
-          mean_alpha_score:,
-          median_alpha_score:,
-          mean_beta_score:,
-          median_beta_score:,
-          end_date:,
-        }
+        def normalise(score, min, max, epsilon) = (score + epsilon - min) / (epsilon + max - min)
       end
     end
   end

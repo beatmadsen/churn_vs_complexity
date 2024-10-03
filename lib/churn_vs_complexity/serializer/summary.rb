@@ -18,11 +18,8 @@ module ChurnVsComplexity
           Complexity:
           Mean #{summary[:mean_complexity]}, Median #{summary[:median_complexity]}
 
-          Alpha score:
-          Mean #{summary[:mean_alpha_score]}, Median #{summary[:median_alpha_score]}
-
-          Beta score:
-          Mean #{summary[:mean_beta_score]}, Median #{summary[:median_beta_score]}
+          Gamma score:
+          Mean #{summary[:mean_gamma_score]}, Median #{summary[:median_gamma_score]}
         SUMMARY
       end
     end
