@@ -21,8 +21,12 @@ module ChurnVsComplexity
         assert_equal({
                        mean_churn: 3.0,
                        median_churn: 3.0,
+                       max_churn: 5.0,
+                       min_churn: 1.0,
                        mean_complexity: 7.8,
                        median_complexity: 3.0,
+                       max_complexity: 27.0,
+                       min_complexity: 2.0,
                        mean_gamma_score: 3.235835943461319,
                        median_gamma_score: 3.428673469329448,
                        end_date:,

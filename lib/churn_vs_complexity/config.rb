@@ -77,7 +77,7 @@ module ChurnVsComplexity
     def timetravel_engine_config
       Config.new(
         language: @language,
-        serializer: :summary_hash,
+        serializer: :pass_through,
         excluded: @excluded,
         since: nil, # since has a different meaning in timetravel mode
         relative_period: @relative_period,
@@ -99,8 +99,8 @@ module ChurnVsComplexity
         Serializer::Graph.new
       when :summary
         Serializer::Summary
-      when :summary_hash
-        Serializer::SummaryHash
+      when :pass_through
+        Serializer::PassThrough
       end
     end
 

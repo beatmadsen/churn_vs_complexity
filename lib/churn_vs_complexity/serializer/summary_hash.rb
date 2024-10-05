@@ -14,13 +14,12 @@ module ChurnVsComplexity
           mean_complexity = complexity_values.sum / complexity_values.size
           median_complexity = complexity_values.sort[complexity_values.size / 2]
 
+          max_churn = churn_values.max
+          min_churn = churn_values.min
+          max_complexity = complexity_values.max
+          min_complexity = complexity_values.min
+
           epsilon = 0.0001
-
-          churn_values.min
-          churn_values.max
-          complexity_values.min
-          complexity_values.max
-
           gamma_score = values_by_file.map do |_, values|
             # unnormalised harmonic mean of churn and complexity,
             # since the summary needs to be comparable over time
@@ -38,17 +37,17 @@ module ChurnVsComplexity
           {
             mean_churn:,
             median_churn:,
+            max_churn:,
+            min_churn:,
             mean_complexity:,
             median_complexity:,
+            max_complexity:,
+            min_complexity:,
             mean_gamma_score:,
             median_gamma_score:,
             end_date:,
           }
         end
-
-        private
-
-        def normalise(score, min, max, epsilon) = (score + epsilon - min) / (epsilon + max - min)
       end
     end
   end
