@@ -5,6 +5,8 @@ require_relative 'serializer/summary_hash'
 require_relative 'serializer/summary'
 require_relative 'serializer/csv'
 require_relative 'serializer/graph'
+require_relative 'serializer/pass_through'
+
 
 module ChurnVsComplexity
   module Serializer

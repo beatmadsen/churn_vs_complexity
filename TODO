@@ -1,7 +1,5 @@
 TODO:
-- Normalisation factor for churn and complexity should be calculated over the whole period, not per sha
-  - Use an intermediate engine serializer for the individual commits that return raw data
-  - Aggregate numbers pr commit somewhere in Timetravel with access to the whole series for normalisation
+- Move Timetravel calculations away from serializer
 
 - Few worktrees and incremental checking out of next sha for processing. Much faster. 
 - Database, where we can prepopulate the state of every file and every commit
