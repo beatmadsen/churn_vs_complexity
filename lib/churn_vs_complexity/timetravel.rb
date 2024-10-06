@@ -1,93 +1,78 @@
 # frozen_string_literal: true
 
+require_relative 'timetravel/traveller'
+
 module ChurnVsComplexity
-  # TODO: unit test and integration test
-  class Timetravel
-    def initialize(since:, relative_period:, engine:, serializer:, jump_days: 30)
-      @relative_period = relative_period
-      @engine = engine
-      @jump_days = jump_days
-      @serializer = serializer
-      @git_period = GitDate.git_period(since, Time.now.to_date)
+  module Timetravel
+    class Factory
+      def self.git_strategy(folder:) = GitStrategy.new(folder:)
+      def self.pipe = IO.pipe
+      def self.worker(engine:, git_strategy:) = Worker.new(engine:, git_strategy:)
     end
 
-    def go(folder:)
-      repo = Git.open(folder)
+    class Worker
+      def initialize(engine:, git_strategy:)
+        @engine = engine
+        @git_strategy = git_strategy
+      end
 
-      commits = resolve_commits_with_interval(repo)
-
-      chunked = commits.each_slice(3).map do |chunk|
-        { chunk:, pipe: IO.pipe }
-      end.to_a
-
-      pids = chunked.map do |c_and_p|
-        c_and_p => { chunk:, pipe: }
+      def schedule(chunk:, worktree_folder:, pipe:)
         fork do
           results = chunk.to_h do |commit|
             sha = commit.sha
-            # locate tmp folder relative to this file
-            tt_folder = File.expand_path("../../../tmp/timetravel/#{sha}", __FILE__)
-
-            unless File.directory?(tt_folder)
-              FileUtils.mkdir_p(tt_folder)
-              command = "cd #{folder} && git worktree add -f #{tt_folder} #{sha}"
-              `#{command}`
-            end
-            result = @engine.check(folder: tt_folder)
-
-            # cleanup
-            command = "cd #{folder} && git worktree remove -f #{tt_folder}"
-            `#{command}`
-
+            git_strategy.checkout_in_worktree(worktree_folder, sha)
+            result = @engine.check(folder: worktree_folder)
             [sha, result]
           end
+          git_strategy.remove_worktree(worktree_folder)
           pipe[1].puts(JSON.dump(results))
           pipe[1].close
         end
       end
+    end
 
-      combined = chunked.map do |c_and_p|
-        c_and_p => { chunk:, pipe: }
-        pipe[1].close
-        #  read a single line from the pipe
-        part = begin
-          line = pipe[0].gets
-          JSON.parse(line)
-        rescue StandardError => e
-          warn "Error parsing JSON: #{e}"
-          {}
-        end
-        pipe[0].close
-        part
-      end.reduce({}, :merge)
-
-      pids.each do |pid|
-        Process.waitpid(pid)
+    class GitStrategy
+      def initialize(folder:)
+        @repo = Git.open(folder)
+        @folder = folder
       end
 
-      puts serializer.serialize(combined)
-    end
+      def checkout_in_worktree(worktree_folder, sha)
+        command = "cd #{worktree_folder} && git checkout #{sha}"
+        `#{command}`
+      end
 
-    private
+      def resolve_commits_with_interval(git_period:, jump_days:)
+        candidates = @repo.log(1_000_000).since(git_period.effective_start_date).until(git_period.end_date).to_a
 
-    def resolve_commits_with_interval(repo)
-      candidates = repo.log(1_000_000).since(@git_period.effective_start_date).until(@git_period.end_date).to_a
+        commits_by_date = candidates.filter { |c| c.date.to_date >= git_period.effective_start_date }
+                                    .group_by { |c| c.date.to_date }
 
-      commits_by_date = candidates.filter { |c| c.date.to_date >= @git_period.effective_start_date }
-                                  .group_by { |c| c.date.to_date }
+        found_dates = GitDate.select_dates_with_at_least_interval(commits_by_date.keys, jump_days)
 
-      found_dates = GitDate.select_dates_with_at_least_interval(commits_by_date.keys, @jump_days)
+        found_dates.map { |date| commits_by_date[date].max_by(&:date) }
+      end
 
-      found_dates.map { |date| commits_by_date[date].max_by(&:date) }
-    end
+      def prepare_worktree(tt_folder, index)
+        worktree_folder = File.join(tt_folder, "worktree_#{index}")
 
-    def serializer
-      case @serializer
-      when :csv
-        Serializer::Timetravel::CSV
-      when :graph
-        Serializer::Timetravel::Graph.new(git_period: @git_period, relative_period: @relative_period,
-                                          jump_days: @jump_days,)
+        unless File.directory?(worktree_folder)
+          begin
+            FileUtils.mkdir_p(worktree_folder)
+          rescue StandardError
+            nil
+          end
+          # TODO: instead of one worktree per commit, use a few worktrees and checkout new commits on them
+          command = "cd #{@folder} && git worktree add -f #{worktree_folder}"
+          `#{command}`
+        end
+
+        worktree_folder
+      end
+
+      def remove_worktree(worktree_folder)
+        command = "cd #{worktree_folder} && git worktree remove -f #{worktree_folder}"
+        `#{command}`
       end
     end
   end

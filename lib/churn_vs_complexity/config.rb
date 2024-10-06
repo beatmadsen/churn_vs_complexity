@@ -34,7 +34,7 @@ module ChurnVsComplexity
 
     def timetravel
       engine = timetravel_engine_config.to_engine
-      Timetravel.new(
+      Timetravel::Traveller.new(
         since: @since,
         relative_period: @relative_period,
         engine:,

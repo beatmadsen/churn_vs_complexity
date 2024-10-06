@@ -7,7 +7,6 @@ require_relative 'serializer/csv'
 require_relative 'serializer/graph'
 require_relative 'serializer/pass_through'
 
-
 module ChurnVsComplexity
   module Serializer
     def self.title(result)
