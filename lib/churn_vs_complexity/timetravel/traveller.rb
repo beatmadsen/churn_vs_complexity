@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'digest'
 module ChurnVsComplexity
   # TODO: unit test and integration test
   module Timetravel
@@ -16,58 +15,45 @@ module ChurnVsComplexity
 
       def go(folder:)
         git_strategy = @factory.git_strategy(folder:)
-
         commits = git_strategy.resolve_commits_with_interval(git_period: @git_period, jump_days: @jump_days)
 
-        chunked = commits.each_slice(3).map do |chunk|
-          { chunk:, pipe: @factory.pipe }
-        end.to_a
-
-        chunked.map.with_index do |c_and_p, i|
-          c_and_p => { chunk:, pipe: }
-          worktree_folder = git_strategy.prepare_worktree(tt_folder, i)
-
-          #  TODO: why is the root folder changed too upon checkout?
-          #       It wasn't that way when I ran the commands manually
-          schedule_work(chunk:, worktree_folder:, pipe:)
-        end
-
-        combined = chunked.map do |c_and_p|
-          c_and_p => { pipe: }
-          read_result(pipe)
-        end.reduce({}, :merge)
-
-        # pids.each do |pid|
-        #   Process.waitpid(pid)
-        # end
+        chunked = make_chunks(commits)
+        work_on(chunked:, folder:, git_strategy:)
+        combined = chunked.map { |c_and_p| read_result(c_and_p[:pipe]) }.reduce({}, :merge)
 
         puts serializer.serialize(combined)
       end
 
       private
 
+      def work_on(chunked:, folder:, git_strategy:)
+        chunked.map.with_index do |c_and_p, i|
+          worktree = @factory.worktree(root_folder: folder, git_strategy:, number: i)
+          worktree.prepare
+          schedule_work(worktree:, **c_and_p)
+        end
+      end
+
+      def make_chunks(commits)
+        commits.each_slice(3).map do |chunk|
+          { chunk:, pipe: @factory.pipe }
+        end.to_a
+      end
+
       def read_result(pipe)
-        pipe[1].close
-        #  read a single line from the pipe
         part = begin
-          line = pipe[0].gets
-          JSON.parse(line)
+          JSON.parse(pipe[0].gets)
         rescue StandardError => e
           warn "Error parsing JSON: #{e}"
           {}
         end
-        pipe[0].close
+        pipe.each(&:close)
         part
       end
 
-      def schedule_work(chunk:, worktree_folder:, pipe:)
-        @factory.worker(engine: @engine, git_strategy: @git_strategy)
-                .schedule(chunk:, worktree_folder:, pipe:)
-      end
-
-      def tt_folder
-        folder_hash = Digest::SHA256.hexdigest(folder)
-        File.expand_path("../../tmp/timetravel/#{folder_hash}", __dir__)
+      def schedule_work(chunk:, worktree:, pipe:)
+        @factory.worker(engine: @engine, worktree:)
+                .schedule(chunk:, pipe:)
       end
 
       def serializer

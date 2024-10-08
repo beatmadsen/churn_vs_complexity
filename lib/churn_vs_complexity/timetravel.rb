@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'digest'
 require_relative 'timetravel/traveller'
 
 module ChurnVsComplexity
@@ -7,24 +8,73 @@ module ChurnVsComplexity
     class Factory
       def self.git_strategy(folder:) = GitStrategy.new(folder:)
       def self.pipe = IO.pipe
-      def self.worker(engine:, git_strategy:) = Worker.new(engine:, git_strategy:)
+      def self.worker(engine:, worktree:) = Worker.new(engine:, worktree:)
+      def self.worktree(root_folder:, git_strategy:, number:) = Worktree.new(root_folder:, git_strategy:, number:)
+    end
+
+    class Worktree
+      attr_reader :folder
+
+      def initialize(root_folder:, git_strategy:, number:)
+        @root_folder = root_folder
+        @git_strategy = git_strategy
+        @number = number
+      end
+
+      def prepare
+        @folder = prepare_worktree
+      end
+
+      def checkout(sha)
+        raise Error, 'Worktree not prepared' if @folder.nil?
+
+        @git_strategy.checkout_in_worktree(@folder, sha)
+      end
+
+      def remove
+        raise Error, 'Worktree not prepared' if @folder.nil?
+
+        @git_strategy.remove_worktree(@folder)
+      end
+
+      private
+
+      def tt_folder
+        folder_hash = Digest::SHA256.hexdigest(@root_folder)[0..7]
+        File.expand_path("../../tmp/timetravel/#{folder_hash}", __dir__)
+      end
+
+      def prepare_worktree
+        worktree_folder = File.join(tt_folder, "worktree_#{@number}")
+
+        unless File.directory?(worktree_folder)
+          begin
+            FileUtils.mkdir_p(worktree_folder)
+          rescue StandardError
+            nil
+          end
+          @git_strategy.add_worktree(worktree_folder)
+        end
+
+        worktree_folder
+      end
     end
 
     class Worker
-      def initialize(engine:, git_strategy:)
+      def initialize(engine:, worktree:)
         @engine = engine
-        @git_strategy = git_strategy
+        @worktree = worktree
       end
 
-      def schedule(chunk:, worktree_folder:, pipe:)
+      def schedule(chunk:, pipe:)
         fork do
           results = chunk.to_h do |commit|
             sha = commit.sha
-            git_strategy.checkout_in_worktree(worktree_folder, sha)
-            result = @engine.check(folder: worktree_folder)
+            @worktree.checkout(sha)
+            result = @engine.check(folder: @worktree.folder)
             [sha, result]
           end
-          git_strategy.remove_worktree(worktree_folder)
+          @worktree.remove
           pipe[1].puts(JSON.dump(results))
           pipe[1].close
         end
@@ -53,21 +103,9 @@ module ChurnVsComplexity
         found_dates.map { |date| commits_by_date[date].max_by(&:date) }
       end
 
-      def prepare_worktree(tt_folder, index)
-        worktree_folder = File.join(tt_folder, "worktree_#{index}")
-
-        unless File.directory?(worktree_folder)
-          begin
-            FileUtils.mkdir_p(worktree_folder)
-          rescue StandardError
-            nil
-          end
-          # TODO: instead of one worktree per commit, use a few worktrees and checkout new commits on them
-          command = "cd #{@folder} && git worktree add -f #{worktree_folder}"
-          `#{command}`
-        end
-
-        worktree_folder
+      def add_worktree(wt_folder)
+        command = "cd #{@folder} && git worktree add -f #{wt_folder}"
+        `#{command}`
       end
 
       def remove_worktree(worktree_folder)

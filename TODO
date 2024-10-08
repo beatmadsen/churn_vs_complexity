@@ -1,4 +1,9 @@
 TODO:
+- why is the root folder changed too upon checkout? 
+  - It wasn't that way when I ran the commands manually
+  - Now when GitStrategy has been extracted we can integration test worktree switching. 
+
+
 - Move Timetravel calculations away from serializer
 
 - Few worktrees and incremental checking out of next sha for processing. Much faster. 
