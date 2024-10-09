@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'digest'
 require_relative 'timetravel/traveller'
+require_relative 'timetravel/worktree'
 
 module ChurnVsComplexity
   module Timetravel
@@ -10,54 +10,6 @@ module ChurnVsComplexity
       def self.pipe = IO.pipe
       def self.worker(engine:, worktree:) = Worker.new(engine:, worktree:)
       def self.worktree(root_folder:, git_strategy:, number:) = Worktree.new(root_folder:, git_strategy:, number:)
-    end
-
-    class Worktree
-      attr_reader :folder
-
-      def initialize(root_folder:, git_strategy:, number:)
-        @root_folder = root_folder
-        @git_strategy = git_strategy
-        @number = number
-      end
-
-      def prepare
-        @folder = prepare_worktree
-      end
-
-      def checkout(sha)
-        raise Error, 'Worktree not prepared' if @folder.nil?
-
-        @git_strategy.checkout_in_worktree(@folder, sha)
-      end
-
-      def remove
-        raise Error, 'Worktree not prepared' if @folder.nil?
-
-        @git_strategy.remove_worktree(@folder)
-      end
-
-      private
-
-      def tt_folder
-        folder_hash = Digest::SHA256.hexdigest(@root_folder)[0..7]
-        File.expand_path("../../tmp/timetravel/#{folder_hash}", __dir__)
-      end
-
-      def prepare_worktree
-        worktree_folder = File.join(tt_folder, "worktree_#{@number}")
-
-        unless File.directory?(worktree_folder)
-          begin
-            FileUtils.mkdir_p(worktree_folder)
-          rescue StandardError
-            nil
-          end
-          @git_strategy.add_worktree(worktree_folder)
-        end
-
-        worktree_folder
-      end
     end
 
     class Worker
@@ -88,7 +40,7 @@ module ChurnVsComplexity
       end
 
       def checkout_in_worktree(worktree_folder, sha)
-        command = "cd #{worktree_folder} && git checkout #{sha}"
+        command = "(cd #{worktree_folder} && git checkout #{sha}) > /dev/null 2>&1"
         `#{command}`
       end
 
@@ -104,12 +56,12 @@ module ChurnVsComplexity
       end
 
       def add_worktree(wt_folder)
-        command = "cd #{@folder} && git worktree add -f #{wt_folder}"
+        command = "(cd #{@folder} && git worktree add -f #{wt_folder}) > /dev/null 2>&1"
         `#{command}`
       end
 
       def remove_worktree(worktree_folder)
-        command = "cd #{worktree_folder} && git worktree remove -f #{worktree_folder}"
+        command = "(cd #{worktree_folder} && git worktree remove -f #{worktree_folder}) > /dev/null 2>&1"
         `#{command}`
       end
     end

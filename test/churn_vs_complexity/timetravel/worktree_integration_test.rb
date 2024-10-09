@@ -30,8 +30,7 @@ module ChurnVsComplexity
           pipe = IO.pipe
           fork do
             worktree.checkout(sha)
-            worktree_repo = Git.open(worktree.folder)
-            $stdout.puts "Worktree #{number} is at #{worktree_repo.object('HEAD').sha} in folder #{worktree.folder}"
+            worktree_repo = Git.open(worktree.folder)            
             worktree_sha = worktree_repo.object('HEAD').sha
             pipe[1].puts(worktree_sha)
             pipe[1].close
