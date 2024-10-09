@@ -5,7 +5,6 @@ require 'tmpdir'
 
 module ChurnVsComplexity
   module Timetravel
-    
     class Worktree
       attr_reader :folder
 
@@ -53,6 +52,5 @@ module ChurnVsComplexity
         worktree_folder
       end
     end
-
   end
 end

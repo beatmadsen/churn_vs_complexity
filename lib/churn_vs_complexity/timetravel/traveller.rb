@@ -21,7 +21,7 @@ module ChurnVsComplexity
         work_on(chunked:, folder:, git_strategy:)
         combined = chunked.map { |c_and_p| read_result(c_and_p[:pipe]) }.reduce({}, :merge)
 
-        puts serializer.serialize(combined)
+        serializer.serialize(combined)
       end
 
       private
@@ -56,15 +56,7 @@ module ChurnVsComplexity
                 .schedule(chunk:, pipe:)
       end
 
-      def serializer
-        case @serializer
-        when :csv
-          Serializer::Timetravel::CSV
-        when :graph
-          Serializer::Timetravel::Graph.new(git_period: @git_period, relative_period: @relative_period,
-                                            jump_days: @jump_days,)
-        end
-      end
+      def serializer = @factory.serializer(@serializer)
     end
   end
 end

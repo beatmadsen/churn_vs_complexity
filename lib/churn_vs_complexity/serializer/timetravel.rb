@@ -10,6 +10,16 @@ module ChurnVsComplexity
         StatsCalculator.new.summaries(result)
       end
 
+      def self.resolve(serializer)
+        case serializer
+        when :csv
+          CSV
+        when :graph
+          Graph.new(git_period: @git_period, relative_period: @relative_period,
+                    jump_days: @jump_days,)
+        end
+      end
+
       module CSV
         def self.serialize(result)
           summaries = Timetravel.summaries(result)
