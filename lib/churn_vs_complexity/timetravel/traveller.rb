@@ -56,7 +56,8 @@ module ChurnVsComplexity
                 .schedule(chunk:, pipe:)
       end
 
-      def serializer = @factory.serializer(@serializer)
+      def serializer = @factory.serializer(serializer: @serializer, git_period: @git_period,
+                                          relative_period: @relative_period, jump_days: @jump_days)
     end
   end
 end

@@ -52,6 +52,11 @@ module ChurnVsComplexity
       assert_equal :java, complexity_validator.validate_called_with
     end
 
+    def test_that_timetravel_produces_a_traveller
+      subject = config(language: :java).timetravel
+      assert_instance_of Timetravel::Traveller, subject
+    end
+
     private
 
     def config(language: :java, serializer: :csv, excluded: [], complexity_validator: ValidatorStub,
