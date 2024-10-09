@@ -35,7 +35,8 @@ module ChurnVsComplexity
       end
 
       def make_chunks(commits)
-        commits.each_slice(3).map do |chunk|
+        chunk_size = (commits.size / 3.0).ceil
+        commits.each_slice(chunk_size).map do |chunk|
           { chunk:, pipe: @factory.pipe }
         end.to_a
       end
