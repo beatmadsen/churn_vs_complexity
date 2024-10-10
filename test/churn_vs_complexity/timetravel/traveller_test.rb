@@ -16,7 +16,12 @@ module ChurnVsComplexity
 
       private
 
-      def as_io(data) = StringIO.new.tap { |io| JSON.dump(data, io); io.rewind }
+      def as_io(data)
+        StringIO.new.tap do |io|
+          JSON.dump(data, io)
+          io.rewind
+        end
+      end
 
       def traveller(factory: FactoryStub.new, since: nil, relative_period: :month, jump_days: 3, engine: EngineStub,
                     serializer: :none)

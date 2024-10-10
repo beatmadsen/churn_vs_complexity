@@ -5,7 +5,6 @@ module ChurnVsComplexity
     module Timetravel
       class StatsCalculator
         # ['some_sha', { 'end_date' => '2024-01-01', 'values' => [[1, 2], [3, 4]] }]
-        # TODO: quality sqores should be caluclated by file, not by sha. We will then aggregate them to mean and median quality scores for all files
         def summaries(result)
           observations = result.sort_by do |_sha, summary|
             summary['end_date']

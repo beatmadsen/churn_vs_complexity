@@ -4,7 +4,7 @@ A tool to visualise code complexity in a project and help direct refactoring eff
 
 Inspired by [Michael Feathers' article "Getting Empirical about Refactoring"](https://www.agileconnection.com/article/getting-empirical-about-refactoring) and the gem [turbulence](https://rubygems.org/gems/turbulence) by Chad Fowler and others.
 
-This gem was built primarily to support analysis of Java and Ruby repositories, but it can easily be extended.
+This gem currently supports analysis of Java, Ruby, JavaScript, and TypeScript repositories, but it can easily be extended.
 
 ## Installation
 
@@ -40,14 +40,27 @@ Usage: churn_vs_complexity [options] folder
         --graph                      Format output as HTML page with Churn vs Complexity graph
         --summary                    Output summary statistics (mean and median) for churn and complexity
         --excluded PATTERN           Exclude file paths including this string. Can be used multiple times.
-        --since YYYY-MM-DD           Calculate churn after this date
+        --since YYYY-MM-DD           Normal mode: Calculate churn after this date. Timetravel mode: calculate summaries from this date
     -m, --month                      Calculate churn for the month leading up to the most recent commit
     -q, --quarter                    Calculate churn for the quarter leading up to the most recent commit
     -y, --year                       Calculate churn for the year leading up to the most recent commit
+        --timetravel N               Calculate summary for all commits at intervals of N days throughout project history or from the date specified with --since
         --dry-run                    Echo the chosen options from the CLI
     -h, --help                       Display help
+
+
 ```
 
+Note that when using the `--timetravel` mode, the semantics of some flags are subtly different from normal mode:
+
+* `--since YYYY-MM-DD`: Calculate summaries from this date
+* `--month`, `--quarter`, `--year`: Calculate churn for the period leading up to each commit being summarised
+
+Timetravel analysis can take many minutes for old and large repositories.
+
+Summaries in normal mode include a gamma score, which is an unnormalised harmonic mean of churn and complexity. This allows for comparison of summaries across different projects with the same language, or over time for a single project.
+
+Summary points in timetravel mode instead include an alpha score, which is the same harmonic mean of churn and complexity, where churn and complexity values are normalised to a 0-1 range to avoid either churn or complexity dominating the score. The summary points also include a beta score, which is the geometric mean of the normalised churn and complexity values.
 ## Examples
 
 `churn_vs_complexity --ruby --csv my_ruby_project > ~/Desktop/ruby-demo.csv`
@@ -56,6 +69,7 @@ Usage: churn_vs_complexity [options] folder
 
 `churn_vs_complexity --ruby --summary -m my_ruby_project >> ~/Desktop/monthly-report.txt`
 
+`churn_vs_complexity --java -m --since 2019-03-01 --timetravel 30 --graph my_java_project > ~/Desktop/timetravel-after-1st-march-2019.html`
 
 ## Development
 

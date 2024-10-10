@@ -17,3 +17,9 @@
 
 - Add support for javascript and typescript complexity calculation using eslint
 - Fixed behavior when --since or short-hand flags were not provided
+
+## [1.4.0] - 2024-10-10
+
+- Add timetravel mode to visualise code quality over time
+- Add alpha, beta, and gamma scores to summaries
+- Fixed broken Ruby complexity calculation

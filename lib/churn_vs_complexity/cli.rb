@@ -44,7 +44,8 @@ module ChurnVsComplexity
           options[:excluded] << value
         end
 
-        opts.on('--since YYYY-MM-DD', 'Calculate churn after this date') do |value|
+        opts.on('--since YYYY-MM-DD',
+                'Normal mode: Calculate churn after this date. Timetravel mode: calculate summaries from this date',) do |value|
           options[:since] = value
         end
 
@@ -61,7 +62,7 @@ module ChurnVsComplexity
         end
 
         opts.on('--timetravel N',
-                'Calculate summary for all commits at intervals of N days throughout project history',) do |value|
+                'Calculate summary for all commits at intervals of N days throughout project history or from the date specified with --since',) do |value|
           options[:mode] = :timetravel
           options[:jump_days] = value.to_i
         end
