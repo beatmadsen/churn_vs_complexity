@@ -3,11 +3,12 @@
 module ChurnVsComplexity
   module Delta
     class Checker
-      def initialize(serializer:)
+      def initialize(serializer:, excluded:)
         @serializer = serializer
+        @excluded = excluded
       end
 
-      def check(folder:); end
+      def check(folder:) = 'yo'
     end
   end
 end

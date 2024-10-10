@@ -8,14 +8,12 @@ module ChurnVsComplexity
         serializer:,
         excluded: [],
         complexity_validator: ComplexityValidator,
-        since_validator: SinceValidator,
-        **options
+        **_options
       )
         @language = language
         @serializer = serializer
         @excluded = excluded
         @complexity_validator = complexity_validator
-        @since_validator = since_validator
       end
 
       def validate!
@@ -24,14 +22,14 @@ module ChurnVsComplexity
         @complexity_validator.validate!(@language)
       end
 
-      def checker = Checker.new(serializer:)
+      def checker = Checker.new(serializer:, excluded: @excluded)
 
       private
 
       def serializer
         case @serializer
         when :none
-          Serializer::None
+          Normal::Serializer::None
         when :csv
           Serializer::CSV
         when :summary
