@@ -4,8 +4,6 @@ require 'test_helper'
 
 module ChurnVsComplexity
   module Serializer
-    GitPeriod = Data.define(:requested_start_date, :end_date)
-
     class SummaryTest < TLDR
       def test_that_x
         values_by_file = {

@@ -44,8 +44,7 @@ module ChurnVsComplexity
       def read_result(pipe)
         part = begin
           JSON.parse(pipe[0].gets)
-        rescue StandardError => e
-          warn "Error parsing JSON: #{e}"
+        rescue StandardError
           {}
         end
         pipe.each(&:close)

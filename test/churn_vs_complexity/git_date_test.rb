@@ -3,7 +3,7 @@
 require 'test_helper'
 
 module ChurnVsComplexity
-  class EngineTest < TLDR
+  class GitDateTest < TLDR
     def setup
       @latest_commit_date = Date.new(2024, 3, 15)
       @latest_commit_time = @latest_commit_date.to_time

@@ -44,9 +44,7 @@ class TestComplexityCalculator
     ChurnVsComplexity::FileSelector::Any.select_files(folder)[:included].to_h do |file|
       `cat #{file}`
       s = stable_hash(File.basename(file))
-      puts "Stable hash was #{s} for #{file}"
       c = s % 7
-      puts "Complexity was #{c} for #{file}"
       [file, c]
     end
   end

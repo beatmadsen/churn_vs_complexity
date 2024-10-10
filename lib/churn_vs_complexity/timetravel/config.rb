@@ -58,6 +58,5 @@ module ChurnVsComplexity
         )
       end
     end
-
   end
 end

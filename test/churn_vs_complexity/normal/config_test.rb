@@ -67,21 +67,22 @@ module ChurnVsComplexity
 
       private
 
-      def config(language: :java, serializer: :csv, excluded: [], complexity_validator: ValidatorStub,
-                  since: nil, relative_period: nil)
+      def config(language: :java,
+                 serializer: :csv, excluded: [], complexity_validator: ValidatorStub,
+                 since: nil, relative_period: nil)
         Config.new(language:, serializer:, excluded:, complexity_validator:, since:, relative_period:)
       end
+    end
 
-      module ValidatorStub
-        def self.validate!(language); end
-      end
+    module ValidatorStub
+      def self.validate!(language); end
+    end
 
-      class ValidatorMock
-        attr_reader :validate_called_with
+    class ValidatorMock
+      attr_reader :validate_called_with
 
-        def validate!(language)
-          @validate_called_with = language
-        end
+      def validate!(language)
+        @validate_called_with = language
       end
     end
   end

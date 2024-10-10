@@ -11,7 +11,7 @@ module ChurnVsComplexity
           earliest_date = [date_of_first_commit(folder:), since].max
           formatted_date = earliest_date.strftime('%Y-%m-%d')
           cmd = %(git --git-dir #{git_dir} --work-tree #{folder} log --format="%H" --follow --since="#{formatted_date}" -- #{file} | wc -l)
-          `#{cmd}`.to_i
+          `(#{cmd}) 2>/dev/null`.to_i
         end
 
         def date_of_latest_commit(folder:)

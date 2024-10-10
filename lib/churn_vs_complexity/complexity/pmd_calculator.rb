@@ -10,7 +10,7 @@ module ChurnVsComplexity
 
         def calculate(folder:)
           cache_path = resolve_cache_path
-          output = `pmd check -d #{folder} -R #{resolve_ruleset_path} -f json -t #{CONCURRENCY}  --cache #{cache_path}`
+          output = `pmd check -d #{folder} -R #{resolve_ruleset_path} -f json -t #{CONCURRENCY} --cache #{cache_path} 2>/dev/null`
           File.delete(cache_path)
 
           Parser.new.parse(output)
