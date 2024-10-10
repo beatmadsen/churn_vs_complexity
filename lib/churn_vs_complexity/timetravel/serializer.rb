@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require_relative 'timetravel/quality_calculator'
-require_relative 'timetravel/stats_calculator'
+require_relative 'serializer/quality_calculator'
+require_relative 'serializer/stats_calculator'
 
 module ChurnVsComplexity
-  module Serializer
-    module Timetravel
+  module Timetravel
+    module Serializer
       def self.summaries(result)
         StatsCalculator.new.summaries(result)
       end
@@ -60,7 +60,7 @@ module ChurnVsComplexity
         end
 
         def serialize(result)
-          summaries = Timetravel.summaries(result)
+          summaries = Serializer.summaries(result)
 
           data = summaries.map do |summary|
             JSON.dump(summary)

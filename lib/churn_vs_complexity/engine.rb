@@ -15,7 +15,7 @@ module ChurnVsComplexity
       @serializer.serialize(result)
     end
 
-    def self.concurrent(since:, complexity:, churn:, serializer: Serializer::None, file_selector: FileSelector::Any)
+    def self.concurrent(since:, complexity:, churn:, serializer: Normal::Serializer::None, file_selector: FileSelector::Any)
       Engine.new(since:, file_selector:, serializer:, calculator: ConcurrentCalculator.new(complexity:, churn:))
     end
   end

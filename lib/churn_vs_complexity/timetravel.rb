@@ -4,6 +4,8 @@ require_relative 'timetravel/traveller'
 require_relative 'timetravel/worktree'
 require_relative 'timetravel/config'
 require_relative 'timetravel/git_strategy'
+require_relative 'timetravel/serializer'
+require_relative 'timetravel/factory'
 
 module ChurnVsComplexity
   module Timetravel
@@ -40,14 +42,6 @@ module ChurnVsComplexity
           raise ValidationError, "Invalid date #{since}, please use correct format, YYYY-MM-DD"
         end
       end
-    end
-
-    class Factory
-      def self.git_strategy(folder:) = GitStrategy.new(folder:)
-      def self.pipe = IO.pipe
-      def self.worker(engine:, worktree:) = Worker.new(engine:, worktree:)
-      def self.worktree(root_folder:, git_strategy:, number:) = Worktree.new(root_folder:, git_strategy:, number:)
-      def self.serializer(**args) = Serializer::Timetravel.resolve(**args)
     end
 
     class Worker

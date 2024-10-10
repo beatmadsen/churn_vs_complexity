@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module ChurnVsComplexity
-  module Serializer
-    module Timetravel
+  module Timetravel
+    module Serializer
       EPSILON = 0.0001
 
       class QualityCalculator

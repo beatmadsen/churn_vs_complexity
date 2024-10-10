@@ -7,7 +7,9 @@ require 'tldr'
 PROJECT_ROOT_FOLDER = File.expand_path('..', __dir__)
 
 module ChurnVsComplexity
-  module Serializer
-    GitPeriod = Data.define(:requested_start_date, :end_date)
+  module Normal
+    module Serializer
+      GitPeriod = Data.define(:requested_start_date, :end_date)
+    end
   end
 end

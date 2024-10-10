@@ -19,7 +19,7 @@ module ChurnVsComplexity
 
     def test_that_it_calcualtes_the_complexity_and_churn_for_selected_files
       result = Engine.new(
-        serializer: Serializer::None,
+        serializer: Normal::Serializer::None,
         calculator: CalculatorStub,
         file_selector: FileSelector::Stub,
         since: Date.new(2012, 2, 2),

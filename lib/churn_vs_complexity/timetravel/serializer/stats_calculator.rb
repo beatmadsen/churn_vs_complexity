@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module ChurnVsComplexity
-  module Serializer
-    module Timetravel
+  module Timetravel
+    module Serializer
       class StatsCalculator
         # ['some_sha', { 'end_date' => '2024-01-01', 'values' => [[1, 2], [3, 4]] }]
         def summaries(result)

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'normal/config'
+require_relative 'normal/serializer'
 
 module ChurnVsComplexity
   module Normal

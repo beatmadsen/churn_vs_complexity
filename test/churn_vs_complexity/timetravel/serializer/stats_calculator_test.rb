@@ -3,8 +3,8 @@
 require 'test_helper'
 
 module ChurnVsComplexity
-  module Serializer
-    module Timetravel
+  module Timetravel
+    module Serializer
       class StatsCalculatorTest < TLDR
         def test_summaries
           result = [

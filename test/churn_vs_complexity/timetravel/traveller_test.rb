@@ -33,7 +33,7 @@ module ChurnVsComplexity
       attr_reader :pipe
 
       def initialize(git_strategy: GitStrategyStub.new, pipe: [StringIO.new, StringIO.new], worker: WorkerStub,
-                     worktree: WorktreeStub, serializer: Serializer::None)
+                     worktree: WorktreeStub, serializer: Normal::Serializer::None)
         @git_strategy = git_strategy
         @pipe = pipe
         @worker = worker

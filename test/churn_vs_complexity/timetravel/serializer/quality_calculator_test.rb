@@ -3,8 +3,8 @@
 require 'test_helper'
 
 module ChurnVsComplexity
-  module Serializer
-    module Timetravel
+  module Timetravel
+    module Serializer
       class QualityCalculatorTest < TLDR
         def test_alpha_score
           subject = QualityCalculator.new(min_churn: 1.0, max_churn: 5.0, min_complexity: 2.0, max_complexity: 27.0)
