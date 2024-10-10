@@ -11,9 +11,11 @@ require_relative 'churn_vs_complexity/complexity'
 require_relative 'churn_vs_complexity/churn'
 require_relative 'churn_vs_complexity/cli'
 require_relative 'churn_vs_complexity/git_date'
-require_relative 'churn_vs_complexity/timetravel'
 require_relative 'churn_vs_complexity/complexity_validator'
+require_relative 'churn_vs_complexity/language_validator'
 require_relative 'churn_vs_complexity/normal'
+require_relative 'churn_vs_complexity/timetravel'
+require_relative 'churn_vs_complexity/delta'
 
 module ChurnVsComplexity
   class Error < StandardError; end

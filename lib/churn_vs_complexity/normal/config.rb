@@ -24,7 +24,7 @@ module ChurnVsComplexity
       end
 
       def validate!
-        raise ValidationError, "Unsupported language: #{@language}" unless %i[java ruby javascript].include?(@language)
+        LanguageValidator.validate!(@language)
 
         SerializerValidator.validate!(serializer: @serializer)
 

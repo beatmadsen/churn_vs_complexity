@@ -5,15 +5,6 @@ require_relative 'normal/serializer'
 
 module ChurnVsComplexity
   module Normal
-    module ComplexityValidator
-      def self.validate!(language)
-        case language
-        when :java
-          Complexity::PMDCalculator.check_dependencies!
-        end
-      end
-    end
-
     # TODO: unit test
     module SerializerValidator
       def self.validate!(serializer:)
