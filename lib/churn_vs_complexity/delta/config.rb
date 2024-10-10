@@ -8,15 +8,18 @@ module ChurnVsComplexity
         serializer:,
         excluded: [],
         complexity_validator: ComplexityValidator,
+        commit:,
         **_options
       )
         @language = language
         @serializer = serializer
         @excluded = excluded
         @complexity_validator = complexity_validator
+        @commit = commit
       end
 
       def validate!
+        # TODO: validate that commit exists.
         LanguageValidator.validate!(@language)
         SerializerValidator.validate!(serializer: @serializer)
         @complexity_validator.validate!(@language)
