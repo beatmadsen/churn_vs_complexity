@@ -2,9 +2,46 @@
 
 require_relative 'timetravel/traveller'
 require_relative 'timetravel/worktree'
+require_relative 'timetravel/config'
+require_relative 'timetravel/git_strategy'
 
 module ChurnVsComplexity
   module Timetravel
+    # TODO: unit test
+    module SerializerValidator
+      def self.validate!(serializer:)
+        raise ValidationError, 'Does not support --summary in --timetravel mode' \
+         if serializer == :summary
+        raise ValidationError, "Unsupported serializer: #{serializer}" \
+          unless %i[none csv graph].include?(serializer)
+      end
+    end
+
+    # TODO: unit test
+    module RelativePeriodValidator
+      def self.validate!(relative_period:)
+        raise ValidationError, 'Relative period is required in timetravel mode' if relative_period.nil?
+        return if relative_period.nil? || %i[month quarter year].include?(relative_period)
+
+        raise ValidationError, "Invalid relative period #{relative_period}"
+      end
+    end
+
+    module SinceValidator
+      def self.validate!(since:)
+        # since can be nil, a date string or a keyword (:month, :quarter, :year)
+        return if since.nil?
+
+        raise ValidationError, "Invalid since value #{since}" unless since.is_a?(String)
+
+        begin
+          Date.strptime(since, '%Y-%m-%d')
+        rescue Date::Error
+          raise ValidationError, "Invalid date #{since}, please use correct format, YYYY-MM-DD"
+        end
+      end
+    end
+
     class Factory
       def self.git_strategy(folder:) = GitStrategy.new(folder:)
       def self.pipe = IO.pipe
@@ -31,39 +68,6 @@ module ChurnVsComplexity
           pipe[1].puts(JSON.dump(results))
           pipe[1].close
         end
-      end
-    end
-
-    class GitStrategy
-      def initialize(folder:)
-        @repo = Git.open(folder)
-        @folder = folder
-      end
-
-      def checkout_in_worktree(worktree_folder, sha)
-        command = "(cd #{worktree_folder} && git checkout #{sha}) > /dev/null 2>&1"
-        `#{command}`
-      end
-
-      def resolve_commits_with_interval(git_period:, jump_days:)
-        candidates = @repo.log(1_000_000).since(git_period.effective_start_date).until(git_period.end_date).to_a
-
-        commits_by_date = candidates.filter { |c| c.date.to_date >= git_period.effective_start_date }
-                                    .group_by { |c| c.date.to_date }
-
-        found_dates = GitDate.select_dates_with_at_least_interval(commits_by_date.keys, jump_days)
-
-        found_dates.map { |date| commits_by_date[date].max_by(&:date) }
-      end
-
-      def add_worktree(wt_folder)
-        command = "(cd #{@folder} && git worktree add -f #{wt_folder}) > /dev/null 2>&1"
-        `#{command}`
-      end
-
-      def remove_worktree(worktree_folder)
-        command = "(cd #{worktree_folder} && git worktree remove -f #{worktree_folder}) > /dev/null 2>&1"
-        `#{command}`
       end
     end
   end

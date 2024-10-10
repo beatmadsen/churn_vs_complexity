@@ -13,7 +13,7 @@ module ChurnVsComplexity
         @factory = factory
       end
 
-      def go(folder:)
+      def check(folder:)
         git_strategy = @factory.git_strategy(folder:)
         commits = git_strategy.resolve_commits_with_interval(git_period: @git_period, jump_days: @jump_days)
 

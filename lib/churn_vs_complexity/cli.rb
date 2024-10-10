@@ -88,15 +88,10 @@ module ChurnVsComplexity
 
       raise Error, 'No options selected. Use --help for usage information.' if options.empty?
 
-      config = Config.new(**options)
-
+      config_class = options[:mode] == :timetravel ? Timetravel::Config : Normal::Config
+      config = config_class.new(**options)
       config.validate!
-
-      if options[:mode] == :timetravel
-        puts config.timetravel.go(folder:)
-      else
-        puts config.to_engine.check(folder:)
-      end
+      puts config.checker.check(folder:)
     end
   end
 end
