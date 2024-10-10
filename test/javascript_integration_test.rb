@@ -4,13 +4,13 @@ require 'test_helper'
 
 class JavascriptIntegrationTest < TLDR
   def test_javascript_summary_completes
-    config = ChurnVsComplexity::Config.new(
+    config = ChurnVsComplexity::Normal::Config.new(
       language: :javascript,
       serializer: :summary,
       since: '2000-01-01',
     )
     config.validate!
-    result = config.to_engine.check(folder: 'tmp/test-support/javascript')
+    result = config.checker.check(folder: 'tmp/test-support/javascript')
 
     expected_summary_contents = <<~EXPECTED
       Number of observations: 4

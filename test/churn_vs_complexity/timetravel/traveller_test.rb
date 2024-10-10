@@ -5,12 +5,12 @@ require 'test_helper'
 module ChurnVsComplexity
   module Timetravel
     class TravellerTest < TLDR
-      def test_go
+      def test_check
         git_strategy = GitStrategyStub.new(commits: %w[sha1 sha2])
         pipe_result = { 'a' => 2 }
         pipe = [as_io(pipe_result), StringIO.new]
         factory = FactoryStub.new(git_strategy:, pipe:)
-        result = traveller(factory:).go(folder: 'space-place')
+        result = traveller(factory:).check(folder: 'space-place')
         assert_equal pipe_result, result
       end
 
