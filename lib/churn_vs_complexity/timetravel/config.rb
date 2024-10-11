@@ -11,6 +11,7 @@ module ChurnVsComplexity
         relative_period: nil,
         complexity_validator: ComplexityValidator,
         since_validator: SinceValidator,
+        factory: Factory,
         **options
       )
         @language = language
@@ -21,6 +22,7 @@ module ChurnVsComplexity
         @jump_days = jump_days
         @complexity_validator = complexity_validator
         @since_validator = since_validator
+        @factory = factory
         @options = options
       end
 
@@ -47,6 +49,7 @@ module ChurnVsComplexity
           engine: engine_config.checker,
           jump_days: @jump_days,
           serializer: serializer(git_period:),
+          factory: @factory,
         )
       end
 

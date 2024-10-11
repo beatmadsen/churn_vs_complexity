@@ -4,7 +4,7 @@ module ChurnVsComplexity
   # TODO: unit test and integration test
   module Timetravel
     class Traveller
-      def initialize(git_period:, relative_period:, engine:, serializer:, jump_days:, factory: Factory)
+      def initialize(git_period:, relative_period:, engine:, serializer:, jump_days:, factory:)
         @relative_period = relative_period
         @engine = engine
         @jump_days = jump_days

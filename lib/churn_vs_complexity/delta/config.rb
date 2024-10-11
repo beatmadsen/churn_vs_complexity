@@ -29,9 +29,10 @@ module ChurnVsComplexity
       private
 
       def validate_commit!
-        unless @commit.match?(/\A[0-9a-f]{40}\z/i) || @commit.match?(/\A[0-9a-f]{8}\z/i)
-          raise ValidationError, "Invalid commit: #{@commit}. It must be a valid 40-character SHA-1 hash or an 8-character shortened form."
-        end
+        return if @commit.match?(/\A[0-9a-f]{40}\z/i) || @commit.match?(/\A[0-9a-f]{8}\z/i)
+
+        raise ValidationError,
+              "Invalid commit: #{@commit}. It must be a valid 40-character SHA-1 hash or an 8-character shortened form."
       end
 
       def serializer

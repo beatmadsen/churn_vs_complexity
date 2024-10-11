@@ -2,7 +2,7 @@
 
 module ChurnVsComplexity
   module Timetravel
-    class Factory
+    module Factory
       def self.git_strategy(folder:) = GitStrategy.new(folder:)
       def self.pipe = IO.pipe
       def self.worker(engine:, worktree:) = Worker.new(engine:, worktree:)
