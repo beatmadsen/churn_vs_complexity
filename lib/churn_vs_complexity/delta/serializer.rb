@@ -3,7 +3,7 @@
 module ChurnVsComplexity
   module Delta
     module Serializer
-      def self.resolve(serializer)
+      def self.resolve(_serializer)
         case @serializer
         when :none
           Normal::Serializer::None

@@ -6,7 +6,7 @@ module ChurnVsComplexity
       def initialize(
         language:,
         serializer:,
-        commit:, 
+        commit:,
         excluded: [],
         complexity_validator: ComplexityValidator,
         factory: Factory,
@@ -26,7 +26,7 @@ module ChurnVsComplexity
         @factory.complexity_validator.validate!(@language)
       end
 
-      def checker = Checker.new(serializer:, excluded: @excluded, factory: @factory)
+      def checker = Checker.new(serializer:, excluded: @excluded, factory: @factory, commit: @commit)
 
       private
 
@@ -38,7 +38,6 @@ module ChurnVsComplexity
       end
 
       def serializer = Serializer.resolve(@serializer)
-        
     end
   end
 end

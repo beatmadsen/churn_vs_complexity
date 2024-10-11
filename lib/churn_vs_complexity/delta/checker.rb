@@ -3,13 +3,19 @@
 module ChurnVsComplexity
   module Delta
     class Checker
-      def initialize(serializer:, excluded:, factory:)
+      def initialize(serializer:, excluded:, factory:, commit:)
         @serializer = serializer
         @excluded = excluded
         @factory = factory
+        @commit = commit
       end
 
-      def check(folder:) = 'yo'
+      def check(folder:)
+        valid = @factory.git_strategy(folder:).valid_commit?(commit: @commit)
+        raise Error, 'Invalid commit' unless valid
+
+        'yo'
+      end
     end
   end
 end
