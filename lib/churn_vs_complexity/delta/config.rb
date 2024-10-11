@@ -6,25 +6,27 @@ module ChurnVsComplexity
       def initialize(
         language:,
         serializer:,
-        commit:, excluded: [],
+        commit:, 
+        excluded: [],
         complexity_validator: ComplexityValidator,
+        factory: Factory,
         **_options
       )
         @language = language
         @serializer = serializer
         @excluded = excluded
-        @complexity_validator = complexity_validator
         @commit = commit
+        @factory = factory
       end
 
       def validate!
         validate_commit!
         LanguageValidator.validate!(@language)
         SerializerValidator.validate!(serializer: @serializer)
-        @complexity_validator.validate!(@language)
+        @factory.complexity_validator.validate!(@language)
       end
 
-      def checker = Checker.new(serializer:, excluded: @excluded)
+      def checker = Checker.new(serializer:, excluded: @excluded, factory: @factory)
 
       private
 
@@ -35,16 +37,8 @@ module ChurnVsComplexity
               "Invalid commit: #{@commit}. It must be a valid 40-character SHA-1 hash or an 8-character shortened form."
       end
 
-      def serializer
-        case @serializer
-        when :none
-          Normal::Serializer::None
-        when :csv
-          Serializer::CSV
-        when :summary
-          Serializer::Summary
-        end
-      end
+      def serializer = Serializer.resolve(@serializer)
+        
     end
   end
 end

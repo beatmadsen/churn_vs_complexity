@@ -3,6 +3,17 @@
 module ChurnVsComplexity
   module Delta
     module Serializer
+      def self.resolve(serializer)
+        case @serializer
+        when :none
+          Normal::Serializer::None
+        when :csv
+          Serializer::CSV
+        when :summary
+          Serializer::Summary
+        end
+      end
+
       module CSV
       end
 
