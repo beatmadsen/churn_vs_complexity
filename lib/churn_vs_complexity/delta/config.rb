@@ -18,7 +18,7 @@ module ChurnVsComplexity
       end
 
       def validate!
-        # TODO: validate that commit exists.
+        validate_commit!
         LanguageValidator.validate!(@language)
         SerializerValidator.validate!(serializer: @serializer)
         @complexity_validator.validate!(@language)
@@ -27,6 +27,12 @@ module ChurnVsComplexity
       def checker = Checker.new(serializer:, excluded: @excluded)
 
       private
+
+      def validate_commit!
+        unless @commit.match?(/\A[0-9a-f]{40}\z/i) || @commit.match?(/\A[0-9a-f]{8}\z/i)
+          raise ValidationError, "Invalid commit: #{@commit}. It must be a valid 40-character SHA-1 hash or an 8-character shortened form."
+        end
+      end
 
       def serializer
         case @serializer

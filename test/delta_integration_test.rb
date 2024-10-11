@@ -7,7 +7,7 @@ class DeltaIntegrationTest < TLDR
     config = ChurnVsComplexity::Delta::Config.new(
       language: :ruby,
       serializer: :csv,
-      commit: 'dummy-sha',
+      commit: 'e75eb5aa',
     )
     config.validate!
     result = config.checker.check(folder: 'lib')

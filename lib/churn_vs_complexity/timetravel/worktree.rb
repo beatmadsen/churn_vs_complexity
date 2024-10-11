@@ -21,7 +21,7 @@ module ChurnVsComplexity
       def checkout(sha)
         raise Error, 'Worktree not prepared' if @folder.nil?
 
-        @git_strategy.checkout_in_worktree(@folder, sha)
+        @git_strategy.checkout_in_worktree(@folder, sha)      
       end
 
       def remove
@@ -37,10 +37,14 @@ module ChurnVsComplexity
         File.join(Dir.tmpdir, 'churn_vs_complexity', 'timetravel', folder_hash)
       end
 
-      def prepare_worktree
-        worktree_folder = File.join(tt_folder, "worktree_#{@number}")
+      def worktree_folder
+        @_worktree_folder ||= File.join(tt_folder, "worktree_#{@number}")
+      end
 
-        unless File.directory?(worktree_folder)
+      def prepare_worktree
+        if File.directory?(worktree_folder)
+          prepare_worktree_in_existing_dir
+        else
           begin
             FileUtils.mkdir_p(worktree_folder)
           rescue StandardError
@@ -50,6 +54,14 @@ module ChurnVsComplexity
         end
 
         worktree_folder
+      end
+
+      def prepare_worktree_in_existing_dir
+        Git.open(worktree_folder)
+      rescue ArgumentError
+        # Delete the worktree folder and try again
+        FileUtils.rm_rf(worktree_folder)
+        prepare_worktree
       end
     end
   end
