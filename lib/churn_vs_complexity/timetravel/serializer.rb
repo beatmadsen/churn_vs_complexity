@@ -21,7 +21,7 @@ module ChurnVsComplexity
 
       module CSV
         def self.serialize(result)
-          summaries = Timetravel.summaries(result)
+          summaries = Serializer.summaries(result)
 
           # 2. Add title row to front of summaries
           summaries.unshift(
