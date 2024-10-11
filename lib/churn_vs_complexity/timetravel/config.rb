@@ -6,7 +6,7 @@ module ChurnVsComplexity
       def initialize(
         language:,
         serializer:,
-        excluded: [],
+        jump_days:, excluded: [],
         since: nil,
         relative_period: nil,
         complexity_validator: ComplexityValidator,
@@ -18,12 +18,15 @@ module ChurnVsComplexity
         @excluded = excluded
         @since = since
         @relative_period = relative_period
+        @jump_days = jump_days
         @complexity_validator = complexity_validator
         @since_validator = since_validator
         @options = options
       end
 
       def validate!
+        raise ValidationError, 'Must specify jump days!' if @jump_days.nil?
+
         LanguageValidator.validate!(@language)
 
         SerializerValidator.validate!(serializer: @serializer)
@@ -33,17 +36,24 @@ module ChurnVsComplexity
         @complexity_validator.validate!(@language)
       end
 
-      def checker
+      def checker = traveller(git_period: GitDate.git_period(@since, Time.now.to_date))
+
+      private
+
+      def traveller(git_period:)
         Traveller.new(
-          since: @since,
+          git_period:,
           relative_period: @relative_period,
           engine: engine_config.checker,
-          jump_days: @options[:jump_days],
-          serializer: @serializer,
+          jump_days: @jump_days,
+          serializer: serializer(git_period:),
         )
       end
 
-      private
+      def serializer(git_period:)
+        Serializer.resolve(serializer: @serializer, git_period:, relative_period: @relative_period,
+                           jump_days: @jump_days,)
+      end
 
       def engine_config
         Normal::Config.new(

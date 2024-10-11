@@ -4,12 +4,12 @@ module ChurnVsComplexity
   # TODO: unit test and integration test
   module Timetravel
     class Traveller
-      def initialize(since:, relative_period:, engine:, serializer:, jump_days:, factory: Factory)
+      def initialize(git_period:, relative_period:, engine:, serializer:, jump_days:, factory: Factory)
         @relative_period = relative_period
         @engine = engine
         @jump_days = jump_days
         @serializer = serializer
-        @git_period = GitDate.git_period(since, Time.now.to_date)
+        @git_period = git_period
         @factory = factory
       end
 
@@ -21,7 +21,7 @@ module ChurnVsComplexity
         work_on(chunked:, folder:, git_strategy:)
         combined = chunked.map { |c_and_p| read_result(c_and_p[:pipe]) }.reduce({}, :merge)
 
-        serializer.serialize(combined)
+        @serializer.serialize(combined)
       end
 
       private
@@ -54,11 +54,6 @@ module ChurnVsComplexity
       def schedule_work(chunk:, worktree:, pipe:)
         @factory.worker(engine: @engine, worktree:)
                 .schedule(chunk:, pipe:)
-      end
-
-      def serializer
-        @factory.serializer(serializer: @serializer, git_period: @git_period,
-                            relative_period: @relative_period, jump_days: @jump_days,)
       end
     end
   end

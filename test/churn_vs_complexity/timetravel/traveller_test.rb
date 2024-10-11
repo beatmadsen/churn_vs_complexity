@@ -23,9 +23,13 @@ module ChurnVsComplexity
         end
       end
 
-      def traveller(factory: FactoryStub.new, since: nil, relative_period: :month, jump_days: 3, engine: EngineStub,
-                    serializer: :none)
-        Traveller.new(factory:, since:, relative_period:, jump_days:, engine:, serializer:)
+      def traveller(git_period: git_period, factory: FactoryStub.new, relative_period: :month, jump_days: 3, engine: EngineStub,
+                    serializer: Normal::Serializer::None)
+        Traveller.new(factory:, git_period:, relative_period:, jump_days:, engine:, serializer:)
+      end
+
+      def git_period(start_date: Date.new(2024, 1, 1), end_date: Date.new(2024, 1, 31))
+        Serializer::GitPeriod.new(start_date, end_date)
       end
     end
 
@@ -33,18 +37,16 @@ module ChurnVsComplexity
       attr_reader :pipe
 
       def initialize(git_strategy: GitStrategyStub.new, pipe: [StringIO.new, StringIO.new], worker: WorkerStub,
-                     worktree: WorktreeStub, serializer: Normal::Serializer::None)
+                     worktree: WorktreeStub)
         @git_strategy = git_strategy
         @pipe = pipe
         @worker = worker
         @worktree = worktree
-        @serializer = serializer
       end
 
       def git_strategy(*) = @git_strategy
       def worker(*) = @worker
       def worktree(*) = @worktree
-      def serializer(*) = @serializer
     end
 
     class GitStrategyStub

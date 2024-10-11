@@ -7,7 +7,6 @@ module ChurnVsComplexity
       def self.pipe = IO.pipe
       def self.worker(engine:, worktree:) = Worker.new(engine:, worktree:)
       def self.worktree(root_folder:, git_strategy:, number:) = Worktree.new(root_folder:, git_strategy:, number:)
-      def self.serializer(**args) = Serializer.resolve(**args)
     end
   end
 end

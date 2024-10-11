@@ -6,9 +6,8 @@ module ChurnVsComplexity
       def initialize(
         language:,
         serializer:,
-        excluded: [],
+        commit:, excluded: [],
         complexity_validator: ComplexityValidator,
-        commit:,
         **_options
       )
         @language = language
