@@ -7,8 +7,7 @@ module ChurnVsComplexity
     DEFAULT_COMMIT = 'abc123ee'
 
     class CheckerTest < TLDR
-      def test_check
-        factory = FactoryStub.new
+      def test_check        
         result = checker(factory:).check(folder: 'space-place')
         assert_equal 'yo', result
       end
@@ -21,10 +20,10 @@ module ChurnVsComplexity
       # 5. Serialize results
 
       def test_that_it_fails_when_commit_is_not_found_in_log
-        git_strategy = GitStrategyStub.new(valid_commits: [])
-        factory = FactoryStub.new(git_strategy:)
+        g = git_strategy(valid_commits: [])
+        f = factory(git_strategy: g)
         assert_raises(StandardError) do
-          checker(factory:).check(folder: 'space-place')
+          checker(factory: f).check(folder: 'space-place')
         end
       end
 
@@ -33,12 +32,20 @@ module ChurnVsComplexity
       def checker(factory: FactoryStub.new, serializer: Normal::Serializer::None, excluded: [], commit: DEFAULT_COMMIT)
         Checker.new(factory:, serializer:, excluded:, commit:)
       end
+
+      def factory(git_strategy: git_strategy())
+        FactoryStub.new(git_strategy:)
+      end
+
+      def git_strategy(valid_commits: [DEFAULT_COMMIT])
+        GitStrategyStub.new(valid_commits:)
+      end
     end
 
     class FactoryStub
       delegate :complexity_validator, to: Factory
 
-      def initialize(git_strategy: GitStrategyStub.new)
+      def initialize(git_strategy:)
         @git_strategy = git_strategy
       end
 
@@ -46,7 +53,7 @@ module ChurnVsComplexity
     end
 
     class GitStrategyStub
-      def initialize(valid_commits: [DEFAULT_COMMIT])
+      def initialize(valid_commits:)
         @valid_commits = valid_commits
       end
 
