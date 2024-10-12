@@ -19,7 +19,8 @@ module ChurnVsComplexity
       def select_files(folder)
         were_excluded = []
         were_included = []
-        Dir.glob("#{folder}/**/*").each do |f|
+        cs = candidates(folder)
+        cs.each do |f|
           if has_excluded_pattern?(f)
             were_excluded << f
           elsif has_correct_extension?(f) && File.file?(f)
@@ -51,7 +52,7 @@ module ChurnVsComplexity
     end
 
     class Predefined < Excluding
-      def initialize(included, extensions, excluded, convert_to_absolute_path = false)
+      def initialize(included:, extensions:, excluded:, convert_to_absolute_path: false)
         super(extensions, excluded, convert_to_absolute_path)
         @included = included
       end
@@ -66,8 +67,8 @@ module ChurnVsComplexity
         Excluding.new(['.java'], excluded)
       end
 
-      def self.predefined(included, excluded)
-        Predefined.new(included, ['.java'], excluded)
+      def self.predefined(included:, excluded:)
+        Predefined.new(included:, extensions: ['.java'], excluded:)
       end
     end
 
@@ -76,8 +77,8 @@ module ChurnVsComplexity
         Excluding.new(['.rb'], excluded)
       end
 
-      def self.predefined(included, excluded)
-        Predefined.new(included, ['.rb'], excluded)
+      def self.predefined(included:, excluded:)
+        Predefined.new(included:, extensions: ['.rb'], excluded:)
       end
     end
 
@@ -86,8 +87,8 @@ module ChurnVsComplexity
         Excluding.new(['.js', '.jsx', '.ts', '.tsx'], excluded, true)
       end
 
-      def self.predefined(included, excluded)
-        Predefined.new(included, ['.js', '.jsx', '.ts', '.tsx'], excluded, true)
+      def self.predefined(included:, excluded:)
+        Predefined.new(included:, extensions: ['.js', '.jsx', '.ts', '.tsx'], excluded:, convert_to_absolute_path: true)
       end
     end
   end

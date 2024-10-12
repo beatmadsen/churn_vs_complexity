@@ -23,14 +23,21 @@ module ChurnVsComplexity
         worktree.prepare
         worktree.checkout(sha: @commit)
 
-        files = changes.map { |change| change[:path] }
-        # we need to create engine here becuase it needs to have a file selector that only selects files that are changed
-        engine = @factory.engine(language: @language, excluded: @excluded, files:)
-        engine.check(folder:)[:values_by_file]
-
-        changes.map do |_annotated_file|
-          'process me'
+        changes.each do |change|
+          change[:full_path] = File.join(worktree.folder, change[:path])
         end
+
+        files = changes.reject { |change| change[:type] == :deleted }.map { |change| change[:full_path] }
+
+        engine = @factory.engine(language: @language, excluded: @excluded, files:)
+
+        values_by_file = engine.check(folder: worktree.folder)[:values_by_file]
+
+        changes.each do |annotated_file|
+          annotated_file[:complexity] = values_by_file.dig(annotated_file[:full_path], 1)
+        end
+
+        @serializer.serialize(changes)
       end
 
       private

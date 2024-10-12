@@ -13,22 +13,24 @@ module ChurnVsComplexity
 
     class << self
       def engine(language:, excluded:, files:)
+        file_selector = file_selector(language:, included: files, excluded:)
         Engine.concurrent(
           since: nil, complexity: complexity(language), churn: Churn::Disabled,
-          serializer: Normal::Serializer::None, file_selector: file_selector(language, files, excluded),
+          serializer: Normal::Serializer::None,
+          file_selector:,
         )
       end
 
       private
 
-      def file_selector(language, files, excluded)
+      def file_selector(language:, included:, excluded:)
         case language
         when :java
-          FileSelector::Java.predefined(files, excluded)
+          FileSelector::Java.predefined(included:, excluded:)
         when :ruby
-          FileSelector::Ruby.predefined(files, excluded)
+          FileSelector::Ruby.predefined(included:, excluded:)
         when :javascript
-          FileSelector::JavaScript.predefined(files, excluded)
+          FileSelector::JavaScript.predefined(included:, excluded:)
         end
       end
 
