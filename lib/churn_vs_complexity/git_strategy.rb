@@ -14,6 +14,12 @@ module ChurnVsComplexity
       false
     end
 
+    def changes(commit:)
+      @repo.object(commit).diff(@repo.object(commit).parent).map do |change|
+        { path: change.path, type: change.type.to_sym }
+      end
+    end
+
     def checkout_in_worktree(worktree_folder, sha)
       command = "(cd #{worktree_folder} && git checkout #{sha}) > /dev/null 2>&1"
       `#{command}`

@@ -11,10 +11,19 @@ module ChurnVsComplexity
       end
 
       def check(folder:)
-        valid = @factory.git_strategy(folder:).valid_commit?(commit: @commit)
-        raise Error, 'Invalid commit' unless valid
+        raise Error, 'Invalid commit' unless valid_commit?(folder:)
 
-        'yo'
+        changes = @factory.git_strategy(folder:).changes(commit: @commit)
+
+        changes.map do |annotated_file|
+          'process me'
+        end
+      end
+
+      private
+
+      def valid_commit?(folder:)
+        @factory.git_strategy(folder:).valid_commit?(commit: @commit)
       end
     end
   end

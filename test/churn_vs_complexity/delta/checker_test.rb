@@ -9,7 +9,7 @@ module ChurnVsComplexity
     class CheckerTest < TLDR
       def test_check        
         result = checker(factory:).check(folder: 'space-place')
-        assert_equal 'yo', result
+        assert_equal [], result
       end
 
       # Idea for check algorithm:
@@ -27,6 +27,12 @@ module ChurnVsComplexity
         end
       end
 
+      def test_that_it_returns_empty_array_when_no_files_are_changed
+        g = git_strategy(changes: [])
+        f = factory(git_strategy: g)
+        assert_equal [], checker(factory: f).check(folder: 'space-place')
+      end
+
       private
 
       def checker(factory: FactoryStub.new, serializer: Normal::Serializer::None, excluded: [], commit: DEFAULT_COMMIT)
@@ -37,8 +43,8 @@ module ChurnVsComplexity
         FactoryStub.new(git_strategy:)
       end
 
-      def git_strategy(valid_commits: [DEFAULT_COMMIT])
-        GitStrategyStub.new(valid_commits:)
+      def git_strategy(valid_commits: [DEFAULT_COMMIT], changes: [])
+        GitStrategyStub.new(valid_commits:, changes:)
       end
     end
 
@@ -53,12 +59,17 @@ module ChurnVsComplexity
     end
 
     class GitStrategyStub
-      def initialize(valid_commits:)
+      def initialize(valid_commits:, changes:)
         @valid_commits = valid_commits
+        @changes = changes
       end
 
       def valid_commit?(commit:)
         @valid_commits.include?(commit)
+      end
+
+      def changes(commit:)
+        @changes
       end
     end
   end
