@@ -9,18 +9,6 @@ module ChurnVsComplexity
       end
     end
 
-    class Predefined
-      def initialize(included, excluded, convert_to_absolute_path = false)
-        @included = included
-        @excluded = excluded
-        @convert_to_absolute_path = convert_to_absolute_path
-      end
-
-      def select_files(_folder)
-        raise NotImplementedError, 'Soon!'
-      end
-    end
-
     class Excluding
       def initialize(extensions, excluded, convert_to_absolute_path = false)
         @extensions = extensions
@@ -45,6 +33,12 @@ module ChurnVsComplexity
         { explicitly_excluded: were_excluded, included: were_included }
       end
 
+      protected
+
+      def candidates(folder)
+        Dir.glob("#{folder}/**/*")
+      end
+
       private
 
       def has_correct_extension?(file_path)
@@ -56,9 +50,24 @@ module ChurnVsComplexity
       end
     end
 
+    class Predefined < Excluding
+      def initialize(included, extensions, excluded, convert_to_absolute_path = false)
+        super(extensions, excluded, convert_to_absolute_path)
+        @included = included
+      end
+
+      protected
+
+      def candidates(*) = @included
+    end
+
     module Java
       def self.excluding(excluded)
         Excluding.new(['.java'], excluded)
+      end
+
+      def self.predefined(included, excluded)
+        Predefined.new(included, ['.java'], excluded)
       end
     end
 
@@ -66,11 +75,19 @@ module ChurnVsComplexity
       def self.excluding(excluded)
         Excluding.new(['.rb'], excluded)
       end
+
+      def self.predefined(included, excluded)
+        Predefined.new(included, ['.rb'], excluded)
+      end
     end
 
     module JavaScript
       def self.excluding(excluded)
         Excluding.new(['.js', '.jsx', '.ts', '.tsx'], excluded, true)
+      end
+
+      def self.predefined(included, excluded)
+        Predefined.new(included, ['.js', '.jsx', '.ts', '.tsx'], excluded, true)
       end
     end
   end

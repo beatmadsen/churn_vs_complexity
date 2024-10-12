@@ -5,7 +5,11 @@ require 'git'
 module ChurnVsComplexity
   module Churn
     module Disabled
-      def self.calculate(*) = 0
+      def self.calculate(*)
+        raise Error, 'Churn is disabled'
+      end
+
+      def self.date_of_latest_commit(*) = :disabled
     end
 
     module GitCalculator

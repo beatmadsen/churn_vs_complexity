@@ -16,55 +16,54 @@ module ChurnVsComplexity
       # 5. Serialize results
 
       def test_that_it_fails_when_commit_is_not_found_in_log
-        g = git_strategy(valid_commits: [])
-        f = factory(git_strategy: g)
+        g = create_git_strategy(valid_commits: [])
+        f = create_factory(git_strategy: g)
         assert_raises(StandardError) do
-          checker(factory: f).check(folder: 'space-place')
+          create_checker(factory: f).check(folder: 'space-place')
         end
       end
 
       def test_that_it_returns_empty_array_when_no_files_are_changed
-        g = git_strategy(changes: [])
-        f = factory(git_strategy: g)
-        assert_equal [], checker(factory: f).check(folder: 'space-place')
+        g = create_git_strategy(changes: [])
+        f = create_factory(git_strategy: g)
+        assert_equal [], create_checker(factory: f).check(folder: 'space-place')
       end
 
       def test_that_it_fails_when_it_cannot_prepare_a_worktree_and_there_are_changes
-        f = factory(worktree: worktree(fail_to_prepare: true))
+        f = create_factory(worktree: create_worktree(fail_to_prepare: true))
         # TODO: move worktree up one level
         assert_raises(Timetravel::Worktree::Error) do
-          checker(factory: f).check(folder: 'space-place')
+          create_checker(factory: f).check(folder: 'space-place')
         end
       end
 
       def test_that_it_fails_when_it_cannot_calculate_complexity_for_a_file
-        f = factory(engine: engine(fail_to_process: true))
-        # TODO: wire Engine for custom complexity calculator
+        f = create_factory(engine: create_engine(fail_to_process: true))
         assert_raises(Error) do
-          checker(factory: f).check(folder: 'space-place')
+          create_checker(factory: f).check(folder: 'space-place')
         end
       end
 
       private
 
-      def checker(factory: FactoryStub.new, serializer: Normal::Serializer::None, excluded: [], commit: DEFAULT_COMMIT, 
-language: :ruby)
+      def create_checker(factory: create_factory, serializer: Normal::Serializer::None, excluded: [], commit: DEFAULT_COMMIT,
+                         language: :ruby)
         Checker.new(factory:, serializer:, excluded:, commit:, language:)
       end
 
-      def factory(git_strategy: git_strategy, worktree: worktree, engine: engine)
+      def create_factory(git_strategy: create_git_strategy, worktree: create_worktree, engine: create_engine)
         FactoryStub.new(git_strategy:, worktree:, engine:)
       end
 
-      def git_strategy(valid_commits: [DEFAULT_COMMIT], changes: DEFAULT_CHANGES)
+      def create_git_strategy(valid_commits: [DEFAULT_COMMIT], changes: DEFAULT_CHANGES)
         GitStrategyStub.new(valid_commits:, changes:)
       end
 
-      def worktree(fail_to_prepare: false, fail_to_checkout: false)
+      def create_worktree(fail_to_prepare: false, fail_to_checkout: false)
         WorktreeStub.new(fail_to_prepare:, fail_to_checkout:)
       end
 
-      def engine(fail_to_process: false)
+      def create_engine(fail_to_process: false)
         EngineStub.new(fail_to_process:)
       end
     end

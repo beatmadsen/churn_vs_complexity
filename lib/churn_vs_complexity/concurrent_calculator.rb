@@ -14,8 +14,10 @@ module ChurnVsComplexity
 
     def calculate(folder:, files:, since:)
       latest_commit_date = @churn.date_of_latest_commit(folder:)
-      @git_period = GitDate.git_period(since, latest_commit_date)
-      schedule_churn_calculation(folder, files[:included], @git_period.effective_start_date)
+      unless latest_commit_date == :disabled
+        @git_period = GitDate.git_period(since, latest_commit_date)
+        schedule_churn_calculation(folder, files[:included], @git_period.effective_start_date)
+      end
       calculate_complexity(folder, files)
       await_results
       combine_results
@@ -49,7 +51,7 @@ module ChurnVsComplexity
     end
 
     def await_results
-      @threads.each(&:join)
+      @threads&.each(&:join)
     rescue StandardError => e
       raise Error, "Failed to caculate churn: #{e.message}"
     end
