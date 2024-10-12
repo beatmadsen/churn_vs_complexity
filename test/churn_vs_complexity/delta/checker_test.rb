@@ -29,8 +29,16 @@ module ChurnVsComplexity
         assert_equal [], checker(factory: f).check(folder: 'space-place')
       end
 
+      def test_that_it_fails_when_it_cannot_prepare_a_worktree_and_there_are_changes
+        f = factory(worktree: worktree(fail_to_prepare: true))
+        # TODO: move worktree up one level
+        assert_raises(Timetravel::Worktree::Error) do
+          checker(factory: f).check(folder: 'space-place')
+        end
+      end
+
       def test_that_it_fails_when_it_cannot_check_out_a_worktree_for_commit_and_there_are_changes
-        f = factory(worktree: worktree(failing: true))
+        f = factory(worktree: worktree(fail_to_checkout: true))
         # TODO: move worktree up one level
         assert_raises(Timetravel::Worktree::Error) do
           checker(factory: f).check(folder: 'space-place')
@@ -51,8 +59,8 @@ module ChurnVsComplexity
         GitStrategyStub.new(valid_commits:, changes:)
       end
 
-      def worktree(failing: false)
-        WorktreeStub.new(failing:)
+      def worktree(fail_to_prepare: false, fail_to_checkout: false)
+        WorktreeStub.new(fail_to_prepare:, fail_to_checkout:)
       end
     end
 
@@ -85,12 +93,17 @@ module ChurnVsComplexity
     end
 
     class WorktreeStub
-      def initialize(failing:)
-        @failing = failing
+      def initialize(fail_to_prepare:, fail_to_checkout:)
+        @fail_to_prepare = fail_to_prepare
+        @fail_to_checkout = fail_to_checkout
       end
 
       def prepare
-        raise Timetravel::Worktree::Error, 'Failed to prepare worktree' if @failing
+        raise Timetravel::Worktree::Error, 'Failed to prepare worktree' if @fail_to_prepare
+      end
+
+      def checkout(sha:)
+        raise Timetravel::Worktree::Error, "Failed to checkout #{sha} in worktree" if @fail_to_checkout
       end
     end
   end

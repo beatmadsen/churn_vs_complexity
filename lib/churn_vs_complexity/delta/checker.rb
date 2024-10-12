@@ -19,8 +19,10 @@ module ChurnVsComplexity
 
         worktree = @factory.worktree(root_folder: folder, git_strategy:)
         worktree.prepare
+        worktree.checkout(sha: @commit)
 
         changes.map do |annotated_file|
+
           'process me'
         end
       end
