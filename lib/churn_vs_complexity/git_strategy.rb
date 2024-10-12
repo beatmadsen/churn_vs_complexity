@@ -15,7 +15,9 @@ module ChurnVsComplexity
     end
 
     def changes(commit:)
-      @repo.object(commit).diff(@repo.object(commit).parent).map do |change|
+      commit_object = @repo.object(commit)
+      base = commit_object.parent
+      commit_object.diff(base).map do |change|
         { path: change.path, type: change.type.to_sym }
       end
     end

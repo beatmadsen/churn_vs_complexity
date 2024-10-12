@@ -11,7 +11,7 @@ module ChurnVsComplexity
       # Idea for check algorithm:
       # 1. Find commit in log
       # 2. Find all files changed in this commit
-      #  3. Annotate changed files with type of change (create, delete, modify)
+      # 3. Annotate changed files with type of change (create, delete, modify)
       # 4. Validate changed files with complexity validator
       # 5. Serialize results
 
@@ -37,10 +37,10 @@ module ChurnVsComplexity
         end
       end
 
-      def test_that_it_fails_when_it_cannot_check_out_a_worktree_for_commit_and_there_are_changes
-        f = factory(worktree: worktree(fail_to_checkout: true))
-        # TODO: move worktree up one level
-        assert_raises(Timetravel::Worktree::Error) do
+      def test_that_it_fails_when_it_cannot_calculate_complexity_for_a_file
+        f = factory()
+        # TODO: wire Engine for custom complexity calculator        
+        assert_raises(StandardError) do
           checker(factory: f).check(folder: 'space-place')
         end
       end
