@@ -74,7 +74,7 @@ module ChurnVsComplexity
 
       def git_strategy(folder:) = @git_strategy
 
-      def worktree(root_folder:, git_strategy:) = @worktree
+      def worktree(root_folder:, git_strategy:, data_isolation_id:) = @worktree
     end
 
     class GitStrategyStub

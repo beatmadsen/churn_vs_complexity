@@ -1,6 +1,9 @@
 TODO:
 
 - Change Mode: find the files that were changed for a commit sha and analayse only those files for new complexity levels
+  - Sequential Checker for single commit  
+  - Concurrent Checker for multiple commits executing Sequential Checker in separate threads
+
 - Move Timetravel calculations away from serializer
 
 - Database, where we can prepopulate the state of every file and every commit

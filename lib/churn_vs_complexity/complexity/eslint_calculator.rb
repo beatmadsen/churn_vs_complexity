@@ -23,6 +23,14 @@ module ChurnVsComplexity
           end
         end
 
+        def check_dependencies!
+          begin 
+            `npm --version`
+          rescue Errno::ENOENT
+            raise Error, 'Needs node and npm installed'
+          end
+        end
+
         private
 
         def gem_root

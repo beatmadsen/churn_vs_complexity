@@ -88,6 +88,9 @@ module ChurnVsComplexity
 
       raise Error, 'No options selected. Use --help for usage information.' if options.empty?
 
+      raise Error, 'No language selected. Use --help for usage information.' if options[:language].nil?
+      raise Error, 'No serializer selected. Use --help for usage information.' if options[:serializer].nil?
+
       config_class = options[:mode] == :timetravel ? Timetravel::Config : Normal::Config
       config = config_class.new(**options)
       config.validate!

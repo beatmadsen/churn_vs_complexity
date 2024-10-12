@@ -6,6 +6,8 @@ module ChurnVsComplexity
       case language
       when :java
         Complexity::PMDCalculator.check_dependencies!
+      when :javascript
+        Complexity::ESLintCalculator.check_dependencies!
       end
     end
   end
