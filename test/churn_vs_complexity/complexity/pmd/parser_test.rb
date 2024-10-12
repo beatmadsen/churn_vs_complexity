@@ -4,7 +4,7 @@ require 'test_helper'
 
 module ChurnVsComplexity
   module Complexity
-    module PMDCalculator
+    module PMD
       class ParserTest < TLDR
         def test_that_it_does_x
           parser = Parser.new

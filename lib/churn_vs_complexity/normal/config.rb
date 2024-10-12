@@ -37,7 +37,7 @@ module ChurnVsComplexity
         case @language
         when :java
           Engine.concurrent(
-            complexity: Complexity::PMDCalculator,
+            complexity: Complexity::PMD::FolderCalculator,
             churn:,
             file_selector: FileSelector::Java.excluding(@excluded),
             serializer:,

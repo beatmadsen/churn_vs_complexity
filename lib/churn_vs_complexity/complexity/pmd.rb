@@ -1,28 +1,14 @@
 # frozen_string_literal: true
 
+require_relative 'pmd/folder_calculator'
+require_relative 'pmd/files_calculator'
+
 module ChurnVsComplexity
   module Complexity
-    module PMDCalculator
+    module PMD
       CONCURRENCY = Etc.nprocessors
 
       class << self
-        def folder_based? = true
-
-        def calculate(folder:)
-          cache_path = resolve_cache_path
-          output = `pmd check -d #{folder} -R #{resolve_ruleset_path} -f json -t #{CONCURRENCY} --cache #{cache_path} 2>/dev/null`
-          File.delete(cache_path)
-
-          Parser.new.parse(output)
-        end
-
-        def check_dependencies!
-          `pmd --help`
-        rescue StandardError
-          raise Error, 'Could not execute PMD using command pmd'
-        end
-
-        private
 
         def resolve_ruleset_path
           ruleset_path = File.join(gem_root, 'tmp', 'pmd-support', 'ruleset.xml')
@@ -35,9 +21,15 @@ module ChurnVsComplexity
           File.join(gem_root, 'tmp', 'pmd-support', "pmd-cache-#{Process.pid}")
         end
 
-        def gem_root
-          File.expand_path('../../..', __dir__)
-        end
+        def check_dependencies!
+          `pmd --help`
+        rescue StandardError
+          raise Error, 'Could not execute PMD using command pmd'
+        end   
+
+        private
+
+        def gem_root = ROOT_PATH
       end
 
       class Parser

@@ -5,7 +5,7 @@ module ChurnVsComplexity
     def self.validate!(language)
       case language
       when :java
-        Complexity::PMDCalculator.check_dependencies!
+        Complexity::PMD.check_dependencies!
       when :javascript
         Complexity::ESLintCalculator.check_dependencies!
       end
