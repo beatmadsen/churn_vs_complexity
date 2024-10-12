@@ -26,7 +26,10 @@ module ChurnVsComplexity
         @factory.complexity_validator.validate!(@language)
       end
 
-      def checker = Checker.new(serializer:, excluded: @excluded, factory: @factory, commit: @commit, language: @language)
+      def checker
+        Checker.new(serializer:, excluded: @excluded, factory: @factory, commit: @commit,
+                    language: @language,)
+      end
 
       private
 

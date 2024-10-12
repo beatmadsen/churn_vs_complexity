@@ -11,8 +11,26 @@ module ChurnVsComplexity
       def self.validate!(serializer:); end
     end
 
-    def self.engine(language:, excluded:, files:)
-      raise 'Not yet implemented'
+    class << self
+      def engine(language:, excluded:, files:)
+        Engine.concurrent(
+          since: nil, complexity: complexity(language), churn: Churn::Disabled,
+          serializer: Normal::Serializer::None, file_selector: FileSelector::Predefined.new(files, excluded),
+        )
+      end
+
+      private
+
+      def complexity(language)
+        case language
+        when :java
+          Complexity::PMD::FilesCalculator
+        when :ruby
+          Complexity::FlogCalculator
+        when :javascript
+          Complexity::ESLintCalculator
+        end
+      end
     end
   end
 end

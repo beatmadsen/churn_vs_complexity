@@ -9,7 +9,6 @@ module ChurnVsComplexity
       CONCURRENCY = Etc.nprocessors
 
       class << self
-
         def resolve_ruleset_path
           ruleset_path = File.join(gem_root, 'tmp', 'pmd-support', 'ruleset.xml')
           raise "ruleset.xml not found in #{ruleset_path}" unless File.exist?(ruleset_path)
@@ -25,7 +24,7 @@ module ChurnVsComplexity
           `pmd --help`
         rescue StandardError
           raise Error, 'Could not execute PMD using command pmd'
-        end   
+        end
 
         private
 

@@ -5,7 +5,7 @@ require 'test_helper'
 module ChurnVsComplexity
   module Delta
     DEFAULT_COMMIT = 'abc123ee'
-    DEFAULT_CHANGES = [{ path: 'file1', type: :modified }, { path: 'file2', type: :deleted }]
+    DEFAULT_CHANGES = [{ path: 'file1', type: :modified }, { path: 'file2', type: :deleted }].freeze
 
     class CheckerTest < TLDR
       # Idea for check algorithm:
@@ -39,7 +39,7 @@ module ChurnVsComplexity
 
       def test_that_it_fails_when_it_cannot_calculate_complexity_for_a_file
         f = factory(engine: engine(fail_to_process: true))
-        # TODO: wire Engine for custom complexity calculator        
+        # TODO: wire Engine for custom complexity calculator
         assert_raises(Error) do
           checker(factory: f).check(folder: 'space-place')
         end
@@ -47,11 +47,12 @@ module ChurnVsComplexity
 
       private
 
-      def checker(factory: FactoryStub.new, serializer: Normal::Serializer::None, excluded: [], commit: DEFAULT_COMMIT, language: :ruby)
+      def checker(factory: FactoryStub.new, serializer: Normal::Serializer::None, excluded: [], commit: DEFAULT_COMMIT, 
+language: :ruby)
         Checker.new(factory:, serializer:, excluded:, commit:, language:)
       end
 
-      def factory(git_strategy: git_strategy(), worktree: worktree(), engine: engine())
+      def factory(git_strategy: git_strategy, worktree: worktree, engine: engine)
         FactoryStub.new(git_strategy:, worktree:, engine:)
       end
 

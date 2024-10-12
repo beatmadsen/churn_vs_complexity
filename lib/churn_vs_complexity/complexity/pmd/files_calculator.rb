@@ -4,7 +4,6 @@ module ChurnVsComplexity
   module Complexity
     module PMD
       module FilesCalculator
-        
         class << self
           def folder_based? = false
 
@@ -15,7 +14,7 @@ module ChurnVsComplexity
             File.delete(cache_path)
 
             Parser.new.parse(output)
-          end         
+          end
         end
       end
     end

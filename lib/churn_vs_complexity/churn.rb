@@ -4,6 +4,10 @@ require 'git'
 
 module ChurnVsComplexity
   module Churn
+    module Disabled
+      def self.calculate(*) = 0
+    end
+
     module GitCalculator
       class << self
         def calculate(folder:, file:, since:)

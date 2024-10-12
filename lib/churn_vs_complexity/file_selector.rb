@@ -9,6 +9,18 @@ module ChurnVsComplexity
       end
     end
 
+    class Predefined
+      def initialize(included, excluded, convert_to_absolute_path = false)
+        @included = included
+        @excluded = excluded
+        @convert_to_absolute_path = convert_to_absolute_path
+      end
+
+      def select_files(_folder)
+        raise NotImplementedError, 'Soon!'
+      end
+    end
+
     class Excluding
       def initialize(extensions, excluded, convert_to_absolute_path = false)
         @extensions = extensions

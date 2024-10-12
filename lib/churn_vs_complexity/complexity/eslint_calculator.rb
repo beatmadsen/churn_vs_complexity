@@ -24,11 +24,9 @@ module ChurnVsComplexity
         end
 
         def check_dependencies!
-          begin 
-            `npm --version`
-          rescue Errno::ENOENT
-            raise Error, 'Needs node and npm installed'
-          end
+          `npm --version`
+        rescue Errno::ENOENT
+          raise Error, 'Needs node and npm installed'
         end
 
         private
