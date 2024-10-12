@@ -3,7 +3,6 @@
 require_relative 'timetravel/traveller'
 require_relative 'timetravel/worktree'
 require_relative 'timetravel/config'
-require_relative 'timetravel/git_strategy'
 require_relative 'timetravel/serializer'
 require_relative 'timetravel/factory'
 
