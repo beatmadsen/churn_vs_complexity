@@ -38,21 +38,21 @@ module ChurnVsComplexity
       end
 
       def test_that_it_fails_when_it_cannot_calculate_complexity_for_a_file
-        f = factory()
+        f = factory(engine: engine(fail_to_process: true))
         # TODO: wire Engine for custom complexity calculator        
-        assert_raises(StandardError) do
+        assert_raises(Error) do
           checker(factory: f).check(folder: 'space-place')
         end
       end
 
       private
 
-      def checker(factory: FactoryStub.new, serializer: Normal::Serializer::None, excluded: [], commit: DEFAULT_COMMIT)
-        Checker.new(factory:, serializer:, excluded:, commit:)
+      def checker(factory: FactoryStub.new, serializer: Normal::Serializer::None, excluded: [], commit: DEFAULT_COMMIT, language: :ruby)
+        Checker.new(factory:, serializer:, excluded:, commit:, language:)
       end
 
-      def factory(git_strategy: git_strategy(), worktree: worktree())
-        FactoryStub.new(git_strategy:, worktree:)
+      def factory(git_strategy: git_strategy(), worktree: worktree(), engine: engine())
+        FactoryStub.new(git_strategy:, worktree:, engine:)
       end
 
       def git_strategy(valid_commits: [DEFAULT_COMMIT], changes: DEFAULT_CHANGES)
@@ -62,19 +62,25 @@ module ChurnVsComplexity
       def worktree(fail_to_prepare: false, fail_to_checkout: false)
         WorktreeStub.new(fail_to_prepare:, fail_to_checkout:)
       end
+
+      def engine(fail_to_process: false)
+        EngineStub.new(fail_to_process:)
+      end
     end
 
     class FactoryStub
       delegate :complexity_validator, to: Factory
 
-      def initialize(git_strategy:, worktree:)
+      def initialize(git_strategy:, worktree:, engine:)
         @git_strategy = git_strategy
         @worktree = worktree
+        @engine = engine
       end
 
-      def git_strategy(folder:) = @git_strategy
+      def git_strategy(*) = @git_strategy
 
-      def worktree(root_folder:, git_strategy:, data_isolation_id:) = @worktree
+      def worktree(*) = @worktree
+      def engine(*) = @engine
     end
 
     class GitStrategyStub
@@ -104,6 +110,18 @@ module ChurnVsComplexity
 
       def checkout(sha:)
         raise Timetravel::Worktree::Error, "Failed to checkout #{sha} in worktree" if @fail_to_checkout
+      end
+    end
+
+    class EngineStub
+      def initialize(fail_to_process: false)
+        @fail_to_process = fail_to_process
+      end
+
+      def check(*)
+        raise Error, 'Failed to process files' if @fail_to_process
+
+        { values_by_file: {} }
       end
     end
   end

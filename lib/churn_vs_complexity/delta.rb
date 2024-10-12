@@ -10,5 +10,9 @@ module ChurnVsComplexity
     module SerializerValidator
       def self.validate!(serializer:); end
     end
+
+    def self.engine(language:, excluded:, files:)
+      raise 'Not yet implemented'
+    end
   end
 end
