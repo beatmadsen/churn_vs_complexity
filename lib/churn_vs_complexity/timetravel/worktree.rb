@@ -16,6 +16,8 @@ module ChurnVsComplexity
 
       def prepare
         @folder = prepare_worktree
+      rescue StandardError => e
+        raise Error, "Failed to prepare worktree: #{e.message}"
       end
 
       def checkout(sha)
@@ -47,15 +49,17 @@ module ChurnVsComplexity
         if File.directory?(worktree_folder)
           prepare_worktree_in_existing_dir
         else
-          begin
-            FileUtils.mkdir_p(worktree_folder)
-          rescue StandardError
-            nil
-          end
+          create_worktree_folder
           @git_strategy.add_worktree(worktree_folder)
         end
 
         worktree_folder
+      end
+
+      def create_worktree_folder
+        FileUtils.mkdir_p(worktree_folder)
+      rescue Errno::EEXIST
+        # Folder was created by another process, which is fine
       end
 
       def prepare_worktree_in_existing_dir
@@ -65,6 +69,8 @@ module ChurnVsComplexity
         FileUtils.rm_rf(worktree_folder)
         prepare_worktree
       end
+
+      class Error < ChurnVsComplexity::Error; end
     end
   end
 end

@@ -5,13 +5,9 @@ require 'test_helper'
 module ChurnVsComplexity
   module Delta
     DEFAULT_COMMIT = 'abc123ee'
+    DEFAULT_CHANGES = [{ path: 'file1', type: :modified }, { path: 'file2', type: :deleted }]
 
     class CheckerTest < TLDR
-      def test_check        
-        result = checker(factory:).check(folder: 'space-place')
-        assert_equal [], result
-      end
-
       # Idea for check algorithm:
       # 1. Find commit in log
       # 2. Find all files changed in this commit
@@ -33,29 +29,44 @@ module ChurnVsComplexity
         assert_equal [], checker(factory: f).check(folder: 'space-place')
       end
 
+      def test_that_it_fails_when_it_cannot_check_out_a_worktree_for_commit_and_there_are_changes
+        f = factory(worktree: worktree(failing: true))
+        # TODO: move worktree up one level
+        assert_raises(Timetravel::Worktree::Error) do
+          checker(factory: f).check(folder: 'space-place')
+        end
+      end
+
       private
 
       def checker(factory: FactoryStub.new, serializer: Normal::Serializer::None, excluded: [], commit: DEFAULT_COMMIT)
         Checker.new(factory:, serializer:, excluded:, commit:)
       end
 
-      def factory(git_strategy: git_strategy())
-        FactoryStub.new(git_strategy:)
+      def factory(git_strategy: git_strategy(), worktree: worktree())
+        FactoryStub.new(git_strategy:, worktree:)
       end
 
-      def git_strategy(valid_commits: [DEFAULT_COMMIT], changes: [])
+      def git_strategy(valid_commits: [DEFAULT_COMMIT], changes: DEFAULT_CHANGES)
         GitStrategyStub.new(valid_commits:, changes:)
+      end
+
+      def worktree(failing: false)
+        WorktreeStub.new(failing:)
       end
     end
 
     class FactoryStub
       delegate :complexity_validator, to: Factory
 
-      def initialize(git_strategy:)
+      def initialize(git_strategy:, worktree:)
         @git_strategy = git_strategy
+        @worktree = worktree
       end
 
       def git_strategy(folder:) = @git_strategy
+
+      def worktree(root_folder:, git_strategy:) = @worktree
     end
 
     class GitStrategyStub
@@ -70,6 +81,16 @@ module ChurnVsComplexity
 
       def changes(commit:)
         @changes
+      end
+    end
+
+    class WorktreeStub
+      def initialize(failing:)
+        @failing = failing
+      end
+
+      def prepare
+        raise Timetravel::Worktree::Error, 'Failed to prepare worktree' if @failing
       end
     end
   end

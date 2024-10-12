@@ -13,7 +13,12 @@ module ChurnVsComplexity
       def check(folder:)
         raise Error, 'Invalid commit' unless valid_commit?(folder:)
 
-        changes = @factory.git_strategy(folder:).changes(commit: @commit)
+        git_strategy = @factory.git_strategy(folder:)
+        changes = git_strategy.changes(commit: @commit)
+        return [] if changes.empty?
+
+        worktree = @factory.worktree(root_folder: folder, git_strategy:)
+        worktree.prepare
 
         changes.map do |annotated_file|
           'process me'
