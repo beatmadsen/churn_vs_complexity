@@ -33,6 +33,7 @@ module ChurnVsComplexity
 
       class Parser
         def self.empty_result = {}
+
         def parse(output)
           doc = JSON.parse(output)
           doc['files'].each_with_object({}) do |file, result|

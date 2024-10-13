@@ -32,8 +32,7 @@ module ChurnVsComplexity
       def select_files(folder)
         were_excluded = []
         were_included = []
-        cs = candidates(folder)
-        cs.each do |f|
+        candidates(folder).each do |f|
           if has_excluded_pattern?(f)
             were_excluded << f
           elsif has_correct_extension?(f) && File.file?(f)
@@ -101,7 +100,8 @@ module ChurnVsComplexity
       end
 
       def self.predefined(included:, excluded:)
-        Predefined.new(included:, extensions: FileSelector.extensions(:javascript), excluded:, convert_to_absolute_path: true)
+        Predefined.new(included:, extensions: FileSelector.extensions(:javascript), excluded:,
+                       convert_to_absolute_path: true,)
       end
     end
   end

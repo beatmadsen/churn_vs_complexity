@@ -28,24 +28,29 @@ module ChurnVsComplexity
       end
 
       module Summary
-        def self.serialize(result)
-          changes = result[:changes]
+        class << self
+          def serialize(result)
+            changes = result[:changes]
 
-          commit_text = "Commit:   #{result[:commit]}\nParent:   #{result[:parent]}\nNext:     #{result[:next_commit]}"
-          change_text = changes.empty? ? 
-            "(No changes)" : 
+            commit_text = "Commit:   #{result[:commit]}\nParent:   #{result[:parent]}\nNext:     #{result[:next_commit]}"
+            change_text = changes.empty? ? '(No changes)' : describe(changes)
+
+            "#{commit_text}\n\n\n#{change_text}"
+          end
+
+          def has_commit_summary? = true
+
+          private
+
+          def describe(changes)
             changes.map do |change|
               a = "File, relative path:  #{change[:path]}\nType of change:       #{change[:type]}\n"
               b = "Complexity:           #{change[:complexity]}\n" unless change[:complexity].nil?
               "#{a}#{b}"
             end.join("\n\n")
-
-          "#{commit_text}\n\n\n#{change_text}"
+          end
         end
-
-        def self.has_commit_summary? = true
       end
-
 
       module PassThrough
         extend Normal::Serializer::None

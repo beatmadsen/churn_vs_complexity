@@ -4,7 +4,7 @@ require_relative 'delta/config'
 require_relative 'delta/checker'
 require_relative 'delta/serializer'
 require_relative 'delta/factory'
-
+require_relative 'delta/complexity_annotator'
 module ChurnVsComplexity
   module Delta
     module SerializerValidator

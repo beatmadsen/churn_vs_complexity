@@ -16,10 +16,10 @@ module ChurnVsComplexity
         end
       end
 
-      def test_that_it_returns_empty_array_when_no_files_are_changed
+      def test_that_it_returns_commit_summary_only_when_no_files_are_changed
         g = Stubs.create_git_strategy(changes: [])
         f = Stubs.create_factory(git_strategy: g)
-        assert_equal [], create_checker(factory: f).check(folder: 'space-place')
+        assert_equal({ commit: 'abc123ee' }, create_checker(factory: f).check(folder: 'space-place'))
       end
 
       def test_that_it_fails_when_it_cannot_prepare_a_worktree_and_there_are_changes
@@ -49,7 +49,7 @@ module ChurnVsComplexity
 
       def test_that_changed_files_with_irrelevant_extensions_are_ignored
         result = create_checker(language: :javascript).check(folder: 'space-place')
-        expected = { commit: 'abc123ee', changes: [], }
+        expected = { commit: 'abc123ee', changes: [] }
         assert_equal expected, result
       end
 
@@ -57,7 +57,8 @@ module ChurnVsComplexity
         result = create_checker.check(folder: 'space-place')
         expected = { commit: 'abc123ee',
                      changes: [{ path: 'file1.rb', type: :modified, full_path: 'my-worktree/file1.rb', complexity: 3 },
-                               { path: 'file2.rb', type: :deleted, full_path: 'my-worktree/file2.rb', complexity: 2 },], }
+                               { path: 'file2.rb', type: :deleted, full_path: 'my-worktree/file2.rb',
+                                 complexity: 2, },], }
         assert_equal expected, result
       end
 
@@ -65,7 +66,8 @@ module ChurnVsComplexity
         result = create_checker(serializer: Serializer::PassThrough).check(folder: 'space-place')
         expected = { commit: 'abc123ee', parent: 'aabbccdd', next_commit: 'bbbbccdd',
                      changes: [{ path: 'file1.rb', type: :modified, full_path: 'my-worktree/file1.rb', complexity: 3 },
-                               { path: 'file2.rb', type: :deleted, full_path: 'my-worktree/file2.rb', complexity: 2 },], }
+                               { path: 'file2.rb', type: :deleted, full_path: 'my-worktree/file2.rb',
+                                 complexity: 2, },], }
         assert_equal expected, result
       end
 
@@ -141,7 +143,7 @@ module ChurnVsComplexity
       end
 
       def surrounding(commit:)
-        ['aabbccdd', 'bbbbccdd']
+        %w[aabbccdd bbbbccdd]
       end
     end
 
@@ -174,9 +176,9 @@ module ChurnVsComplexity
 
         base_folder = WorktreeStub::FOLDER
 
-        { values_by_file: { File.join(base_folder, 'file1.rb') => [0, 3], File.join(base_folder, 'file2.rb') => [0, 2] } }
+        { values_by_file: { File.join(base_folder, 'file1.rb') => [0, 3],
+                            File.join(base_folder, 'file2.rb') => [0, 2], } }
       end
     end
-
   end
 end

@@ -15,37 +15,29 @@ module ChurnVsComplexity
       def check(folder:)
         raise Error, 'Invalid commit' unless valid_commit?(folder:)
 
-        git_strategy = @factory.git_strategy(folder:)
-        changes = git_strategy.changes(commit: @commit)
-        return [] if changes.empty?
+        worktree = setup_worktree(folder:)
 
-        worktree = @factory.worktree(root_folder: folder, git_strategy:, data_isolation_id: @data_isolation_id)
-        worktree.prepare
-        worktree.checkout(sha: @commit)
-
-        changes.each do |change|
-          change[:full_path] = File.join(worktree.folder, change[:path])
-        end
-
-        files = changes.reject { |change| change[:type] == :deleted }.map { |change| change[:full_path] }
-
-        engine = @factory.engine(language: @language, excluded: @excluded, files:)
-
-        values_by_file = engine.check(folder: worktree.folder)[:values_by_file]
-
-        valid_extensions = FileSelector.extensions(@language)
-        changes.select! { |change| valid_extensions.any? { |ext| change[:path].end_with?(ext) } }
-        changes.each do |annotated_file|
-          annotated_file[:complexity] = values_by_file.dig(annotated_file[:full_path], 1)
-        end
-
+        changes = @factory.git_strategy(folder: worktree.folder).changes(commit: @commit)
         result = commit_summary(worktree_folder: worktree.folder)
-        result[:changes] = changes
+        unless changes.empty?
+          ComplexityAnnotator.new(factory: @factory, changes:)
+                             .enhance(worktree_folder: worktree.folder, language: @language, excluded: @excluded)
+          result[:changes] = changes
+        end
 
         @serializer.serialize(result)
       end
 
       private
+
+      def setup_worktree(folder:)
+        worktree = @factory.worktree(root_folder: folder, git_strategy: @factory.git_strategy(folder:),
+                                     data_isolation_id: @data_isolation_id,)
+        worktree.prepare
+        worktree.checkout(sha: @commit)
+
+        worktree
+      end
 
       def commit_summary(worktree_folder:)
         summary = { commit: @commit }
