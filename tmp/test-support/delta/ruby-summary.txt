@@ -1,0 +1,50 @@
+Commit:   b20a9bddd04afb9c7a736cf4530fd3188b5f785e
+Parent:   4f3151f83e982eb8f2b8a4e7a7572a0af156c3c0
+Next:     8cdaac516365bd7007b9f755bbe6f6e86d8e13dd
+
+
+File, relative path:  lib/churn_vs_complexity/serializer/timetravel.rb
+Type of change:       modified
+Complexity:           62.07689265062675
+
+File, relative path:  lib/churn_vs_complexity/serializer/timetravel/stats_calculator.rb
+Type of change:       deleted
+
+File, relative path:  test/churn_vs_complexity/serializer/timetravel/quality_calculator_test.rb
+Type of change:       modified
+Complexity:           13.054183368177016
+
+File, relative path:  test/churn_vs_complexity/serializer/timetravel/stats_calculator_test.rb
+Type of change:       deleted
+
+
+
+Commit:   4f3151f83e982eb8f2b8a4e7a7572a0af156c3c0
+Parent:   83deeccf8aa40e46cd0ca7e2c603c9726633256e
+Next:     b20a9bddd04afb9c7a736cf4530fd3188b5f785e
+
+
+File, relative path:  lib/churn_vs_complexity/config.rb
+Type of change:       modified
+Complexity:           70.26655854867414
+
+File, relative path:  lib/churn_vs_complexity/serializer/pass_through.rb
+Type of change:       deleted
+
+File, relative path:  lib/churn_vs_complexity/serializer/summary_hash.rb
+Type of change:       modified
+Complexity:           89.25682464940157
+
+File, relative path:  lib/churn_vs_complexity/serializer/timetravel.rb
+Type of change:       modified
+Complexity:           62.07689265062675
+
+File, relative path:  lib/churn_vs_complexity/serializer/timetravel/quality_calculator.rb
+Type of change:       deleted
+
+File, relative path:  test/churn_vs_complexity/serializer/summary_hash_test.rb
+Type of change:       modified
+Complexity:           14.396336540125482
+
+File, relative path:  test/churn_vs_complexity/serializer/timetravel/quality_calculator_test.rb
+Type of change:       deleted

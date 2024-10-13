@@ -6,7 +6,7 @@ module ChurnVsComplexity
       def initialize(
         language:,
         serializer:,
-        commit:,
+        commits:,
         excluded: [],
         complexity_validator: ComplexityValidator,
         factory: Factory,
@@ -15,29 +15,33 @@ module ChurnVsComplexity
         @language = language
         @serializer = serializer
         @excluded = excluded
-        @commit = commit
+        @commits = commits
         @factory = factory
       end
 
       def validate!
-        validate_commit!
+        validate_commits!
         LanguageValidator.validate!(@language)
         SerializerValidator.validate!(serializer: @serializer)
         @factory.complexity_validator.validate!(@language)
       end
 
       def checker
-        MultiChecker.new(serializer:, excluded: @excluded, factory: @factory, commits: [@commit],
+        MultiChecker.new(serializer:, excluded: @excluded, factory: @factory, commits: @commits,
                     language: @language,)
       end
 
       private
 
-      def validate_commit!
-        return if @commit.match?(/\A[0-9a-f]{40}\z/i) || @commit.match?(/\A[0-9a-f]{8}\z/i)
+      def validate_commits!
+        @commits.each { |commit| validate_commit!(commit) }
+      end
+
+      def validate_commit!(commit)
+        return if commit.match?(/\A[0-9a-f]{40}\z/i) || @commit.match?(/\A[0-9a-f]{8}\z/i)
 
         raise ValidationError,
-              "Invalid commit: #{@commit}. It must be a valid 40-character SHA-1 hash or an 8-character shortened form."
+              "Invalid commit: #{commit}. It must be a valid 40-character SHA-1 hash or an 8-character shortened form."
       end
 
       def serializer = Serializer.resolve(@serializer)

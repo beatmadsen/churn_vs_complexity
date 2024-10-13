@@ -34,7 +34,7 @@ module ChurnVsComplexity
         class << self
           def serialize(result)
             results = result.is_a?(Array) ? result : [result]
-            results.map { |r| serialize_single(r) }.join("\n\n\n")
+            results.map { |r| serialize_single(r) }.join("\n\n\n\n")
           end
 
           def has_commit_summary? = true
@@ -52,8 +52,8 @@ module ChurnVsComplexity
 
           def describe(changes)
             changes.map do |change|
-              a = "File, relative path:  #{change[:path]}\nType of change:       #{change[:type]}\n"
-              b = "Complexity:           #{change[:complexity]}\n" unless change[:complexity].nil?
+              a = "File, relative path:  #{change[:path]}\nType of change:       #{change[:type]}"
+              b = "\nComplexity:           #{change[:complexity]}" unless change[:complexity].nil?
               "#{a}#{b}"
             end.join("\n\n")
           end

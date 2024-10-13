@@ -66,7 +66,7 @@ module ChurnVsComplexity
           opts.on('--delta SHA',
                   'Identify changes between the specified commit and the previous commit and annotate changed files with complexity score',) do |value|
             options[:mode] = :delta
-            options[:commit] = value
+            (options[:commits] ||= []) << value
           end
 
           opts.on('--dry-run', 'Echo the chosen options from the CLI') do
