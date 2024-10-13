@@ -14,6 +14,15 @@ module ChurnVsComplexity
       false
     end
 
+    def surrounding(commit:)
+      current = @repo.object(commit)
+      parent = current.parent
+      next_commit = @repo.log(100_000).find do |c|
+        c.parents.map(&:sha).include?(current.sha)
+      end
+      [parent.sha, next_commit&.sha]
+    end
+
     def changes(commit:)
       commit_object = @repo.object(commit)
       base = commit_object.parent
