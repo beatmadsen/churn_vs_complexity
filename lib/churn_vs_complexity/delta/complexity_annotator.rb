@@ -15,7 +15,7 @@ module ChurnVsComplexity
 
         files = @changes.reject { |change| change[:type] == :deleted }.map { |change| change[:full_path] }
 
-        engine = @factory.engine(language:, excluded:, files:)
+        engine = @factory.engine(root_folder: worktree_folder, language:, excluded:, files:)
 
         values_by_file = engine.check(folder: worktree_folder)[:values_by_file]
 

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'digest'
-require 'tmpdir'
-
 module ChurnVsComplexity
   module Timetravel
     class Worktree
@@ -35,8 +32,7 @@ module ChurnVsComplexity
       protected
 
       def tt_folder
-        folder_hash = Digest::SHA256.hexdigest(@root_folder)[0..7]
-        File.join(Dir.tmpdir, 'churn_vs_complexity', 'timetravel', folder_hash)
+        File.join(ChurnVsComplexity.tmp_dir_path(@root_folder), 'timetravel')
       end
 
       private

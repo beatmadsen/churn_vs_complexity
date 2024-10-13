@@ -122,9 +122,9 @@ module ChurnVsComplexity
         @stub = Stubs.create_factory
       end
 
-      def engine(language:, excluded:, files:)
-        @engine_called_with = { language:, excluded:, files: }
-        stub.engine(language:, excluded:, files:)
+      def engine(**options)
+        @engine_called_with = options
+        stub.engine(**options)
       end
     end
 
