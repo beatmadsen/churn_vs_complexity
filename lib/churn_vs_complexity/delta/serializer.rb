@@ -8,14 +8,17 @@ module ChurnVsComplexity
         when :none
           Normal::Serializer::None
         when :csv
-          Serializer::CSV
+          CSV
         when :summary
-          Serializer::Summary
+          Summary
+        when :pass_through
+          PassThrough
         end
       end
 
       module CSV
-        def self.serialize(changes)
+        def self.serialize(result)
+          changes = result[:changes]
           rows = ["Relative Path, Type of Change, Complexity\n"]
           changes.each do |change|
             rows << "#{change[:path]}, #{change[:type]}, #{change[:complexity]}\n"
@@ -25,13 +28,26 @@ module ChurnVsComplexity
       end
 
       module Summary
-        def self.serialize(changes)
-          changes.map do |change|
+        def self.serialize(result)
+          changes = result[:changes]
+
+          commit_text = "Commit: #{result[:commit]}\nParent: #{result[:parent]}\nNext: #{result[:next_commit]}"
+          change_text = changes.map do |change|
             a = "File, relative path: #{change[:path]}\nType of change: #{change[:type]}\n"
-            b = "Complexity: #{change[:complexity]}" unless change[:complexity].nil?
+            b = "Complexity: #{change[:complexity]}\n" unless change[:complexity].nil?
             "#{a}#{b}"
           end.join("\n\n")
+
+          "#{commit_text}\n\n\n#{change_text}"
         end
+
+        def self.has_commit_summary? = true
+      end
+
+
+      module PassThrough
+        extend Normal::Serializer::None
+        def self.has_commit_summary? = true
       end
     end
   end

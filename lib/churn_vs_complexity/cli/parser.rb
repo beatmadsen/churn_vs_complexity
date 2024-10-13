@@ -63,7 +63,8 @@ module ChurnVsComplexity
             options[:jump_days] = value.to_i
           end
 
-          opts.on('--delta SHA', 'Identify changes between the specified commit and the previous commit and annotate changed files with complexity score') do |value|
+          opts.on('--delta SHA',
+                  'Identify changes between the specified commit and the previous commit and annotate changed files with complexity score',) do |value|
             options[:mode] = :delta
             options[:commit] = value
           end
@@ -77,7 +78,6 @@ module ChurnVsComplexity
             puts opts
             exit
           end
-
         end
         [parser, options]
       end

@@ -20,7 +20,10 @@ module ChurnVsComplexity
       end
 
       module None
-        def self.serialize(result) = result
+        extend self
+        
+        def serialize(result) = result
+        
       end
     end
   end

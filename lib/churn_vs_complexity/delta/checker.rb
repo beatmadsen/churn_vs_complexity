@@ -37,10 +37,22 @@ module ChurnVsComplexity
           annotated_file[:complexity] = values_by_file.dig(annotated_file[:full_path], 1)
         end
 
-        @serializer.serialize(changes)
+        result = commit_summary(worktree_folder: worktree.folder)
+        result[:changes] = changes
+
+        @serializer.serialize(result)
       end
 
       private
+
+      def commit_summary(worktree_folder:)
+        summary = { commit: @commit }
+        if @serializer.respond_to?(:has_commit_summary?) && @serializer.has_commit_summary?
+          parent, next_commit = @factory.git_strategy(folder: worktree_folder).surrounding(commit: @commit)
+          summary.merge!(parent:, next_commit:)
+        end
+        summary
+      end
 
       def valid_commit?(folder:)
         @factory.git_strategy(folder:).valid_commit?(commit: @commit)

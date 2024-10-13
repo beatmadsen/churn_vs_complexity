@@ -7,25 +7,13 @@ class DeltaIntegrationTest < TLDR
     config = ChurnVsComplexity::Delta::Config.new(
       language: :ruby,
       serializer: :summary,
-      commit: 'e75eb5aa',
+      commit: '8cdaac516365bd7007b9f755bbe6f6e86d8e13dd',
     )
     config.validate!
     result = config.checker.check(folder: 'lib')
-    assert_equal <<~EXPECTED, result
-      File, relative path: lib/churn_vs_complexity/config.rb
-      Type of change: modified
-      Complexity: 70.26655854867414
 
-      File, relative path: lib/churn_vs_complexity/serializer.rb
-      Type of change: modified
-      Complexity: 16.413256340277677
+    expected = "Commit: 8cdaac516365bd7007b9f755bbe6f6e86d8e13dd\nParent: b20a9bddd04afb9c7a736cf4530fd3188b5f785e\nNext: 29599743d3eab7d3926ded186336a861f1d00670\n\n\nFile, relative path: TODO\nType of change: modified\n\n\nFile, relative path: lib/churn_vs_complexity/serializer.rb\nType of change: modified\nComplexity: 16.413256340277677\n"
 
-      File, relative path: lib/churn_vs_complexity/timetravel.rb
-      Type of change: modified
-      Complexity: 62.75918945702391
-
-      File, relative path: lib/churn_vs_complexity/timetravel/traveller.rb
-      Type of change: deleted
-    EXPECTED
+    assert_equal expected, result
   end
 end

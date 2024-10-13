@@ -49,17 +49,18 @@ module ChurnVsComplexity
 
       def test_that_it_succeeds_when_all_is_good
         result = create_checker.check(folder: 'space-place')
-        assert_equal [{
-          path: 'file1',
-          type: :modified,
-          full_path: 'my-worktree/file1',
-          complexity: 3,
-        }, {
-          path: 'file2',
-          type: :deleted,
-          full_path: 'my-worktree/file2',
-          complexity: 2,
-        },], result
+        expected = { commit: 'abc123ee',
+                     changes: [{ path: 'file1', type: :modified, full_path: 'my-worktree/file1', complexity: 3 },
+                               { path: 'file2', type: :deleted, full_path: 'my-worktree/file2', complexity: 2 },], }
+        assert_equal expected, result
+      end
+
+      def test_that_it_includes_surrounding_commits_when_serializer_supports_it
+        result = create_checker(serializer: Serializer::PassThrough).check(folder: 'space-place')
+        expected = { commit: 'abc123ee', parent: 'aabbccdd', next_commit: 'bbbbccdd',
+                     changes: [{ path: 'file1', type: :modified, full_path: 'my-worktree/file1', complexity: 3 },
+                               { path: 'file2', type: :deleted, full_path: 'my-worktree/file2', complexity: 2 },], }
+        assert_equal expected, result
       end
 
       private
@@ -132,6 +133,10 @@ module ChurnVsComplexity
       def changes(commit:)
         @changes
       end
+
+      def surrounding(commit:)
+        ['aabbccdd', 'bbbbccdd']
+      end
     end
 
     class WorktreeStub
@@ -166,5 +171,6 @@ module ChurnVsComplexity
         { values_by_file: { File.join(base_folder, 'file1') => [0, 3], File.join(base_folder, 'file2') => [0, 2] } }
       end
     end
+
   end
 end
