@@ -27,7 +27,7 @@ module ChurnVsComplexity
       end
 
       def checker
-        Checker.new(serializer:, excluded: @excluded, factory: @factory, commit: @commit,
+        MultiChecker.new(serializer:, excluded: @excluded, factory: @factory, commits: [@commit],
                     language: @language,)
       end
 

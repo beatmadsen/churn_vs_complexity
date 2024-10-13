@@ -2,7 +2,7 @@
 
 module ChurnVsComplexity
   module Delta
-    CONCURRENCY = Etc.nprocessors
+    CONCURRENCY = Etc.nprocessors * 2
 
     class MultiChecker
       def initialize(serializer:, factory:, commits:, language:, excluded:)
@@ -20,24 +20,26 @@ module ChurnVsComplexity
 
         results = []
 
-        CONCURRENCY.times.map do |ci|
+        concurrency = [CONCURRENCY, indexed_commits.size].min
+
+        concurrency.times.map do |ci|
           Thread.new do
             loop do
               commit, index = indexed_commits.shift
               break if commit.nil?
-              result = check_commit(commit:, data_isolation_id: ci)
+              result = check_commit(commit:, data_isolation_id: ci, folder:)
               results[index] = result
             end
           end
         end.each(&:join)
 
-        
+        @serializer.serialize(results)
       end
 
       private
 
-      def check_commit(commit:, data_isolation_id:)
-        Checker.new(serializer: @serializer, factory: @factory, commit:, language: @language, excluded: @excluded, data_isolation_id:)
+      def check_commit(commit:, data_isolation_id:, folder:)
+        Checker.new(serializer: Serializer::PassThrough, factory: @factory, commit:, language: @language, excluded: @excluded, data_isolation_id:)
                .check(folder:)
       end
     end
