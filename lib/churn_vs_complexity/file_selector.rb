@@ -2,6 +2,19 @@
 
 module ChurnVsComplexity
   module FileSelector
+    def self.extensions(language)
+      case language
+      when :java
+        ['.java']
+      when :ruby
+        ['.rb']
+      when :javascript
+        ['.js', '.jsx', '.ts', '.tsx']
+      else
+        raise Error, "Unsupported language: #{language}"
+      end
+    end
+
     module Any
       def self.select_files(folder)
         included = Dir.glob("#{folder}/**/*").select { |f| File.file?(f) }
@@ -64,31 +77,31 @@ module ChurnVsComplexity
 
     module Java
       def self.excluding(excluded)
-        Excluding.new(['.java'], excluded)
+        Excluding.new(FileSelector.extensions(:java), excluded)
       end
 
       def self.predefined(included:, excluded:)
-        Predefined.new(included:, extensions: ['.java'], excluded:)
+        Predefined.new(included:, extensions: FileSelector.extensions(:java), excluded:)
       end
     end
 
     module Ruby
       def self.excluding(excluded)
-        Excluding.new(['.rb'], excluded)
+        Excluding.new(FileSelector.extensions(:ruby), excluded)
       end
 
       def self.predefined(included:, excluded:)
-        Predefined.new(included:, extensions: ['.rb'], excluded:)
+        Predefined.new(included:, extensions: FileSelector.extensions(:ruby), excluded:)
       end
     end
 
     module JavaScript
       def self.excluding(excluded)
-        Excluding.new(['.js', '.jsx', '.ts', '.tsx'], excluded, true)
+        Excluding.new(FileSelector.extensions(:javascript), excluded, true)
       end
 
       def self.predefined(included:, excluded:)
-        Predefined.new(included:, extensions: ['.js', '.jsx', '.ts', '.tsx'], excluded:, convert_to_absolute_path: true)
+        Predefined.new(included:, extensions: FileSelector.extensions(:javascript), excluded:, convert_to_absolute_path: true)
       end
     end
   end

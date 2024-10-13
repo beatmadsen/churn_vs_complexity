@@ -33,6 +33,8 @@ module ChurnVsComplexity
 
         values_by_file = engine.check(folder: worktree.folder)[:values_by_file]
 
+        valid_extensions = FileSelector.extensions(@language)
+        changes.select! { |change| valid_extensions.any? { |ext| change[:path].end_with?(ext) } }
         changes.each do |annotated_file|
           annotated_file[:complexity] = values_by_file.dig(annotated_file[:full_path], 1)
         end

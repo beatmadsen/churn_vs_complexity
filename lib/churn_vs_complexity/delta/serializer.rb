@@ -31,10 +31,10 @@ module ChurnVsComplexity
         def self.serialize(result)
           changes = result[:changes]
 
-          commit_text = "Commit: #{result[:commit]}\nParent: #{result[:parent]}\nNext: #{result[:next_commit]}"
+          commit_text = "Commit:   #{result[:commit]}\nParent:   #{result[:parent]}\nNext:     #{result[:next_commit]}"
           change_text = changes.map do |change|
-            a = "File, relative path: #{change[:path]}\nType of change: #{change[:type]}\n"
-            b = "Complexity: #{change[:complexity]}\n" unless change[:complexity].nil?
+            a = "File, relative path:  #{change[:path]}\nType of change:       #{change[:type]}\n"
+            b = "Complexity:           #{change[:complexity]}\n" unless change[:complexity].nil?
             "#{a}#{b}"
           end.join("\n\n")
 

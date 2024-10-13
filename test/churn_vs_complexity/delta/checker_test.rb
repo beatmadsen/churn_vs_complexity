@@ -5,7 +5,7 @@ require 'test_helper'
 module ChurnVsComplexity
   module Delta
     DEFAULT_COMMIT = 'abc123ee'
-    DEFAULT_CHANGES = [{ path: 'file1', type: :modified }, { path: 'file2', type: :deleted }].freeze
+    DEFAULT_CHANGES = [{ path: 'file1.rb', type: :modified }, { path: 'file2.rb', type: :deleted }].freeze
 
     class CheckerTest < TLDR
       def test_that_it_fails_when_commit_is_not_found_in_log
@@ -47,19 +47,25 @@ module ChurnVsComplexity
         end
       end
 
+      def test_that_changed_files_with_irrelevant_extensions_are_ignored
+        result = create_checker(language: :javascript).check(folder: 'space-place')
+        expected = { commit: 'abc123ee', changes: [], }
+        assert_equal expected, result
+      end
+
       def test_that_it_succeeds_when_all_is_good
         result = create_checker.check(folder: 'space-place')
         expected = { commit: 'abc123ee',
-                     changes: [{ path: 'file1', type: :modified, full_path: 'my-worktree/file1', complexity: 3 },
-                               { path: 'file2', type: :deleted, full_path: 'my-worktree/file2', complexity: 2 },], }
+                     changes: [{ path: 'file1.rb', type: :modified, full_path: 'my-worktree/file1.rb', complexity: 3 },
+                               { path: 'file2.rb', type: :deleted, full_path: 'my-worktree/file2.rb', complexity: 2 },], }
         assert_equal expected, result
       end
 
       def test_that_it_includes_surrounding_commits_when_serializer_supports_it
         result = create_checker(serializer: Serializer::PassThrough).check(folder: 'space-place')
         expected = { commit: 'abc123ee', parent: 'aabbccdd', next_commit: 'bbbbccdd',
-                     changes: [{ path: 'file1', type: :modified, full_path: 'my-worktree/file1', complexity: 3 },
-                               { path: 'file2', type: :deleted, full_path: 'my-worktree/file2', complexity: 2 },], }
+                     changes: [{ path: 'file1.rb', type: :modified, full_path: 'my-worktree/file1.rb', complexity: 3 },
+                               { path: 'file2.rb', type: :deleted, full_path: 'my-worktree/file2.rb', complexity: 2 },], }
         assert_equal expected, result
       end
 
@@ -168,7 +174,7 @@ module ChurnVsComplexity
 
         base_folder = WorktreeStub::FOLDER
 
-        { values_by_file: { File.join(base_folder, 'file1') => [0, 3], File.join(base_folder, 'file2') => [0, 2] } }
+        { values_by_file: { File.join(base_folder, 'file1.rb') => [0, 3], File.join(base_folder, 'file2.rb') => [0, 2] } }
       end
     end
 
