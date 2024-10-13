@@ -2,6 +2,8 @@
 
 require 'json'
 require 'etc'
+require 'date'
+require 'time'
 
 module ChurnVsComplexity
   class Error < StandardError; end
