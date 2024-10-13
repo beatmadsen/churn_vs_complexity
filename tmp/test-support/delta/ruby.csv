@@ -1,0 +1,12 @@
+Commit, Relative Path, Type of Change, Complexity
+b20a9bddd04afb9c7a736cf4530fd3188b5f785e, lib/churn_vs_complexity/serializer/timetravel.rb, modified, 62.07689265062675
+b20a9bddd04afb9c7a736cf4530fd3188b5f785e, lib/churn_vs_complexity/serializer/timetravel/stats_calculator.rb, deleted, 
+b20a9bddd04afb9c7a736cf4530fd3188b5f785e, test/churn_vs_complexity/serializer/timetravel/quality_calculator_test.rb, modified, 13.054183368177016
+b20a9bddd04afb9c7a736cf4530fd3188b5f785e, test/churn_vs_complexity/serializer/timetravel/stats_calculator_test.rb, deleted, 
+4f3151f83e982eb8f2b8a4e7a7572a0af156c3c0, lib/churn_vs_complexity/config.rb, modified, 70.26655854867414
+4f3151f83e982eb8f2b8a4e7a7572a0af156c3c0, lib/churn_vs_complexity/serializer/pass_through.rb, deleted, 
+4f3151f83e982eb8f2b8a4e7a7572a0af156c3c0, lib/churn_vs_complexity/serializer/summary_hash.rb, modified, 89.25682464940157
+4f3151f83e982eb8f2b8a4e7a7572a0af156c3c0, lib/churn_vs_complexity/serializer/timetravel.rb, modified, 62.07689265062675
+4f3151f83e982eb8f2b8a4e7a7572a0af156c3c0, lib/churn_vs_complexity/serializer/timetravel/quality_calculator.rb, deleted, 
+4f3151f83e982eb8f2b8a4e7a7572a0af156c3c0, test/churn_vs_complexity/serializer/summary_hash_test.rb, modified, 14.396336540125482
+4f3151f83e982eb8f2b8a4e7a7572a0af156c3c0, test/churn_vs_complexity/serializer/timetravel/quality_calculator_test.rb, deleted, 
