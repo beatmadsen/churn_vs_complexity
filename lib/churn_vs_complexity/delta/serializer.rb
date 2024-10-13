@@ -32,11 +32,13 @@ module ChurnVsComplexity
           changes = result[:changes]
 
           commit_text = "Commit:   #{result[:commit]}\nParent:   #{result[:parent]}\nNext:     #{result[:next_commit]}"
-          change_text = changes.map do |change|
-            a = "File, relative path:  #{change[:path]}\nType of change:       #{change[:type]}\n"
-            b = "Complexity:           #{change[:complexity]}\n" unless change[:complexity].nil?
-            "#{a}#{b}"
-          end.join("\n\n")
+          change_text = changes.empty? ? 
+            "(No changes)" : 
+            changes.map do |change|
+              a = "File, relative path:  #{change[:path]}\nType of change:       #{change[:type]}\n"
+              b = "Complexity:           #{change[:complexity]}\n" unless change[:complexity].nil?
+              "#{a}#{b}"
+            end.join("\n\n")
 
           "#{commit_text}\n\n\n#{change_text}"
         end

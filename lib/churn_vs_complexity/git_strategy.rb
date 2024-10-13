@@ -20,7 +20,7 @@ module ChurnVsComplexity
       next_commit = @repo.log(100_000).find do |c|
         c.parents.map(&:sha).include?(current.sha)
       end
-      [parent.sha, next_commit&.sha]
+      [parent&.sha, next_commit&.sha]
     end
 
     def changes(commit:)
