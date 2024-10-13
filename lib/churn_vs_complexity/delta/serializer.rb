@@ -18,18 +18,30 @@ module ChurnVsComplexity
 
       module CSV
         def self.serialize(result)
-          changes = result[:changes]
-          rows = ["Relative Path, Type of Change, Complexity\n"]
+          results = result.is_a?(Array) ? result : [result]
+          changes = results.flat_map { |r| r[:changes].each { |c| c[:commit] = r[:commit] } }
+          rows = ["Commit, Relative Path, Type of Change, Complexity"]
           changes.each do |change|
-            rows << "#{change[:path]}, #{change[:type]}, #{change[:complexity]}\n"
+            rows << "#{change[:commit]}, #{change[:path]}, #{change[:type]}, #{change[:complexity]}"
           end
-          rows.join
+          rows.join("\n")
         end
+
+        def has_commit_summary? = false
       end
 
       module Summary
         class << self
           def serialize(result)
+            results = result.is_a?(Array) ? result : [result]
+            results.map { |r| serialize_single(r) }.join("\n\n\n")
+          end
+
+          def has_commit_summary? = true
+
+          private
+
+          def serialize_single(result)
             changes = result[:changes]
 
             commit_text = "Commit:   #{result[:commit]}\nParent:   #{result[:parent]}\nNext:     #{result[:next_commit]}"
@@ -37,10 +49,6 @@ module ChurnVsComplexity
 
             "#{commit_text}\n\n\n#{change_text}"
           end
-
-          def has_commit_summary? = true
-
-          private
 
           def describe(changes)
             changes.map do |change|
