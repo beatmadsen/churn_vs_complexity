@@ -64,7 +64,7 @@ module ChurnVsComplexity
           end
 
           opts.on('--delta SHA',
-                  'Identify changes between the specified commit and the previous commit and annotate changed files with complexity score',) do |value|
+                  'Identify changes between the specified commit and the previous commit and annotate changed files with complexity score. Can be used multiple times to specify multiple commits.',) do |value|
             options[:mode] = :delta
             (options[:commits] ||= []) << value
           end
@@ -76,6 +76,11 @@ module ChurnVsComplexity
 
           opts.on('-h', '--help', 'Display help') do
             puts opts
+            exit
+          end
+
+          opts.on('--version', 'Display version') do
+            puts ChurnVsComplexity::VERSION
             exit
           end
         end

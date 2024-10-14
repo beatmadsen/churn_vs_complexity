@@ -20,7 +20,7 @@ module ChurnVsComplexity
         def self.serialize(result)
           results = result.is_a?(Array) ? result : [result]
           changes = results.flat_map { |r| r[:changes].each { |c| c[:commit] = r[:commit] } }
-          rows = ["Commit, Relative Path, Type of Change, Complexity"]
+          rows = ['Commit, Relative Path, Type of Change, Complexity']
           changes.each do |change|
             rows << "#{change[:commit]}, #{change[:path]}, #{change[:type]}, #{change[:complexity]}"
           end

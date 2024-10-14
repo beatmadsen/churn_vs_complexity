@@ -28,7 +28,7 @@ module ChurnVsComplexity
 
       def checker
         MultiChecker.new(serializer:, excluded: @excluded, factory: @factory, commits: @commits,
-                    language: @language,)
+                         language: @language,)
       end
 
       private

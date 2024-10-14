@@ -1,7 +1,6 @@
 TODO:
 
 - Move Timetravel calculations away from serializer
-- Use OS tmpdir for pmd cache
 
 - Database, where we can prepopulate the state of every file and every commit
   - Populate incrementally from each commit in log. 

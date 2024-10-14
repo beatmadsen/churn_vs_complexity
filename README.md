@@ -45,10 +45,9 @@ Usage: churn_vs_complexity [options] folder
     -q, --quarter                    Calculate churn for the quarter leading up to the most recent commit
     -y, --year                       Calculate churn for the year leading up to the most recent commit
         --timetravel N               Calculate summary for all commits at intervals of N days throughout project history or from the date specified with --since
+        --delta SHA                  Identify changes between the specified commit and the previous commit and annotate changed files with complexity score. Can be used multiple times to specify multiple commits.
         --dry-run                    Echo the chosen options from the CLI
     -h, --help                       Display help
-
-
 ```
 
 Note that when using the `--timetravel` mode, the semantics of some flags are subtly different from normal mode:
@@ -70,6 +69,8 @@ Summary points in timetravel mode instead include an alpha score, which is the s
 `churn_vs_complexity --ruby --summary -m my_ruby_project >> ~/Desktop/monthly-report.txt`
 
 `churn_vs_complexity --java -m --since 2019-03-01 --timetravel 30 --graph my_java_project > ~/Desktop/timetravel-after-1st-march-2019.html`
+
+`churn_vs_complexity --delta 1496402e81e68e86c5ac240559099fbe581a9a2g --delta 2845296758861773778d70d96328a5f2a1a9e933  --js --summary my_javascript_project > ~/Desktop/interesting-commits.txt`
 
 ## Development
 

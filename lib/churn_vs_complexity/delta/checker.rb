@@ -21,7 +21,7 @@ module ChurnVsComplexity
         result = commit_summary(worktree_folder: worktree.folder)
         unless changes.empty?
           ComplexityAnnotator.new(factory: @factory, changes:)
-                             .enhance(worktree_folder: worktree.folder, language: @language, excluded: @excluded)
+                             .enhance(worktree_folder: worktree.folder, language: @language, excluded: @excluded, commit: @commit)
           result[:changes] = changes
         end
 

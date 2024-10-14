@@ -8,14 +8,14 @@ module ChurnVsComplexity
         @changes = changes
       end
 
-      def enhance(worktree_folder:, language:, excluded:)
+      def enhance(worktree_folder:, language:, excluded:, commit:)
         @changes.each do |change|
           change[:full_path] = File.join(worktree_folder, change[:path])
         end
 
         files = @changes.reject { |change| change[:type] == :deleted }.map { |change| change[:full_path] }
 
-        engine = @factory.engine(root_folder: worktree_folder, language:, excluded:, files:)
+        engine = @factory.engine(cache_components: [worktree_folder, commit], language:, excluded:, files:)
 
         values_by_file = engine.check(folder: worktree_folder)[:values_by_file]
 

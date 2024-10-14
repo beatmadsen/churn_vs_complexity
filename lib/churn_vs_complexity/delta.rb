@@ -14,10 +14,10 @@ module ChurnVsComplexity
     end
 
     class << self
-      def engine(root_folder:, language:, excluded:, files:)
+      def engine(cache_components:, language:, excluded:, files:)
         file_selector = file_selector(language:, included: files, excluded:)
         Engine.concurrent(
-          since: nil, complexity: complexity(language, root_folder), churn: Churn::Disabled,
+          since: nil, complexity: complexity(language, cache_components), churn: Churn::Disabled,
           serializer: Normal::Serializer::None,
           file_selector:,
         )
@@ -36,10 +36,10 @@ module ChurnVsComplexity
         end
       end
 
-      def complexity(language, root_folder)
+      def complexity(language, cache_components)
         case language
         when :java
-          Complexity::PMD::FilesCalculator.new(root_folder:)
+          Complexity::PMD::FilesCalculator.new(cache_components:)
         when :ruby
           Complexity::FlogCalculator
         when :javascript

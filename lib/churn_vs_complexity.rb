@@ -13,9 +13,10 @@ module ChurnVsComplexity
   class ValidationError < Error; end
 
   ROOT_PATH = File.expand_path('..', __dir__)
-  
-  def self.tmp_dir_path(root_folder)
-    folder_hash = Digest::SHA256.hexdigest(root_folder)[0..7]
+
+  def self.tmp_dir_path(*components)
+    combined = components.join('/')
+    folder_hash = Digest::SHA256.hexdigest(combined)[0..7]
     File.join(Dir.tmpdir, 'churn_vs_complexity', folder_hash)
   end
 end

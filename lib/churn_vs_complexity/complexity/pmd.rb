@@ -16,8 +16,8 @@ module ChurnVsComplexity
           ruleset_path
         end
 
-        def resolve_cache_path(root_folder)
-          File.join(ChurnVsComplexity.tmp_dir_path(root_folder), 'pmd', "pmd-cache")
+        def resolve_cache_path(*components)
+          File.join(ChurnVsComplexity.tmp_dir_path(*components), 'pmd', 'pmd-cache')
         end
 
         def check_dependencies!

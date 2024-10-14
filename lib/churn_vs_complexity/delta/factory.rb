@@ -14,7 +14,9 @@ module ChurnVsComplexity
         )
       end
 
-      def self.engine(root_folder:, language:, excluded:, files:) = Delta.engine(root_folder:, language:, excluded:, files:)
+      def self.engine(cache_components:, language:, excluded:, files:)
+        Delta.engine(cache_components:, language:, excluded:, files:)
+      end
     end
   end
 end

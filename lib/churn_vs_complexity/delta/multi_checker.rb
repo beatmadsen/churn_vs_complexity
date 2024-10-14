@@ -27,6 +27,7 @@ module ChurnVsComplexity
             loop do
               commit, index = indexed_commits.shift
               break if commit.nil?
+
               result = check_commit(commit:, data_isolation_id: ci, folder:)
               results[index] = result
             end
@@ -39,8 +40,8 @@ module ChurnVsComplexity
       private
 
       def check_commit(commit:, data_isolation_id:, folder:)
-        Checker.new(serializer: Serializer::PassThrough, factory: @factory, commit:, language: @language, excluded: @excluded, data_isolation_id:)
-               .check(folder:)
+        Checker.new(serializer: Serializer::PassThrough, factory: @factory, commit:, language: @language,
+                    excluded: @excluded, data_isolation_id:,).check(folder:)
       end
     end
   end
