@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Erik T. Madsen']
   spec.email         = ['beatmadsen@gmail.com']
   spec.summary       = 'A tool to visualise code complexity in projects and help direct refactoring efforts.'
-  spec.description   = "Inspired by Michael Feathers' article \"Getting Empirical about Refactoring\" and the gem 'turbulence' by Chad Fowler and others. This gem currently supports analysis of Java, Ruby, JavaScript, and TypeScript repositories, but it can easily be extended."
+  spec.description   = "Inspired by Michael Feathers' article \"Getting Empirical about Refactoring\" and the gem 'turbulence' by Chad Fowler and others. This gem currently supports analysis of Java, Ruby, JavaScript, and TypeScript repositories, but it can easily be extended. For a more detailed introduction, please consult the project README in the GitHub repository."
   spec.homepage      = 'https://github.com/beatmadsen/churn_vs_complexity'
   spec.license       = 'MIT'
   spec.required_ruby_version = '>= 3.3'
