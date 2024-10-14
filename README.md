@@ -22,9 +22,11 @@ Or install it yourself as:
 
     $ gem install churn_vs_complexity
 
-This gem depends on git for churn analysis and [PMD](https://pmd.github.io) for complexity analysis of JVM based languages.
+This gem depends on git for churn analysis.
 
-In order to use the `--java` flag, you must first install PMD manually, and the gem assumes it is available on the search path as `pmd`. On macOS, for example, you can install it using homebrew with `brew install pmd`.
+Complexity analysis for Java relies on [PMD](https://pmd.github.io). In order to use the `--java` flag, you must first install PMD manually, and the gem assumes it is available on the search path as `pmd`. On macOS, for example, you can install it using homebrew with `brew install pmd`.
+
+Complexity analysis for JavaScript and TypeScript relies on [ESLint](https://eslint.org). In order to use the `--js`, `--ts`, `--javascript`, or `--typescript` flag, you must have Node.js installed.
 
 ## Usage
 
