@@ -18,7 +18,7 @@ module ChurnVsComplexity
         worktree = setup_worktree(folder:)
 
         changes = @factory.git_strategy(folder: worktree.folder).changes(commit: @commit)
-        result = commit_summary(worktree_folder: worktree.folder)
+        result = commit_summary(folder:)
         unless changes.empty?
           ComplexityAnnotator.new(factory: @factory, changes:)
                              .enhance(worktree_folder: worktree.folder, language: @language, excluded: @excluded, commit: @commit)
@@ -34,15 +34,15 @@ module ChurnVsComplexity
         worktree = @factory.worktree(root_folder: folder, git_strategy: @factory.git_strategy(folder:),
                                      data_isolation_id: @data_isolation_id,)
         worktree.prepare
-        worktree.checkout(sha: @commit)
+        worktree.checkout(@commit)
 
         worktree
       end
 
-      def commit_summary(worktree_folder:)
+      def commit_summary(folder:)
         summary = { commit: @commit }
         if @serializer.respond_to?(:has_commit_summary?) && @serializer.has_commit_summary?
-          parent, next_commit = @factory.git_strategy(folder: worktree_folder).surrounding(commit: @commit)
+          parent, next_commit = @factory.git_strategy(folder:).surrounding(commit: @commit)
           summary.merge!(parent:, next_commit:)
         end
         summary

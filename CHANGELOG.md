@@ -1,3 +1,7 @@
+## [1.5.1] - 2024-10-15
+
+- Fix bug where worktree checkout silently failed
+
 
 ## [1.5.0] - 2024-10-14
 

@@ -5,7 +5,7 @@ Next:     8cdaac516365bd7007b9f755bbe6f6e86d8e13dd
 
 File, relative path:  lib/churn_vs_complexity/serializer/timetravel.rb
 Type of change:       modified
-Complexity:           62.07689265062675
+Complexity:           58.34326171010786
 
 File, relative path:  lib/churn_vs_complexity/serializer/timetravel/stats_calculator.rb
 Type of change:       deleted
@@ -37,7 +37,7 @@ Complexity:           89.25682464940157
 
 File, relative path:  lib/churn_vs_complexity/serializer/timetravel.rb
 Type of change:       modified
-Complexity:           62.07689265062675
+Complexity:           131.0989019732436
 
 File, relative path:  lib/churn_vs_complexity/serializer/timetravel/quality_calculator.rb
 Type of change:       deleted

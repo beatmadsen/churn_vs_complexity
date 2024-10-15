@@ -159,7 +159,7 @@ module ChurnVsComplexity
         raise Timetravel::Worktree::Error, 'Failed to prepare worktree' if @fail_to_prepare
       end
 
-      def checkout(sha:)
+      def checkout(sha)
         raise Timetravel::Worktree::Error, "Failed to checkout #{sha} in worktree" if @fail_to_checkout
       end
 
