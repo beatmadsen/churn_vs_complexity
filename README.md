@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/churn_vs_complexity.svg)](https://badge.fury.io/rb/churn_vs_complexity)
+
 # ChurnVsComplexity
 
 A tool to visualise code complexity in a project and help direct refactoring efforts.
