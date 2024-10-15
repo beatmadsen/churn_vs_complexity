@@ -1,4 +1,4 @@
-## [1.5.1] - 2024-10-15
+## [1.5.1] - 2024-10-15
 
 - Fix bug where worktree checkout silently failed
 
