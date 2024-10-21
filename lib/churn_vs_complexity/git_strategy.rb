@@ -14,13 +14,15 @@ module ChurnVsComplexity
       false
     end
 
+    def object(commit)
+      commit.is_a?(Git::Object::Commit) ? commit : @repo.object(commit)
+    end
+
     def surrounding(commit:)
-      current = @repo.object(commit)
-      parent = current.parent
-      next_commit = @repo.log(100_000).find do |c|
-        c.parents.map(&:sha).include?(current.sha)
-      end
-      [parent&.sha, next_commit&.sha]
+      current = object(commit)
+      is_head = current.sha == @repo.object('HEAD').sha
+      next_commit = is_head ? nil : @repo.log(100_000).find { |c| c.parents.map(&:sha).include?(current.sha) }
+      [current.parent&.sha, next_commit&.sha]
     end
 
     def changes(commit:)

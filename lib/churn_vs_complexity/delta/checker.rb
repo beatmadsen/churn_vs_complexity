@@ -40,12 +40,10 @@ module ChurnVsComplexity
       end
 
       def commit_summary(folder:)
-        summary = { commit: @commit }
-        if @serializer.respond_to?(:has_commit_summary?) && @serializer.has_commit_summary?
-          parent, next_commit = @factory.git_strategy(folder:).surrounding(commit: @commit)
-          summary.merge!(parent:, next_commit:)
-        end
-        summary
+        CommitHydrator.new(
+          git_strategy: @factory.git_strategy(folder:),
+          serializer: @serializer,
+        ).hydrate(@commit)
       end
 
       def valid_commit?(folder:)

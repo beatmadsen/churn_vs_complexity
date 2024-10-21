@@ -1,3 +1,8 @@
+## [1.5.2] - 2024-10-21
+
+- Fixed bug where delta mode validations would fail when the commit was a non-sha value.
+- Allow HEAD as specified commit in delta mode
+
 ## [1.5.1] - 2024-10-15
 
 - Fix bug where worktree checkout silently failed

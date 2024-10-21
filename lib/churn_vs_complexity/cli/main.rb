@@ -11,6 +11,7 @@ module ChurnVsComplexity
           validate_options!(options)
           config = config(options)
           config.validate!
+
           config.checker.check(folder:)
         end
 

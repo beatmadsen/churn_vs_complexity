@@ -6,6 +6,7 @@ require_relative 'delta/serializer'
 require_relative 'delta/factory'
 require_relative 'delta/complexity_annotator'
 require_relative 'delta/multi_checker'
+require_relative 'delta/commit_hydrator'
 
 module ChurnVsComplexity
   module Delta

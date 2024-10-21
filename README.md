@@ -49,9 +49,10 @@ Usage: churn_vs_complexity [options] folder
     -q, --quarter                    Calculate churn for the quarter leading up to the most recent commit
     -y, --year                       Calculate churn for the year leading up to the most recent commit
         --timetravel N               Calculate summary for all commits at intervals of N days throughout project history or from the date specified with --since
-        --delta SHA                  Identify changes between the specified commit and the previous commit and annotate changed files with complexity score. Can be used multiple times to specify multiple commits.
+        --delta SHA                  Identify changes between the specified commit (SHA) and the previous commit and annotate changed files with complexity score. SHA can be a full or short commit hash, or the value HEAD. Can be used multiple times to specify multiple commits.
         --dry-run                    Echo the chosen options from the CLI
     -h, --help                       Display help
+        --version                    Display version
 ```
 
 Note that when using the `--timetravel` mode, the semantics of some flags are subtly different from normal mode:

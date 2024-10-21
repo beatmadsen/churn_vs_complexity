@@ -142,6 +142,10 @@ module ChurnVsComplexity
         @changes
       end
 
+      def object(commit)
+        GitCommitStub.new(sha: commit)
+      end
+
       def surrounding(commit:)
         %w[aabbccdd bbbbccdd]
       end
@@ -165,6 +169,8 @@ module ChurnVsComplexity
 
       def folder = FOLDER
     end
+
+    GitCommitStub = Data.define(:sha)
 
     class EngineStub
       def initialize(fail_to_process: false)
