@@ -36,7 +36,7 @@ module ChurnVsComplexity
 
         def test_run_raises_error_when_no_language_is_selected
           Dir.mktmpdir do |dir|
-            error = assert_raises(ValidationError) { Main.run!({ a: 1}, dir) }
+            error = assert_raises(ValidationError) { Main.run!({ a: 1 }, dir) }
             assert_equal 'No language selected. Use --help for usage information.', error.message
           end
         end

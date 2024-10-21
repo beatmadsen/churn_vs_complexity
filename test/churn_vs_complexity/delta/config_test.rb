@@ -28,7 +28,7 @@ module ChurnVsComplexity
           Config.new(
             language: :ruby,
             serializer: :none,
-            commits: ['aabbccdd', 'bad_commit'],
+            commits: %w[aabbccdd bad_commit],
           ).validate!
         end
       end
