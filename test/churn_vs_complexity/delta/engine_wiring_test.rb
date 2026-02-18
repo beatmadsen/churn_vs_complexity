@@ -13,6 +13,8 @@ module ChurnVsComplexity
       end
 
       def test_should_create_a_working_engine_for_go
+        skip 'gocognit not installed' unless system('which gocognit > /dev/null 2>&1')
+
         files = ['tmp/test-support/go/main.go']
         engine = Delta.engine(cache_components: [], language: :go, excluded: [], files:)
         result = engine.check(folder: 'tmp/test-support/go')

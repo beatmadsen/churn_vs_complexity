@@ -4,6 +4,8 @@ require 'test_helper'
 
 class GoIntegrationTest < TLDR
   def test_should_complete_go_csv_pipeline
+    skip 'gocognit not installed' unless system('which gocognit > /dev/null 2>&1')
+
     # Given: a Normal::Config for Go with CSV output
     config = ChurnVsComplexity::Normal::Config.new(
       language: :go,

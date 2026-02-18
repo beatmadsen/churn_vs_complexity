@@ -8,6 +8,10 @@ module ChurnVsComplexity
         Complexity::PMD.check_dependencies!
       when :javascript
         Complexity::ESLintCalculator.check_dependencies!
+      when :python
+        Complexity::PythonCalculator.check_dependencies!
+      when :go
+        Complexity::GoCalculator.check_dependencies!
       end
     end
   end

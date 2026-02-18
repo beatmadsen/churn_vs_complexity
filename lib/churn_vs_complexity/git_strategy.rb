@@ -2,6 +2,8 @@
 
 module ChurnVsComplexity
   class GitStrategy
+    EMPTY_TREE_SHA = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+
     def initialize(folder:)
       @repo = Git.open(folder)
       @folder = folder
@@ -27,8 +29,7 @@ module ChurnVsComplexity
 
     def changes(commit:)
       commit_object = @repo.object(commit)
-      base = commit_object.parent
-      commit_object.diff(base).map do |change|
+      diff_from_parent(commit_object).map do |change|
         { path: change.path, type: change.type.to_sym }
       end
     end
@@ -57,6 +58,13 @@ module ChurnVsComplexity
     def remove_worktree(worktree_folder)
       command = "(cd #{worktree_folder} && git worktree remove -f #{worktree_folder}) > /dev/null 2>&1"
       `#{command}`
+    end
+
+    private
+
+    def diff_from_parent(commit_object)
+      base = commit_object.parent
+      base ? base.diff(commit_object) : @repo.diff(EMPTY_TREE_SHA, commit_object.sha)
     end
   end
 end

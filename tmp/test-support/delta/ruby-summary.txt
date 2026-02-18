@@ -8,14 +8,16 @@ Type of change:       modified
 Complexity:           58.34326171010786
 
 File, relative path:  lib/churn_vs_complexity/serializer/timetravel/stats_calculator.rb
-Type of change:       deleted
+Type of change:       new
+Complexity:           80.35549194682164
 
 File, relative path:  test/churn_vs_complexity/serializer/timetravel/quality_calculator_test.rb
 Type of change:       modified
 Complexity:           13.054183368177016
 
 File, relative path:  test/churn_vs_complexity/serializer/timetravel/stats_calculator_test.rb
-Type of change:       deleted
+Type of change:       new
+Complexity:           12.2198021565134
 
 
 
@@ -29,7 +31,8 @@ Type of change:       modified
 Complexity:           70.26655854867414
 
 File, relative path:  lib/churn_vs_complexity/serializer/pass_through.rb
-Type of change:       deleted
+Type of change:       new
+Complexity:           19.309088021254183
 
 File, relative path:  lib/churn_vs_complexity/serializer/summary_hash.rb
 Type of change:       modified
@@ -40,11 +43,13 @@ Type of change:       modified
 Complexity:           131.0989019732436
 
 File, relative path:  lib/churn_vs_complexity/serializer/timetravel/quality_calculator.rb
-Type of change:       deleted
+Type of change:       new
+Complexity:           23.324498016752965
 
 File, relative path:  test/churn_vs_complexity/serializer/summary_hash_test.rb
 Type of change:       modified
 Complexity:           14.396336540125482
 
 File, relative path:  test/churn_vs_complexity/serializer/timetravel/quality_calculator_test.rb
-Type of change:       deleted
+Type of change:       new
+Complexity:           13.054183368177016

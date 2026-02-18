@@ -7,6 +7,8 @@ module ChurnVsComplexity
   module Complexity
     module GoCalculator
       class << self
+        attr_writer :command_runner
+
         def folder_based? = false
 
         def calculate(files:)
@@ -15,23 +17,30 @@ module ChurnVsComplexity
         end
 
         def parse_gocognit_output(json_output, files:)
-          stats = JSON.parse(json_output)
+          stats = JSON.parse(json_output) || []
           scores = stats.group_by { |s| s.dig('Pos', 'Filename') }
                         .transform_values { |funcs| funcs.sum { |f| f['Complexity'] } }
           files.to_h { |file| [file, scores[file] || 0] }
         end
 
         def check_dependencies!
-          Open3.capture2('gocognit', '--help')
+          command_runner.call('gocognit --help 2>&1')
         rescue Errno::ENOENT
           raise Error, 'Needs gocognit installed (go install github.com/uudashr/gocognit/cmd/gocognit@latest)'
         end
 
         private
 
+        def command_runner
+          @command_runner || Open3.method(:capture2)
+        end
+
         def run_gocognit(files)
           files_arg = files.map { |f| "'#{f}'" }.join(' ')
-          `gocognit -json #{files_arg}`
+          stdout, status = command_runner.call("gocognit -json #{files_arg}")
+          raise Error, "gocognit failed (exit #{status.exitstatus}). Is it installed?" unless status.success?
+
+          stdout
         end
       end
     end

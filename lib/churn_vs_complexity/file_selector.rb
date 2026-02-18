@@ -110,12 +110,14 @@ module ChurnVsComplexity
     end
 
     module Python
+      DEFAULT_EXCLUDES = %w[venv .venv env .env __pycache__ .tox site-packages].freeze
+
       def self.excluding(excluded)
-        Excluding.new(FileSelector.extensions(:python), excluded)
+        Excluding.new(FileSelector.extensions(:python), DEFAULT_EXCLUDES + excluded)
       end
 
       def self.predefined(included:, excluded:)
-        Predefined.new(included:, extensions: FileSelector.extensions(:python), excluded:)
+        Predefined.new(included:, extensions: FileSelector.extensions(:python), excluded: DEFAULT_EXCLUDES + excluded)
       end
     end
 
