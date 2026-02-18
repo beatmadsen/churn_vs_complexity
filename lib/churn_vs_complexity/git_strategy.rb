@@ -20,9 +20,9 @@ module ChurnVsComplexity
 
     def surrounding(commit:)
       current = object(commit)
-      is_head = current.sha == @repo.object('HEAD').sha
-      next_commit = is_head ? nil : @repo.log(100_000).find { |c| c.parents.map(&:sha).include?(current.sha) }
-      [current.parent&.sha, next_commit&.sha]
+      child_sha = `git -C #{@folder} log --reverse --ancestry-path #{current.sha}..HEAD --format=%H`.lines.first&.chomp
+      next_commit = child_sha&.empty? ? nil : child_sha
+      [current.parent&.sha, next_commit]
     end
 
     def changes(commit:)

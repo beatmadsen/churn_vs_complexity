@@ -2,8 +2,10 @@
 
 module ChurnVsComplexity
   module LanguageValidator
+    SUPPORTED = %i[java ruby javascript python go].freeze
+
     def self.validate!(language)
-      raise ValidationError, "Unsupported language: #{language}" unless %i[java ruby javascript].include?(language)
+      raise ValidationError, "Unsupported language: #{language}" unless SUPPORTED.include?(language)
     end
   end
 end

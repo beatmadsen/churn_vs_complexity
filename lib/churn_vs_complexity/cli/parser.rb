@@ -23,6 +23,14 @@ module ChurnVsComplexity
             options[:language] = :javascript
           end
 
+          opts.on('--python', 'Check complexity of python files') do
+            options[:language] = :python
+          end
+
+          opts.on('--go', 'Check complexity of go files') do
+            options[:language] = :go
+          end
+
           opts.on('--csv', 'Format output as CSV') do
             options[:serializer] = :csv
           end

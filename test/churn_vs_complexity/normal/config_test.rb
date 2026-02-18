@@ -24,6 +24,16 @@ module ChurnVsComplexity
         assert_instance_of Engine, result
       end
 
+      def test_that_it_creates_an_engine_for_python
+        result = config(language: :python).checker
+        assert_instance_of Engine, result
+      end
+
+      def test_that_it_creates_an_engine_for_go
+        result = config(language: :go).checker
+        assert_instance_of Engine, result
+      end
+
       def test_that_it_raises_an_error_for_unsupported_language
         assert_raises(Error) { config(language: :csharp).validate! }
       end

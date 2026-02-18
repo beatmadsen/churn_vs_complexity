@@ -10,6 +10,10 @@ module ChurnVsComplexity
         ['.rb']
       when :javascript
         ['.js', '.jsx', '.ts', '.tsx']
+      when :python
+        ['.py']
+      when :go
+        ['.go']
       else
         raise Error, "Unsupported language: #{language}"
       end
@@ -102,6 +106,26 @@ module ChurnVsComplexity
       def self.predefined(included:, excluded:)
         Predefined.new(included:, extensions: FileSelector.extensions(:javascript), excluded:,
                        convert_to_absolute_path: true,)
+      end
+    end
+
+    module Python
+      def self.excluding(excluded)
+        Excluding.new(FileSelector.extensions(:python), excluded)
+      end
+
+      def self.predefined(included:, excluded:)
+        Predefined.new(included:, extensions: FileSelector.extensions(:python), excluded:)
+      end
+    end
+
+    module Go
+      def self.excluding(excluded)
+        Excluding.new(FileSelector.extensions(:go), excluded)
+      end
+
+      def self.predefined(included:, excluded:)
+        Predefined.new(included:, extensions: FileSelector.extensions(:go), excluded:)
       end
     end
   end

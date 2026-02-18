@@ -34,6 +34,10 @@ module ChurnVsComplexity
           FileSelector::Ruby.predefined(included:, excluded:)
         when :javascript
           FileSelector::JavaScript.predefined(included:, excluded:)
+        when :python
+          FileSelector::Python.predefined(included:, excluded:)
+        when :go
+          FileSelector::Go.predefined(included:, excluded:)
         end
       end
 
@@ -45,6 +49,10 @@ module ChurnVsComplexity
           Complexity::FlogCalculator
         when :javascript
           Complexity::ESLintCalculator
+        when :python
+          Complexity::PythonCalculator
+        when :go
+          Complexity::GoCalculator
         end
       end
     end

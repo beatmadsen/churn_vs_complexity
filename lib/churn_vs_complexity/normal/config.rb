@@ -59,6 +59,22 @@ module ChurnVsComplexity
             serializer:,
             since: @since || @relative_period,
           )
+        when :python
+          Engine.concurrent(
+            complexity: Complexity::PythonCalculator,
+            churn:,
+            file_selector: FileSelector::Python.excluding(@excluded),
+            serializer:,
+            since: @since || @relative_period,
+          )
+        when :go
+          Engine.concurrent(
+            complexity: Complexity::GoCalculator,
+            churn:,
+            file_selector: FileSelector::Go.excluding(@excluded),
+            serializer:,
+            since: @since || @relative_period,
+          )
         end
       end
 
