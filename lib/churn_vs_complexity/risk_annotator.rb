@@ -2,7 +2,7 @@
 
 module ChurnVsComplexity
   module RiskAnnotator
-    def self.annotate(values_by_file, classifier: RiskClassifier.new)
+    def self.annotate(values_by_file, language: nil, classifier: RiskClassifier.new(language: language))
       values_by_file.map { |file, values| build_entry(file, values, classifier) }
     end
 

@@ -5,11 +5,12 @@ require 'json'
 module ChurnVsComplexity
   module Focus
     class Checker
-      def initialize(engine:, subcommand:, serializer:, baseline_path:)
+      def initialize(engine:, subcommand:, serializer:, baseline_path:, language: nil)
         @engine = engine
         @subcommand = subcommand
         @serializer = serializer
         @baseline_path = baseline_path
+        @language = language
       end
 
       def check(folder:)
@@ -24,7 +25,7 @@ module ChurnVsComplexity
 
       def run_start(folder, baseline_path)
         raw_result = @engine.check(folder:)
-        entries = RiskAnnotator.annotate(raw_result[:values_by_file])
+        entries = RiskAnnotator.annotate(raw_result[:values_by_file], language: @language)
 
         baseline = {
           timestamp: Time.now.utc.iso8601,
@@ -37,7 +38,7 @@ module ChurnVsComplexity
 
       def run_end(folder, baseline_path)
         raw_result = @engine.check(folder:)
-        current_entries = RiskAnnotator.annotate(raw_result[:values_by_file])
+        current_entries = RiskAnnotator.annotate(raw_result[:values_by_file], language: @language)
 
         baseline = load_baseline(baseline_path)
         @serializer.serialize(baseline:, current: current_entries)

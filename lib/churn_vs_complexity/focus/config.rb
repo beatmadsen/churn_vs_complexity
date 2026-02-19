@@ -40,6 +40,7 @@ module ChurnVsComplexity
           subcommand: @subcommand,
           serializer: focus_serializer,
           baseline_path: @baseline_path,
+          language: @language,
         )
       end
 

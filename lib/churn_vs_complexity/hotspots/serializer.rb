@@ -7,7 +7,7 @@ module ChurnVsComplexity
     module Serializer
       module Json
         def self.serialize(result)
-          entries = RiskAnnotator.annotate(result[:values_by_file])
+          entries = RiskAnnotator.annotate(result[:values_by_file], language: result[:language])
           entries.sort_by! { |e| -e[:gamma_score] }
 
           JSON.generate({ generated: Time.now.utc.iso8601, files: entries,
@@ -23,7 +23,7 @@ module ChurnVsComplexity
         }.freeze
 
         def self.serialize(result)
-          entries = RiskAnnotator.annotate(result[:values_by_file])
+          entries = RiskAnnotator.annotate(result[:values_by_file], language: result[:language])
           entries.sort_by! { |e| -e[:gamma_score] }
           grouped = entries.group_by { |e| e[:risk] }
 

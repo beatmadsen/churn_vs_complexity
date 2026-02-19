@@ -16,7 +16,7 @@ module ChurnVsComplexity
         folder = folder || dirs.first || '.'
         engine = build_engine(files, folder)
         raw_result = engine.check(folder:)
-        @serializer.serialize(raw_result)
+        @serializer.serialize(raw_result.merge(language: @language))
       end
 
       private

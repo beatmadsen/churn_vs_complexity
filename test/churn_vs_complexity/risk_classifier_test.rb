@@ -50,5 +50,17 @@ module ChurnVsComplexity
       assert_equal 'medium', classifier.classify(gamma_score: 10.0)[:risk]
       assert_equal 'high', classifier.classify(gamma_score: 16.0)[:risk]
     end
+
+    def test_should_use_higher_thresholds_for_ruby
+      # Given: a classifier configured for Ruby (Flog scores run 3-7x higher)
+      classifier = RiskClassifier.new(language: :ruby)
+
+      # When: classifying a gamma score that would be high with defaults
+      result = classifier.classify(gamma_score: 30.0)
+
+      # Then: Ruby thresholds treat this as NOT high risk
+      refute_equal 'high', result[:risk],
+                   'Gamma 30 should not be high for Ruby — Flog scores are much higher than other tools'
+    end
   end
 end

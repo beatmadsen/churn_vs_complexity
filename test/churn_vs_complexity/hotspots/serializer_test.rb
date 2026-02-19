@@ -6,6 +6,22 @@ require 'json'
 module ChurnVsComplexity
   module Hotspots
     class SerializerJsonTest < TLDR
+      def test_should_use_language_specific_thresholds_in_hotspots_json
+        # Given: a result with gamma ~30 and language: :ruby
+        values_by_file = { 'lib/moderate.rb' => [30, 30.0] }
+        # gamma = 30.0 → high with defaults, medium for Ruby
+        result = { values_by_file:, language: :ruby }
+
+        # When: serialize with hotspots JSON serializer
+        output = Serializer::Json.serialize(result)
+        parsed = JSON.parse(output)
+
+        # Then: Ruby thresholds should classify gamma ~30 as NOT high
+        ruby_risk = parsed['files'].first['risk']
+        refute_equal 'high', ruby_risk,
+                     "Gamma ~30 should not be high risk for Ruby in hotspots output"
+      end
+
       def test_should_produce_sorted_json_with_risk_levels_and_timestamp
         # Given: a Normal-mode result with files of varying risk
         values_by_file = {

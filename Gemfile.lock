@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    churn_vs_complexity (1.6.0)
+    churn_vs_complexity (1.6.2)
       flog (~> 4.8)
       git (~> 2.1)
 

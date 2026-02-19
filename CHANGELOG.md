@@ -1,3 +1,11 @@
+## [1.6.2] - 2026-02-19
+
+### Changed
+- Risk classification in triage, hotspots, and focus modes is now language-aware
+- Ruby thresholds raised to low=30/high=70 (Flog scores 3-7x higher than cyclomatic tools)
+- Go thresholds raised to low=15/high=40 (cognitive complexity penalises nesting)
+- Java, Python, and JavaScript/TypeScript thresholds unchanged (low=10/high=25)
+
 ## [1.6.1] - 2026-02-19
 
 ### Changed

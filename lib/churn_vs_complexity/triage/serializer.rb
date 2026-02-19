@@ -7,7 +7,7 @@ module ChurnVsComplexity
     module Serializer
       module Json
         def self.serialize(result)
-          entries = RiskAnnotator.annotate(result[:values_by_file])
+          entries = RiskAnnotator.annotate(result[:values_by_file], language: result[:language])
           JSON.generate({ files: entries, summary: RiskAnnotator.risk_summary(entries) })
         end
       end

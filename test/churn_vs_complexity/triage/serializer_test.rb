@@ -6,6 +6,22 @@ require 'json'
 module ChurnVsComplexity
   module Triage
     class SerializerJsonTest < TLDR
+      def test_should_use_language_specific_thresholds_when_language_provided
+        # Given: a result with values that produce gamma ~30 AND language: :ruby
+        values_by_file = { 'lib/moderate.rb' => [30, 30.0] }
+        # gamma = 2*30*30 / (30+30) = 30.0 → high with defaults, medium for Ruby
+        result = { values_by_file:, language: :ruby }
+
+        # When: we serialize with triage JSON serializer
+        output = Serializer::Json.serialize(result)
+        parsed = JSON.parse(output)
+
+        # Then: Ruby's higher thresholds should classify gamma ~30 as NOT high
+        ruby_risk = parsed['files'].first['risk']
+        refute_equal 'high', ruby_risk,
+                     "Gamma ~30 should not be high risk for Ruby in triage output"
+      end
+
       def test_should_produce_json_with_risk_levels_and_summary_counts
         # Given: a Normal-mode result hash
         values_by_file = {

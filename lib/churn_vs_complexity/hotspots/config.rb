@@ -34,7 +34,7 @@ module ChurnVsComplexity
           since: @since,
           excluded: @excluded,
         )
-        Checker.new(engine: normal_config.checker, serializer: hotspots_serializer)
+        Checker.new(engine: normal_config.checker, serializer: hotspots_serializer, language: @language)
       end
 
       private
