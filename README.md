@@ -2,11 +2,11 @@
 
 # ChurnVsComplexity
 
-A tool to visualise code complexity in a project and help direct refactoring efforts.
+Correlates file churn (how often files change) with complexity scores to identify refactoring hotspots and track codebase health over time. Supports Ruby, JavaScript/TypeScript, Java, Python, and Go.
 
-Inspired by [Michael Feathers' article "Getting Empirical about Refactoring"](https://www.agileconnection.com/article/getting-empirical-about-refactoring) and the gem [turbulence](https://rubygems.org/gems/turbulence) by Chad Fowler and others.
+Modes include hotspots ranking, triage assessment, CI quality gate, diff comparison, focus sessions, and timetravel history.
 
-This gem currently supports analysis of Java, Ruby, JavaScript, and TypeScript repositories, but it can easily be extended.
+Inspired by [Michael Feathers' article "Getting Empirical about Refactoring"](https://www.agileconnection.com/article/getting-empirical-about-refactoring).
 
 ## Installation
 
@@ -26,30 +26,52 @@ Or install it yourself as:
 
 This gem depends on git for churn analysis.
 
-Complexity analysis for Java relies on [PMD](https://pmd.github.io). In order to use the `--java` flag, you must first install PMD manually, and the gem assumes it is available on the search path as `pmd`. On macOS, for example, you can install it using homebrew with `brew install pmd`.
+External tool dependencies per language:
 
-Complexity analysis for JavaScript and TypeScript relies on [ESLint](https://eslint.org). In order to use the `--js`, `--ts`, `--javascript`, or `--typescript` flag, you must have Node.js installed.
+- **Ruby**: None (uses [Flog](https://rubygems.org/gems/flog), bundled as a gem dependency).
+- **Java**: Requires [PMD](https://pmd.github.io) on the search path as `pmd`. On macOS: `brew install pmd`.
+- **JavaScript/TypeScript**: Requires [Node.js](https://nodejs.org) (uses ESLint internally).
+- **Python**: Requires [Radon](https://radon.readthedocs.io) on the search path as `radon`. Install with `pip install radon`.
+- **Go**: Requires [gocyclo](https://github.com/fzipp/gocyclo) on the search path. Install with `go install github.com/fzipp/gocyclo/cmd/gocyclo@latest`.
 
 ## Usage
 
-Execute the `churn_vs_complexity` with the applicable arguments. Output in the requested format will be directed to stdout.
+Execute `churn_vs_complexity` with the applicable arguments. Output in the requested format will be directed to stdout.
 
 ```
-Usage: churn_vs_complexity [options] folder
+Usage: churn_vs_complexity [options] folder|file...
+
+Languages:
         --java                       Check complexity of java classes
         --ruby                       Check complexity of ruby files
         --js, --ts, --javascript, --typescript
                                      Check complexity of javascript and typescript files
+        --python                     Check complexity of python files
+        --go                         Check complexity of go files
+
+Modes (mutually exclusive):
+        --timetravel N               Calculate summary for all commits at intervals of N days throughout project history or from the date specified with --since
+        --triage                     Assess risk of files based on churn and complexity. Accepts file paths or a folder as arguments.
+        --hotspots                   Generate ranked list of files by risk
+        --gate                       Pass/fail quality check against gamma threshold (exits 0 on pass, 1 on fail)
+        --focus start|end            Capture complexity snapshot before (start) and after (end) a coding session
+        --diff REF                   Compare codebase health between REF and HEAD
+        --delta SHA                  Identify changes between the specified commit (SHA) and the previous commit and annotate changed files with complexity score. SHA can be a full or short commit hash, or the value HEAD. Can be used multiple times to specify multiple commits.
+
+Output formats:
         --csv                        Format output as CSV
         --graph                      Format output as HTML page with Churn vs Complexity graph
         --summary                    Output summary statistics (mean and median) for churn and complexity
+        --json                       Format output as JSON
+        --markdown                   Format output as Markdown
+
+Modifiers:
         --excluded PATTERN           Exclude file paths including this string. Can be used multiple times.
         --since YYYY-MM-DD           Normal mode: Calculate churn after this date. Timetravel mode: calculate summaries from this date
     -m, --month                      Calculate churn for the month leading up to the most recent commit
     -q, --quarter                    Calculate churn for the quarter leading up to the most recent commit
     -y, --year                       Calculate churn for the year leading up to the most recent commit
-        --timetravel N               Calculate summary for all commits at intervals of N days throughout project history or from the date specified with --since
-        --delta SHA                  Identify changes between the specified commit (SHA) and the previous commit and annotate changed files with complexity score. SHA can be a full or short commit hash, or the value HEAD. Can be used multiple times to specify multiple commits.
+        --max-gamma N                Maximum gamma score threshold for gate mode (default: 25)
         --dry-run                    Echo the chosen options from the CLI
     -h, --help                       Display help
         --version                    Display version
@@ -67,15 +89,39 @@ Summaries in normal mode include a gamma score, which is an unnormalised harmoni
 Summary points in timetravel mode instead include an alpha score, which is the same harmonic mean of churn and complexity, where churn and complexity values are normalised to a 0-1 range to avoid either churn or complexity dominating the score. The summary points also include a beta score, which is the geometric mean of the normalised churn and complexity values.
 ## Examples
 
-`churn_vs_complexity --ruby --csv my_ruby_project > ~/Desktop/ruby-demo.csv`
+```bash
+# CSV churn vs complexity report for a Ruby project
+churn_vs_complexity --ruby --csv my_ruby_project > ~/Desktop/ruby-demo.csv
 
-`churn_vs_complexity --java --graph --exclude generated-sources --exclude generated-test-sources --since 2023-01-01 my_java_project > ~/Desktop/java-demo.html`
+# Interactive HTML graph for a Java project (excluding generated code)
+churn_vs_complexity --java --graph --excluded generated-sources --since 2023-01-01 my_java_project > ~/Desktop/java-demo.html
 
-`churn_vs_complexity --ruby --summary -m my_ruby_project >> ~/Desktop/monthly-report.txt`
+# Monthly summary for a Python project
+churn_vs_complexity --python --summary -m my_python_project
 
-`churn_vs_complexity --java -m --since 2019-03-01 --timetravel 30 --graph my_java_project > ~/Desktop/timetravel-after-1st-march-2019.html`
+# Top refactoring hotspots ranked by risk
+churn_vs_complexity --ruby --hotspots -q my_ruby_project
 
-`churn_vs_complexity --delta 1496402e81e68e86c5ac240559099fbe581a9a2g --delta 2845296758861773778d70d96328a5f2a1a9e933  --js --summary my_javascript_project > ~/Desktop/interesting-commits.txt`
+# CI quality gate (exits 1 if gamma exceeds threshold)
+churn_vs_complexity --ruby --gate --max-gamma 30 my_ruby_project
+
+# Triage specific files before a code review
+churn_vs_complexity --go --triage src/server.go src/handler.go
+
+# Compare codebase health between a branch and HEAD
+churn_vs_complexity --ruby --diff origin/main --summary my_ruby_project
+
+# Focus session: snapshot before and after a coding session
+churn_vs_complexity --ruby --focus start my_ruby_project
+# ... do some coding ...
+churn_vs_complexity --ruby --focus end my_ruby_project
+
+# Timetravel: track quality over time at 30-day intervals
+churn_vs_complexity --java -m --since 2019-03-01 --timetravel 30 --graph my_java_project > ~/Desktop/timetravel.html
+
+# Analyse complexity of specific commits
+churn_vs_complexity --js --delta HEAD --summary my_js_project
+```
 
 ## Development
 

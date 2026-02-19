@@ -7,8 +7,8 @@ Gem::Specification.new do |spec|
   spec.version       = ChurnVsComplexity::VERSION
   spec.authors       = ['Erik T. Madsen']
   spec.email         = ['beatmadsen@gmail.com']
-  spec.summary       = 'A tool to visualise code complexity in projects and help direct refactoring efforts.'
-  spec.description   = "Inspired by Michael Feathers' article \"Getting Empirical about Refactoring\" and the gem 'turbulence' by Chad Fowler and others. This gem currently supports analysis of Java, Ruby, JavaScript, and TypeScript repositories, but it can easily be extended. For a more detailed introduction, please consult the project README in the GitHub repository."
+  spec.summary       = 'Analyse churn vs complexity to find refactoring hotspots, gate CI quality, triage risky files, and track codebase health over time.'
+  spec.description   = "Correlates file churn (how often files change) with complexity scores to identify refactoring hotspots. Supports Ruby, JavaScript/TypeScript, Java, Python, and Go. Modes include hotspots ranking, triage assessment, CI quality gate, diff comparison, focus sessions, and timetravel history. Inspired by Michael Feathers' article \"Getting Empirical about Refactoring\"."
   spec.homepage      = 'https://github.com/beatmadsen/churn_vs_complexity'
   spec.license       = 'MIT'
   spec.required_ruby_version = '>= 3.3'

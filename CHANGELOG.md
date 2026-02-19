@@ -1,3 +1,10 @@
+## [1.6.1] - 2026-02-19
+
+### Changed
+- Updated gemspec summary and description to reflect all supported languages and modes
+- Updated README with current usage, all languages (Ruby, JS/TS, Java, Python, Go), all modes, and new examples
+- Added external dependency documentation for Python (radon) and Go (gocyclo)
+
 ## [1.6.0] - 2026-02-19
 
 ### Added
