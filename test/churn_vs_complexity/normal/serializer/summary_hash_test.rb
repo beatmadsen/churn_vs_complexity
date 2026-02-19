@@ -6,6 +6,28 @@ module ChurnVsComplexity
   module Normal
     module Serializer
       class SummaryHashTest < TLDR
+        def test_should_return_zeroed_summary_when_values_by_file_is_empty
+          # Given: no files match the language filter
+          end_date = Date.new(2024, 1, 1)
+          git_period = GitPeriod.new(requested_start_date: nil, end_date:)
+
+          # When
+          result = SummaryHash.serialize({ values_by_file: {}, git_period: })
+
+          # Then
+          assert_equal 0.0, result[:mean_churn]
+          assert_equal 0.0, result[:mean_complexity]
+          assert_equal 0.0, result[:mean_gamma_score]
+          assert_equal 0.0, result[:max_churn]
+          assert_equal 0.0, result[:min_churn]
+          assert_equal 0.0, result[:max_complexity]
+          assert_equal 0.0, result[:min_complexity]
+          assert_equal 0.0, result[:median_churn]
+          assert_equal 0.0, result[:median_complexity]
+          assert_equal 0.0, result[:median_gamma_score]
+          assert_equal end_date, result[:end_date]
+        end
+
         def test_that_x
           values_by_file = {
             'file1' => [1, 4],

@@ -1,3 +1,21 @@
+## [1.6.0] - 2026-02-19
+
+### Added
+- Python support for complexity calculation
+- Go support for complexity calculation (via gocognit)
+- New `--triage` mode: per-file risk assessment based on churn and complexity
+- New `--hotspots` mode: ranked list of files by risk score
+- New `--gate` mode: pass/fail quality gate with `--max-gamma` threshold (exit 0/1)
+- New `--focus start|end` mode: capture complexity snapshots before and after coding sessions
+- New `--diff REF` mode: compare codebase health between a reference commit and HEAD
+- New `--json` output format for all modes
+- New `--markdown` output format
+- Risk classifier and risk annotator modules
+- Gamma score module
+
+### Fixed
+- Improved CLI help text with grouped sections (Languages, Modes, Output formats, Modifiers)
+
 ## [1.5.2] - 2024-10-21
 
 - Fixed bug where delta mode validations would fail when the commit was a non-sha value.

@@ -5,6 +5,7 @@ require_relative 'serializer/summary'
 require_relative 'serializer/csv'
 require_relative 'serializer/graph'
 require_relative 'serializer/pass_through'
+require_relative 'serializer/json'
 
 module ChurnVsComplexity
   module Normal

@@ -56,6 +56,18 @@ module ChurnVsComplexity
         assert_instance_of Engine, result
       end
 
+      def test_should_support_json_serializer
+        # Given: config with :json serializer
+        subject = config(serializer: :json)
+        subject.validate!
+
+        # When: we get the checker
+        result = subject.checker
+
+        # Then: it should create a valid Engine
+        assert_instance_of Engine, result
+      end
+
       def test_that_it_validates_relative_period
         assert_raises(ValidationError) { config(relative_period: :invalid).validate! }
       end

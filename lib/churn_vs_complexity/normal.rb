@@ -9,7 +9,7 @@ module ChurnVsComplexity
     module SerializerValidator
       def self.validate!(serializer:)
         raise ValidationError, "Unsupported serializer: #{serializer}" \
-          unless %i[none csv graph summary].include?(serializer)
+          unless %i[none csv graph summary json].include?(serializer)
       end
     end
 

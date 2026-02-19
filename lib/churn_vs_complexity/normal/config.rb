@@ -94,6 +94,8 @@ module ChurnVsComplexity
           Serializer::Summary
         when :pass_through
           Serializer::PassThrough
+        when :json
+          Serializer::Json
         end
       end
     end

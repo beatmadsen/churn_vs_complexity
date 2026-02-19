@@ -12,7 +12,9 @@ module ChurnVsComplexity
         # First argument that is not an option is the folder
         folder = ARGV.first
 
-        puts Main.run!(options, folder)
+        result = Main.run!(options, folder)
+        puts result
+        exit 1 if result.respond_to?(:passed?) && !result.passed?
       end
     end
   end

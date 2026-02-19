@@ -26,16 +26,24 @@ module ChurnVsComplexity
           raise ValidationError, 'No options selected. Use --help for usage information.' if options.empty?
           raise ValidationError, 'No language selected. Use --help for usage information.' if options[:language].nil?
 
+          return if MODES_WITHOUT_SERIALIZER.include?(options[:mode])
           return unless options[:serializer].nil?
 
           raise ValidationError, 'No serializer selected. Use --help for usage information.'
         end
+
+        MODES_WITHOUT_SERIALIZER = %i[triage hotspots gate focus diff].freeze
 
         def config(options)
           config_class =
             case options[:mode]
             when :timetravel then Timetravel::Config
             when :delta then Delta::Config
+            when :triage then Triage::Config
+            when :hotspots then Hotspots::Config
+            when :gate then Gate::Config
+            when :focus then Focus::Config
+            when :diff then Diff::Config
             else Normal::Config
             end
           config_class.new(**options)
