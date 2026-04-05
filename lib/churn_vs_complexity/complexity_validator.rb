@@ -14,6 +14,8 @@ module ChurnVsComplexity
         Complexity::GoCalculator.check_dependencies!
       when :kotlin
         Complexity::KotlinCalculator.check_dependencies!
+      when :rust
+        Complexity::RustCalculator.check_dependencies!
       end
     end
   end

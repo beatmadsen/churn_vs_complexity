@@ -83,6 +83,14 @@ module ChurnVsComplexity
             serializer:,
             since: @since || @relative_period,
           )
+        when :rust
+          Engine.concurrent(
+            complexity: Complexity::RustCalculator,
+            churn:,
+            file_selector: FileSelector::Rust.excluding(@excluded),
+            serializer:,
+            since: @since || @relative_period,
+          )
         end
       end
 

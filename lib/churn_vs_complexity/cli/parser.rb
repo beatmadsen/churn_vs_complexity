@@ -38,6 +38,10 @@ module ChurnVsComplexity
             options[:language] = :kotlin
           end
 
+          opts.on('--rust', 'Check complexity of rust files') do
+            options[:language] = :rust
+          end
+
           opts.separator ''
           opts.separator 'Modes (mutually exclusive):'
 

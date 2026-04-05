@@ -16,6 +16,8 @@ module ChurnVsComplexity
         ['.go']
       when :kotlin
         ['.kt', '.kts']
+      when :rust
+        ['.rs']
       else
         raise Error, "Unsupported language: #{language}"
       end
@@ -140,6 +142,16 @@ module ChurnVsComplexity
 
       def self.predefined(included:, excluded:)
         Predefined.new(included:, extensions: FileSelector.extensions(:kotlin), excluded:)
+      end
+    end
+
+    module Rust
+      def self.excluding(excluded)
+        Excluding.new(FileSelector.extensions(:rust), excluded)
+      end
+
+      def self.predefined(included:, excluded:)
+        Predefined.new(included:, extensions: FileSelector.extensions(:rust), excluded:)
       end
     end
   end

@@ -40,6 +40,8 @@ module ChurnVsComplexity
           FileSelector::Go.predefined(included:, excluded:)
         when :kotlin
           FileSelector::Kotlin.predefined(included:, excluded:)
+        when :rust
+          FileSelector::Rust.predefined(included:, excluded:)
         end
       end
 
@@ -57,6 +59,8 @@ module ChurnVsComplexity
           Complexity::GoCalculator
         when :kotlin
           Complexity::KotlinCalculator
+        when :rust
+          Complexity::RustCalculator
         end
       end
     end
