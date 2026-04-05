@@ -2,7 +2,7 @@
 
 # ChurnVsComplexity
 
-Correlates file churn (how often files change) with complexity scores to identify refactoring hotspots and track codebase health over time. Supports Ruby, JavaScript/TypeScript, Java, Python, Go, and Kotlin.
+Correlates file churn (how often files change) with complexity scores to identify refactoring hotspots and track codebase health over time. Supports Ruby, JavaScript/TypeScript, Java, Python, Go, Kotlin, and Rust.
 
 Modes include hotspots ranking, triage assessment, CI quality gate, diff comparison, focus sessions, and timetravel history.
 
@@ -34,6 +34,7 @@ External tool dependencies per language:
 - **Python**: Requires [Radon](https://radon.readthedocs.io) on the search path as `radon`. Install with `pip install radon`.
 - **Go**: Requires [gocyclo](https://github.com/fzipp/gocyclo) on the search path. Install with `go install github.com/fzipp/gocyclo/cmd/gocyclo@latest`.
 - **Kotlin**: Requires [lizard](https://github.com/terryyin/lizard) on the search path. Install with `pip install lizard`.
+- **Rust**: Requires [lizard](https://github.com/terryyin/lizard) on the search path. Install with `pip install lizard`.
 
 ## Usage
 
@@ -50,6 +51,7 @@ Languages:
         --python                     Check complexity of python files
         --go                         Check complexity of go files
         --kotlin                     Check complexity of kotlin files
+        --rust                       Check complexity of rust files
 
 Modes (mutually exclusive):
         --timetravel N               Calculate summary for all commits at intervals of N days throughout project history or from the date specified with --since
@@ -126,6 +128,9 @@ churn_vs_complexity --js --delta HEAD --summary my_js_project
 
 # Kotlin project hotspots
 churn_vs_complexity --kotlin --hotspots my_kotlin_project
+
+# Rust project CSV report
+churn_vs_complexity --rust --csv my_rust_project > ~/Desktop/rust-demo.csv
 ```
 
 ## Development

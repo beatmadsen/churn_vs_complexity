@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Erik T. Madsen']
   spec.email         = ['beatmadsen@gmail.com']
   spec.summary       = 'Analyse churn vs complexity to find refactoring hotspots, gate CI quality, triage risky files, and track codebase health over time.'
-  spec.description   = "Correlates file churn (how often files change) with complexity scores to identify refactoring hotspots. Supports Ruby, JavaScript/TypeScript, Java, Python, Go, and Kotlin. Modes include hotspots ranking, triage assessment, CI quality gate, diff comparison, focus sessions, and timetravel history. Inspired by Michael Feathers' article \"Getting Empirical about Refactoring\"."
+  spec.description   = "Correlates file churn (how often files change) with complexity scores to identify refactoring hotspots. Supports Ruby, JavaScript/TypeScript, Java, Python, Go, Kotlin, and Rust. Modes include hotspots ranking, triage assessment, CI quality gate, diff comparison, focus sessions, and timetravel history. Inspired by Michael Feathers' article \"Getting Empirical about Refactoring\"."
   spec.homepage      = 'https://github.com/beatmadsen/churn_vs_complexity'
   spec.license       = 'MIT'
   spec.required_ruby_version = '>= 3.3'

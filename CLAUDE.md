@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`churn_vs_complexity` is a Ruby gem that analyzes code quality by correlating file churn (how often files change) with complexity scores. It supports Ruby (via Flog), JavaScript/TypeScript (via ESLint), Java (via PMD), Python (via Radon), Go (via gocognit), and Kotlin (via lizard). Requires Ruby >= 3.3.
+`churn_vs_complexity` is a Ruby gem that analyzes code quality by correlating file churn (how often files change) with complexity scores. It supports Ruby (via Flog), JavaScript/TypeScript (via ESLint), Java (via PMD), Python (via Radon), Go (via gocognit), Kotlin (via lizard), and Rust (via lizard). Requires Ruby >= 3.3.
 
 ## Commands
 
