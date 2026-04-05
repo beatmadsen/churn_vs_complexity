@@ -14,6 +14,7 @@ module ChurnVsComplexity
   #   Python         Radon     Cyclomatic complexity  1        ~44                 5-50
   #   Java           PMD       Cyclomatic complexity  1        ~39                 1-40
   #   Go             gocognit  Cognitive complexity   0        ~87                 0-50
+  #   Kotlin         lizard    Cyclomatic complexity  1        ~40                 1-40
   #
   # The DEFAULT_LOW and DEFAULT_HIGH thresholds below are rough midpoints
   # suitable for Java/Python/JS. They are too aggressive for Ruby (Flog

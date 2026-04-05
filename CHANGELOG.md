@@ -1,3 +1,8 @@
+## [1.7.0] - 2026-04-05
+
+### Added
+- Kotlin support for complexity calculation (via [lizard](https://github.com/terryyin/lizard), install with `pip install lizard`)
+
 ## [1.6.2] - 2026-02-19
 
 ### Changed
