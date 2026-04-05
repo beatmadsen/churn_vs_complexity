@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'csv'
 require 'open3'
 
 module ChurnVsComplexity
@@ -16,12 +15,16 @@ module ChurnVsComplexity
           parse_lizard_output(csv_output, files:)
         end
 
+        # Lizard CSV format: NLOC,CCN,tokens,params,length,"loc","file","func","long_func",start,end
+        LIZARD_LINE_PATTERN = /^\d+,(\d+),\d+,\d+,\d+,"[^"]*","([^"]*)"/.freeze
+
         def parse_lizard_output(csv_output, files:)
           scores = Hash.new(0)
-          CSV.parse(csv_output).each do |row|
-            next if row.length < 7
+          csv_output.each_line do |line|
+            match = line.match(LIZARD_LINE_PATTERN)
+            next unless match
 
-            scores[row[6]] += row[1].to_i
+            scores[match[2]] += match[1].to_i
           end
           files.to_h { |file| [file, scores[file] || 0] }
         end
