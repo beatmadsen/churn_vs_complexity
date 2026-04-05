@@ -91,6 +91,14 @@ module ChurnVsComplexity
             serializer:,
             since: @since || @relative_period,
           )
+        when :swift
+          Engine.concurrent(
+            complexity: Complexity::SwiftCalculator,
+            churn:,
+            file_selector: FileSelector::Swift.excluding(@excluded),
+            serializer:,
+            since: @since || @relative_period,
+          )
         end
       end
 

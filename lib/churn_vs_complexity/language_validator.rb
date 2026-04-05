@@ -2,7 +2,7 @@
 
 module ChurnVsComplexity
   module LanguageValidator
-    SUPPORTED = %i[java ruby javascript python go kotlin rust].freeze
+    SUPPORTED = %i[java ruby javascript python go kotlin rust swift].freeze
 
     def self.validate!(language)
       raise ValidationError, "Unsupported language: #{language}" unless SUPPORTED.include?(language)

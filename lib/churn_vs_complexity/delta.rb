@@ -42,6 +42,8 @@ module ChurnVsComplexity
           FileSelector::Kotlin.predefined(included:, excluded:)
         when :rust
           FileSelector::Rust.predefined(included:, excluded:)
+        when :swift
+          FileSelector::Swift.predefined(included:, excluded:)
         end
       end
 
@@ -61,6 +63,8 @@ module ChurnVsComplexity
           Complexity::KotlinCalculator
         when :rust
           Complexity::RustCalculator
+        when :swift
+          Complexity::SwiftCalculator
         end
       end
     end

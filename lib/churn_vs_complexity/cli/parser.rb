@@ -42,6 +42,10 @@ module ChurnVsComplexity
             options[:language] = :rust
           end
 
+          opts.on('--swift', 'Check complexity of swift files') do
+            options[:language] = :swift
+          end
+
           opts.separator ''
           opts.separator 'Modes (mutually exclusive):'
 

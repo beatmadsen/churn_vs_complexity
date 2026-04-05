@@ -18,6 +18,8 @@ module ChurnVsComplexity
         ['.kt', '.kts']
       when :rust
         ['.rs']
+      when :swift
+        ['.swift']
       else
         raise Error, "Unsupported language: #{language}"
       end
@@ -152,6 +154,16 @@ module ChurnVsComplexity
 
       def self.predefined(included:, excluded:)
         Predefined.new(included:, extensions: FileSelector.extensions(:rust), excluded:)
+      end
+    end
+
+    module Swift
+      def self.excluding(excluded)
+        Excluding.new(FileSelector.extensions(:swift), excluded)
+      end
+
+      def self.predefined(included:, excluded:)
+        Predefined.new(included:, extensions: FileSelector.extensions(:swift), excluded:)
       end
     end
   end

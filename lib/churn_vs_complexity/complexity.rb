@@ -7,6 +7,7 @@ require_relative 'complexity/python_calculator'
 require_relative 'complexity/go_calculator'
 require_relative 'complexity/kotlin_calculator'
 require_relative 'complexity/rust_calculator'
+require_relative 'complexity/swift_calculator'
 
 module ChurnVsComplexity
   module Complexity

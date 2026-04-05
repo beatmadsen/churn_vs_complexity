@@ -16,6 +16,8 @@ module ChurnVsComplexity
         Complexity::KotlinCalculator.check_dependencies!
       when :rust
         Complexity::RustCalculator.check_dependencies!
+      when :swift
+        Complexity::SwiftCalculator.check_dependencies!
       end
     end
   end
