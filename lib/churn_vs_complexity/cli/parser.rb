@@ -34,6 +34,10 @@ module ChurnVsComplexity
             options[:language] = :go
           end
 
+          opts.on('--kotlin', 'Check complexity of kotlin files') do
+            options[:language] = :kotlin
+          end
+
           opts.separator ''
           opts.separator 'Modes (mutually exclusive):'
 

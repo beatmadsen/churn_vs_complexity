@@ -38,6 +38,8 @@ module ChurnVsComplexity
           FileSelector::Python.predefined(included:, excluded:)
         when :go
           FileSelector::Go.predefined(included:, excluded:)
+        when :kotlin
+          FileSelector::Kotlin.predefined(included:, excluded:)
         end
       end
 
@@ -53,6 +55,8 @@ module ChurnVsComplexity
           Complexity::PythonCalculator
         when :go
           Complexity::GoCalculator
+        when :kotlin
+          Complexity::KotlinCalculator
         end
       end
     end

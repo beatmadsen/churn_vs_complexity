@@ -14,6 +14,8 @@ module ChurnVsComplexity
         ['.py']
       when :go
         ['.go']
+      when :kotlin
+        ['.kt', '.kts']
       else
         raise Error, "Unsupported language: #{language}"
       end
@@ -128,6 +130,16 @@ module ChurnVsComplexity
 
       def self.predefined(included:, excluded:)
         Predefined.new(included:, extensions: FileSelector.extensions(:go), excluded:)
+      end
+    end
+
+    module Kotlin
+      def self.excluding(excluded)
+        Excluding.new(FileSelector.extensions(:kotlin), excluded)
+      end
+
+      def self.predefined(included:, excluded:)
+        Predefined.new(included:, extensions: FileSelector.extensions(:kotlin), excluded:)
       end
     end
   end

@@ -12,6 +12,8 @@ module ChurnVsComplexity
         Complexity::PythonCalculator.check_dependencies!
       when :go
         Complexity::GoCalculator.check_dependencies!
+      when :kotlin
+        Complexity::KotlinCalculator.check_dependencies!
       end
     end
   end

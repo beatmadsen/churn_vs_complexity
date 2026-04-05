@@ -75,6 +75,14 @@ module ChurnVsComplexity
             serializer:,
             since: @since || @relative_period,
           )
+        when :kotlin
+          Engine.concurrent(
+            complexity: Complexity::KotlinCalculator,
+            churn:,
+            file_selector: FileSelector::Kotlin.excluding(@excluded),
+            serializer:,
+            since: @since || @relative_period,
+          )
         end
       end
 
